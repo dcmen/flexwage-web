@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <% include ../layouts/stylesheet %>
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css"
+        href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+    <style>
+        .table-responsive-width {
+            max-width: 50%;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .table-responsive-width table td{
+            vertical-align: middle;
+        }
+
+        @media only screen and (max-width: 1200px) {
+            .table-responsive-width {
+                max-width: 80%;
+            }
+        }
+
+        .input-time {
+            padding-top: 7px;
+            padding-bottom: 7px;
+        }
+    </style>
+</head>
+
+<body>
+    <% include ../layouts/preloader %>
+    <div id="jsLoader">
+        <div style="top: 40%; left: 0px;" class="loader">
+            <div class="loader-chiled"></div>
+        </div>
+    </div>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <% include ../layouts/navbar %>
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <% include ../layouts/leftbar %>
+                    <!-- Toast -->
+                    <div id='jsErr'>
+                        <p>Connection timeout.</p>
+                        <div class="relative w-full sm:w-1/2 bg-gray-200">
+                            <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+                        </div>
+                    </div>
+                    <!-- End toast -->
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper page-wrapper--background">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <!-- tab content start -->
+                                                <div class="tab-content">
+                                                    <!-- tab panel personal start -->
+                                                    <div class="tab-pane active" id="personal" role="tabpanel">
+                                                        <!-- personal card start -->
+                                                        <input type="hidden" name="token" value="<%= csrfToken %>">
+                                                        <div>
+                                                            <div class="elementor-widget-container">
+                                                                <h4 class="elementor-heading-title">Employee Information
+                                                                </h4>
+                                                            </div>
+                                                            <div>
+                                                                <ul class="nav nav-tabs pt-1">
+                                                                    <li class="nav-item flex-grow">
+                                                                      <a id="jsInformation" class="nav-link text-center pl-5 pr-5 active" aria-current="page"><b>Profile</b></a>
+                                                                    </li>
+                                                                    <li class="nav-item flex-grow">
+                                                                      <a id="jsWorkingDay" class="nav-link text-center pl-5 pr-5"><b>Pay set up</b></a>
+                                                                    </li>
+                                                                  </ul>
+                                                            </div>
+                                                            <div id="jsInformationDiv" class="mt-2">
+                                                                <section class="elementor-section">
+                                                                    <div class="elementor-widget">
+                                                                        <h5 class="m-0">
+                                                                            <span><i
+                                                                                    class="fa fa-user-circle"></i></span>
+                                                                            <span class="ml-2">CashD Profile</span>
+                                                                        </h5>
+                                                                    </div>
+                                                                    <div class="elementor-element">
+                                                                        <p>First name:
+                                                                            <span><%= staff.user?.first_name ? staff.user.first_name : "N/A" %></span>
+                                                                        </p>
+                                                                        <p>Last name:
+                                                                            <span><%= staff.user?.last_name ? staff.user.last_name : "N/A" %></span>
+                                                                        </p>
+                                                                        <p>Email address:
+                                                                            <span><%= staff.user?.email ? staff.user.email : "N/A" %></span>
+                                                                        </p>
+                                                                        <p>Phone:
+                                                                            <span><%= staff.user.mobile ? staff.user.mobile : "N/A" %></span>
+                                                                        </p>
+                                                                    </div>
+                                                                </section>
+
+                                                                <section class="elementor-section">
+                                                                    <div class="elementor-widget">
+                                                                        <h5 class="m-0">
+                                                                            <span><i class="fa fa-users"></i></span>
+                                                                            <span class="ml-2">Payroll Profile</span>
+                                                                        </h5>
+                                                                    </div>
+                                                                    <div class="elementor-element">
+                                                                        <p>Full name:
+                                                                            <span><%= staff.first_name + ' ' + staff.last_name %></span>
+                                                                        </p>
+                                                                        <p>Email:
+                                                                            <span><%= staff.email ? staff.email : "N/A" %></span>
+                                                                        </p>
+                                                                        <p>Employee type:
+                                                                            <span><%= staff.is_allow_login_other_system === 1 ? "Employer" : (role == 'SUPERVISOR' ? "Supervisor" : "Employee"); %></span>
+                                                                        </p>
+                                                                        <p>Start date:
+                                                                            <span><%= staff.start_date ? moment(staff.start_date).format( 'DD-MM-YYYY') : "N/A" %></span>
+                                                                        </p>
+                                                                    </div>
+                                                                </section>
+
+                                                                <section class="elementor-section">
+                                                                    <div class="elementor-widget">
+                                                                        <h5 class="m-0">
+                                                                            <span><i class="fa fa-building"></i></span>
+                                                                            <span class="ml-2">Company details</span>
+                                                                        </h5>
+                                                                    </div>
+                                                                    <div class="elementor-element">
+                                                                        <p>Company name:
+                                                                            <span><%= staff.company?.company_name ? staff.company.company_name : "N/A" %></span>
+                                                                        </p>
+                                                                        <p>ABN:
+                                                                            <span><%= staff.company?.abn ? staff.company.abn : "N/A" %></span>
+                                                                        </p>
+                                                                        <p>Address:
+                                                                            <span><%= staff.company?.address ? staff.company.address : "N/A" %></span>
+                                                                        </p>
+                                                                    </div>
+                                                                </section>
+                                                                <% if (staff.system.code === "XERO" || staff.system.code === "KEYPAY" || staff.system.code === "RECKON") { %>
+                                                                <section class="elementor-section">
+                                                                    <div class="elementor-widget">
+                                                                        <h5 class="m-0">
+                                                                            <span><i class="fa fa-calendar"></i></span>
+                                                                            <span class="ml-2">Payroll system</span>
+                                                                        </h5>
+                                                                    </div>
+                                                                    <div class="elementor-element">
+                                                                        <p>Payroll calendar: <span><%= staff.payroll_system_name ? staff.payroll_system_name : "N/A"  %></span></p>
+                                                                    </div>
+                                                                </section>
+                                                                <% } %>
+
+                                                                <section class="elementor-section">
+                                                                    <div class="elementor-widget">
+                                                                        <h5 class="m-0">
+                                                                            <span><i class="fa fa-dollar"></i></span>
+                                                                            <span class="ml-2">Bank details</span>
+                                                                        </h5>
+                                                                    </div>
+                                                                    <div class="elementor-element">
+                                                                        <input hidden name="encryptCode" value="<%= staff.encryption_key %>">
+                                                                        <% if (staff.system.code === "RECKON" || staff.system.code === "DEPUTY") { %>
+                                                                            <p>Bank name: <span><%= staff.bank_info?.bank_name ? staff.bank_info?.bank_name : "N/A" %></span></p>
+                                                                        <% } %>
+                                                                        <p>Bank account name: <span><%= staff.bank_info?.bank_account_name ? staff.bank_info?.bank_account_name : "N/A" %></span></p>
+                                                                        <p>Bank BSB#: <span id="jsBSB"><%= staff.bank_info?.bank_bsb_number ? staff.bank_info?.bank_bsb_number : "N/A" %></span></p>
+                                                                        <p>Bank Account#: <span id="jsBankNumber"><%= staff.bank_info?.bank_account_number ? staff.bank_info?.bank_account_number : "N/A" %></span></p>
+                                                                    </div>
+                                                                </section>
+
+                                                                <% if (!staff.company.is_enterprise && staff.system.code == 'DEPUTY') { %>
+                                                                    <div>
+                                                                        <input type="hidden" name="checkPayPeriod" value="<%= checkPayPeriod %>">
+                                                                        <input type="hidden" name="staff" value="<%= JSON.stringify(staff) %>">
+                            
+                                                                        <section class="elementor-section">
+                                                                            <div class="elementor-widget">
+                                                                                <h5 class="m-0">
+                                                                                    <span><i class="fa fa-cogs"></i></span>
+                                                                                    <span class="ml-2">Change Pay Cycle</span>
+                                                                                </h5>
+                                                                            </div>
+                                                                            <div class="elementor-element">
+                                                                                <select style="width: 50%;" class="form-control" id="selectedPayCycle">
+                                                                                    <option selected disabled>--Select--</option>
+                                                                                    <% payPeriodOriginations.forEach(item => { %>
+                                                                                    <option value="<%= item._id %>"><%= item.name %>
+                                                                                    </option>
+                                                                                    <% }) %>
+                                                                                </select>
+                                                                                <div class="mt-2 pb-3">
+                                                                                    <button type="button"
+                                                                                        class="btn btn-success btn-save-Paycycle">Save</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </section>
+                                                                    </div>
+                                                                    <% } %>
+                                                            </div>
+                                                            <div id="jsWorkingDayDiv" class="mt-2 p-3 hiden">
+                                                                <div class="dt-responsive table-responsive table-responsive-width">
+                                                                    <div>
+                                                                        <p class="mb-2"><strong>Working Days in Week</p>
+                                                                    </div>
+                                                                    <table
+                                                                      class="table table-striped table-bordered nowrap thead-dark">
+                                                                      <thead>
+                                                                        <tr>
+                                                                          <th>#</th>
+                                                                          <th>Days</th>
+                                                                          <th>Time</th>
+                                                                        </tr>
+                                                                      </thead>
+                                                                      <tbody>
+                                                                            <% ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'].forEach(function(item, index) { %>
+                                                                                <tr>
+                                                                                    <td><%= index %></td>
+                                                                                    <td><%= item %></td>
+                                                                                    <td>
+                                                                                        <select class="form-control jsDay" data-index="<%= index %>">
+                                                                                            <option value="0" <%= staff.working_days_of_week && staff.working_days_of_week[index] === 0 ? 'selected' : '' %> >Off</option>
+                                                                                            <option value="1" <%= staff.working_days_of_week && staff.working_days_of_week[index] === 1 ? 'selected' : '' %>>Full Day</option>
+                                                                                            <option value="2" <%= staff.working_days_of_week && staff.working_days_of_week[index] === 2 ? 'selected' : '' %>>Morning</option>
+                                                                                            <option value="3" <%= staff.working_days_of_week && staff.working_days_of_week[index] === 3 ? 'selected' : '' %>>Afternoon</option>
+                                                                                        </select>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            <% }) %>
+                                                                      </tbody>
+                                                                    </table>
+                                                                    <% if(staff.system.code === "XERO") { %>
+                                                                        <div>
+                                                                            <div class="form-group row ml-0 mr-0">
+                                                                                <label for="inputPassword" class="col-auto col-form-label pr-0 pl-0"># of weeks since last pay slip:</label>
+                                                                                <div class="col-auto pl-1">
+                                                                                <input type="number" class="form-control" name="payslipHistory" pattern="[0-9]*" placeholder="# of weeks" value="<%= staff.weeks_checking_payslip_history ? staff.weeks_checking_payslip_history : 0 %>">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    <% } %>
+                                                                    <% if (staff.system.code !== "DEPUTY" && staff.salary_wag !== 2 && staff.salary_wag !== 3) { %>
+                                                                        <div>
+                                                                            <div class="form-group row ml-0 mr-0">
+                                                                                <label for="inputTime" class="col-auto col-form-label pr-0 pl-0">Time of day to accrue wages:</label>
+                                                                                <div class="col-auto pl-1">
+                                                                                <input type="time" class="form-control input-time" name="timeOfDay" value="<%= staff.time_accrue_wages && staff.time_accrue_wages != null ? staff.time_accrue_wages : '17:00' %>">
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    <% } %>
+                                                                    <button id="jsSaveWorkDay" class="btn btn-primary" >Save</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% include ../layouts/script %>
+        <script type="text/javascript" src="/../../web-files/bower_components/crypto-js/crypto-js.min.js"></script>
+        <script type="text/javascript" src="../../web-files/assets/pages/company/watch-staff.js"></script>
+
+        <!-- data-table js -->
+        <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js">
+        </script>
+        <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js">
+        </script>
+        <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js">
+        </script>
+        <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js">
+        </script>
+        <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+        </script>
+        <!-- modalEffects js nifty modal window effects -->
+        <script type="text/javascript" src="../../web-files/assets/js/modalEffects.js"></script>
+        <script type="text/javascript" src="../../web-files/assets/js/classie.js"></script>
+        <!-- i18next.min.js -->
+        <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+        <script type="text/javascript"
+            src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+        </script>
+        <script type="text/javascript"
+            src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+        </script>
+        <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js">
+        </script>
+        <script>
+            let staffPick = <%- JSON.stringify(staff) %> 
+        </script>
+</body>
+
+</html>

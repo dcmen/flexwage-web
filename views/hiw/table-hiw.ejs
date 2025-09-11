@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+  <!-- themify-icons line icon -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/icon/themify-icons/themify-icons.css">
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/icon/icofont/css/icofont.css">
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page-body start -->
+                  <div class="page-body">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <form action="/admin/update-header-hiw?_csrf=<%= csrfToken %>" method="POST"
+                          enctype="multipart/form-data">
+                          <div class="row">
+                            <div class="col-sm-4">
+                              <div class="card">
+                                <div class="card-header">
+                                  <h4>Image</h4>
+                                  <hr>
+                                </div>
+                                <div class="card-block">
+                                  <img src="<%= header.imagePath %>" id="image-upload"
+                                    alt="Default Banner" class="img-fluid">
+                                    <span class="messagesImage"></span>
+                                    <% if(messages.length > 0) { %>
+                                      <div class="alert alert-danger mt-3">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <i class="icofont icofont-close-line-circled"></i>
+                                        </button>
+                                          <%= messages %>
+                                      </div>
+                                    <% } else { %>
+                                      <span class="messagesSuggestion"></span>
+                                    <% } %>
+                                  <div class="form-group mt-3">
+                                    <input type="file" class="form-control" id="upload-path" name="imagePath">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-8">
+                              <div class="card">
+                                <div class="card-header">
+                                  <h4>Edit Header Hiw Area</h4>
+                                  <hr>
+                                </div>
+                                <div class="card-block">
+                                  <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                  <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Title<i style = color:red>*</i></label>
+                                    <div class="col-sm-10">
+                                      <input type="text" class="form-control" name="titleHeader"
+                                        value="<%= header.title %>" maxlength="24" placeholder="Enter Title Less Than 24 Character" required>
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <div class="col-sm-2">
+                                      <label class="col-form-label">Description<i style = color:red>*</i></label>
+                                      <label>(Maximum 200 characters)</label>
+                                    </div>
+                                    <div class="col-sm-10">
+                                      <textarea type="text" class="form-control" rows="5" cols="5" name="desHeader"
+                                        required placeholder="Enter Description"><%= header.description %></textarea>
+                                        <span class="messages"></span>
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <div class="col-sm-2"></div>
+                                    <div class="col-sm-10">
+                                      <label for="">Show or hide Hiw area</label>
+                                    </div>
+                                    <div class="col-sm-2">
+                                      <label class="col-form-label">Status</label>
+                                    </div>
+                                    <div class="col-sm-10">
+                                      <select name="status" class="form-control">
+                                        <option value="true" <%= header.status === true ? 'selected' : '' %>>Show
+                                        </option>
+                                        <option value="false" <%= header.status === false ? 'selected' : '' %>>Hide
+                                        </option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="row">
+                                    <label class="col-sm-2"></label>
+                                    <div class="col-sm-10">
+                                      <button id="btn_submit" type="submit" class="btn btn-primary m-b-0">Submit</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                        <div class="card">
+                          <div class="card-header">
+                            <h4 class="float-left">List HIW</h4>
+                            <a href="/admin/hiw-add-feature">
+                                <% if(data.length < 5) { %>
+                                  <button type="button" class="btn btn-info float-right">Add New
+                                    HIW</button>
+                                <% } %>
+                            </a>
+                          </div>
+                          <div class="card-block">
+                            <div class="dt-responsive table-responsive">
+                              <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                <thead>
+                                  <tr>
+                                    <th>STT</th>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Actiton</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <%  data.forEach(function(feature, index){ %>
+                                  <tr>
+                                    <td><%= index + 1 %></td>
+                                    <td><%= feature.title %></td>
+                                    <td><%- feature.description.substring(0, 10) %>...</td>
+                                    <td>
+                                      <% if(feature.status) { %>
+                                        Active
+                                      <% } else { %>
+                                        Disable
+                                      <% } %>
+                                    </td>
+                                    <td>
+                                      <a href="/admin/hiw-edit-feature/<%= feature._id %>"><button
+                                          class="btn btn-sm btn-primary"><i
+                                            class="icofont icofont-pencil-alt-1"></i></button></a>
+                                      <% if(data.length > 4) { %>
+                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="modal"
+                                        data-target="#<%= feature._id %>"><i class="icofont icofont-trash"></i></button>
+                                      <% } %>
+                                    </td>
+                                    <div class="modal fade" id="<%= feature._id %>" tabindex="-1" role="dialog">
+                                      <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                          <div class="modal-body">
+                                            <h5>Do you want to delete it ?</h5>
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn btn-default waves-effect "
+                                              data-dismiss="modal">No</button>
+                                            <a href="/admin/hiw-delete-feature/<%= feature._id %>">
+                                              <button type="button"
+                                                class="btn btn-primary waves-effect waves-light ">Yes</button>
+                                            </a>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <% }); %>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Zero config.table end -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Page-body end -->
+                </div>
+              </div>
+              <!-- Main-body end -->
+              <div id="styleSelector">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/jszip.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/pdfmake.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/vfs_fonts.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script>
+  <script>
+    function readImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#image-upload').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $('#upload-path').change(function () {
+      readImage(this);
+    });
+
+  </script>
+  <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+  <script>
+    CKEDITOR.on('instanceReady', function( ev ) {
+      var blockTags = ['div','h1','h2','h3','h4','h5','h6','p','pre','li','blockquote','ul','ol',
+      'table','thead','tbody','tfoot','td','th',];
+
+      for (var i = 0; i < blockTags.length; i++)
+      {
+        ev.editor.dataProcessor.writer.setRules( blockTags[i], {
+            indent : false,
+            breakBeforeOpen : true,
+            breakAfterOpen : false,
+            breakBeforeClose : false,
+            breakAfterClose : true
+        });
+      }
+    })
+
+    var edit = CKEDITOR.replace('desHeader');
+    edit.on('change', function(e) {
+      var values = edit.getData();
+      if(values.replace(/<[^>]*>?/gm, '').length < 1){
+        $('.messages').html('<p class="text-danger mt-3">Description is required.</p>');
+        $('#btn_submit').addClass('d-none');
+      }
+      else if(values.replace(/<[^>]*>?/gm, '').length > 200){
+        $('.messages').html('<p class="text-danger mt-3">Maximum 200 characters!</p>');
+        $('#btn_submit').addClass('d-none');
+      }
+      else{
+        $('#btn_submit').removeClass('d-none');
+        $('.messages').html('');
+      }
+    });
+  </script>
+
+  <script>
+    $('.messagesSuggestion').html('<div class="alert alert-success mt-3 text-center"><p style="font-size: 18px">Image should have width = <b>432px</b> and height = <b>415px</b></p></div>');
+    var srcElement = document.getElementById('btn_submit');
+    var _URL = window.URL || window.webkitURL;
+    $("#upload-path").change(function (e) {
+      var file, img;
+      if ((file = this.files[0])) {
+        img = new Image();
+        img.onload = function () {
+          if (this.width !== 432 && this.height !== 415) {
+            $('.messagesImage').html('<div class="alert alert-danger mt-3 text-center"><i class="icofont icofont-warning" style="font-size: 30px;"></i><p style="font-size: 18px;"> Invalid Image. Please upload file image has width = <b>432px</b> and height = <b>415px</b></p>'
+                                    + '<p>(Your image have width = ' + this.width + 'px and height = ' + this.height +'px)</p></div>');
+            $('.messagesSuggestion').html('');
+            srcElement.style.display = 'none';
+          } else {
+            $('.messagesImage').html('<div class="alert alert-success mt-3 text-center"><p class="text-success mt-3" style="font-size: 20px"><i class="icofont icofont-tick-mark ml-2" style="font-size: 25px;"></i><b> Ready to upload!</b></p><div>');
+            $('.messagesSuggestion').html('');
+            srcElement.style.display = 'block';
+          }
+          // alert(this.width + " " + this.height);
+        };
+        img.src = _URL.createObjectURL(file);
+      }
+    });
+  </script>
+</body>
+
+</html>

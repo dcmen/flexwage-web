@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+</head>
+
+<body>
+  <div id='jsErr'>
+    <p>The connection has timed out</p>
+    <div class="relative w-full sm:w-1/2 bg-gray-200">
+      <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+    </div>
+  </div>
+  <% include ../layouts/preloader %>
+  <div id="jsLoader">
+    <div class="loader">
+      <div class="loader-chiled"></div>
+    </div>
+  </div>
+  <section class="signup-block">
+    <!--Navbar Menu-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary navbar-menu">
+      <div class="text-center img-logo">
+        <a href="/"><img src="../../web-files/assets/images/CashD-logo.png" width="100%" alt="CashD Logo"></a>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active nav-item--border-custom">
+            <a class="nav-link" href="#">Home</a>
+          </li>
+          <li class="nav-item  nav-item--border-custom">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item pr-5">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/">
+              <span class="feather icon-user"></span>
+              Sign In</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col-sm-12">
+          <!-- URL -->
+          <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+          <input type="hidden" id="urlApi" value="<%= apiHttps %>">
+          <input type="hidden" id="urlKeyPay" value="<%= urlKeyPay %>">
+          <input type="hidden" id="urlXeRo" value="<%= urlXero %>">
+          <input type="hidden" id="urlDeputy" value="<%= urlDeputy %>">
+          <input type="hidden" id="urlReckon" value="<%= urlReckon %>">
+          <!-- Multi step form --> 
+          <section class="multi_step_form">  
+            <div class="auth-box card">
+              <div class="card-block">
+                <div class="row m-b-20">
+                  <div class="col-md-12">
+                    <h2 class="text-center">Create your account in <b>6 easy steps</b></h2>
+                  </div>
+                </div>
+                <form id="msform">
+                  <!-- progressbar -->
+                  <ul class="progressbar">
+                    <li class="active">Step 1</li>
+                    <li>Step 2</li>
+                    <li>Step 3</li>
+                    <li>Step 4</li>
+                    <li>Step 5</li>
+                    <li>Step 6</li>
+                  </ul>
+                  <!-- fieldsets 1 -->
+                  <fieldset>
+                    <h3 class="text-center py-2">Enter your personal details</h3>
+                    <div class="form-row m-t-30 text-left">
+                      <div class="form-group col-md-6 form-primary">
+                        <input id="firstName" type="text" name="firstname" class="form-control" placeholder="First Name">
+                      </div>
+                      <div class="form-group col-md-6 form-primary">
+                        <input id="lastName" type="text" name="lastname" class="form-control" placeholder="Last Name">
+                      </div>
+                    </div>
+                    <div class="form-group form-primary text-left">
+                      <input id="email" type="text" name="email" class="form-control" placeholder="Email">
+                      <span class="form-bar"></span>
+                    </div>
+                    <div class="form-group form-primary text-left">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <select class="form-control" name="countryCode" id="selectedCountryCode">
+                            <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                            <optgroup label="Other countries">
+                              <% countryCode.forEach(function(item) { %>
+                                <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                              <% }) %>
+                            </optgroup>
+                          </select>
+                        </div>
+                        <div class="col-md-6">
+                          <input type="text" id="mobile" name="mobile" class="form-control" required="" placeholder="Mobile">
+                        </div>
+                      </div>
+                      <span class="form-bar"></span>
+                    </div>
+                    <!-- <div class="form-group form-primary">
+                      <select id="typeUser" type="text" class="form-control">
+                        <option>I am an employee</option>
+                      </select>
+                    </div> -->
+                    <button id="jsNextStep1" type="button"
+                      class="btn btn-primary btn-md btn-step my-3">NEXT</button>
+                      
+                  </fieldset>
+                  <!-- fieldsets 2 -->
+                  <fieldset id="step2">
+                  </fieldset>
+                  <!-- fieldsets 3 -->
+                  <fieldset id="step3">
+                  </fieldset>
+                  <!--fieldsets 4 -->
+                  <fieldset id="step4">
+                    <h3>Choose System</h3>
+                    <div class="system-list"></div>
+                    <button type="button"
+                      class="btn btn-default btn-md btn-step my-3 mx-2 ml-0 jsBackStep">BACK</button>
+                    <button
+                      type="button"
+                      class="btn btn-primary btn-md btn-step my-3"
+                      id="jsNextStep4" disabled>SELECT
+                    </button>
+                  </fieldset>
+                  <fieldset id="step5">
+                    <div class="info-company">
+                    </div>
+                    <!-- none group -->
+                    <div hidden class="input-company">
+                      <h3 class="text-center py-2">Enter your company details</h3>
+                      <div class="form-group form-primary text-left">
+                        <input type="text" name="companyName" class="form-control" placeholder="Company Name">
+                        <span id="companyNameValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide company name.</span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="number" name="ABN" class="form-control"  placeholder="ABN">
+                        <span class="form-bar"></span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="email" name="companyEmail" class="form-control" placeholder="Company Email">
+                        <span id="companyEmailValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Company email is not valid.</span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <select class="form-control" name="companyCountryCode" id="companyCountryCode">
+                              <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                              <optgroup label="Other countries">
+                                <% countryCode.forEach(function(item) { %>
+                                  <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                                <% }) %>
+                              </optgroup>
+                            </select>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="number" name="companyPhone" class="form-control" placeholder="Company Phone">
+                          </div>
+                        </div>
+                        <span class="form-bar"></span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="text" name="companyAddress" class="form-control" placeholder="Address">
+                        <span class="form-bar"></span>
+                      </div>
+                      <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                      <button type="button" id="submitCompanyInfo" class="btn btn-primary btn-md btn-step my-3">Submit</button>
+                    </div>
+                    <!-- end none  -->
+                    <!-- Astute -->
+                    <div hidden class="as-company">
+                      <div class="astute-logo">
+                        <img src="../../web-files/assets/images/astute_logo.png" alt="log-astute">
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="text" name="apiKey" class="form-control" placeholder="API Key">
+                        <span id="apiKeyValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Key.</span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="text" name="apiUserName" class="form-control" placeholder="API Username">
+                        <span id="apiUserNameValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Username.</span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="text" name="apiPassword" class="form-control" placeholder="API Password">
+                        <span id="apiPasswordValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Password.</span>
+                      </div>
+                      <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                      <button type="button" id="submitAstuteInfo" class="btn btn-primary btn-md btn-step my-3">Submit</button>
+                    </div>
+                    <!-- end  -->
+                    <!-- HR3 -->
+                    <div hidden class="as-company-hr3">
+                      <div class="hr3-logo">
+                        <img src="../../web-files/assets/images/logo-hr3.jpg" alt="log-HR3">
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="text" name="userNameHR3" class="form-control" placeholder="Email / Username">
+                        <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Email/Username.</span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="password" name="passwordHR3" class="form-control" placeholder="Password">
+                        <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Password.</span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <input type="text" name="apiKeyRH3" class="form-control" placeholder="API Key">
+                        <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Key.</span>
+                      </div>
+                      <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                      <button type="button" id="submitHR3Info" class="btn btn-primary btn-md btn-step my-3">Submit</button>
+                    </div>
+                    <!-- End HR3 -->
+                  </fieldset>
+                  <!-- fieldsets finish -->
+                  <fieldset>
+                    <h3>Completed for company</h3>
+                    <div class="info-company-register"></div>
+                    <!-- <h6 style="margin-top: 100px; line-height: 24px;">An Email with your password has been sent to your mail 
+                      <br>Please use this to login to CashD to finalise your registration
+                    </h6>
+                    <div>
+                      <img src="/web-images/ic_submit_email_success.9.png" alt="img_mail" width="200">
+                    </div>
+                    <div>
+                      <button class="btn btn-default btn-redirect-login" style="width: 50%">OK</button>
+                    </div> -->
+                  </fieldset>
+                </form>  
+              </div>
+            </div>
+          </section> 
+          <!-- End Multi step form -->  
+        </div>
+      </div>
+    </div>   
+  </section>
+  <!-- Warning Section Starts -->
+  <!-- Modal company list-->
+  <div id="jsChooseCompany" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="position: relative;">
+        <div class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title">Choose Company</h5>
+      </div>
+        <div class="modal-body modal-body--custom modal-chooseCompany">
+          <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+        </div>
+        <div class="modal-footer--custom">
+          <button class="btn modal-footer-button" id="jsSelectCompany" disabled>
+            SELECT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal user list-->
+  <div id="jsChooseUser" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="position: relative;">
+        <div class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title">Choose Users</h5>
+        </div>
+        <div class="modal-body modal-body--custom modal-chooseUser">
+          <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+        </div>
+        <div class="modal-footer--custom">
+          <button class="btn modal-footer-button" id="jsSelectUser" disabled>
+            SELECT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal notification -->
+  <div id="jsShowNotify" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div style="height: 60px;" class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title"></h5>
+        </div>
+        <div class="modal-body modal-body">
+          <p>This screen displays the list of employees in company <strong class="notify-company-name"></strong>. 
+            Employees need to be invited to use CashD. 
+            You may invite employees to use CashD now, or later in the Network module of the App. 
+            Invitations are sent to the email setup in <span class="notify-system-name"></span> 
+            To proceed without sending invitations, click Got It.</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a class="btn btn-primary px-5 btn-gotIt" style="color: #fff">Got It</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal show Invitation Resent -->
+  <div id="jsShowInvitation" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-header--custom">
+            <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+            <h5 style="color: #fff;" class="modal-title">Invitation Link</h5>
+          </div>
+        </div>
+        <div class="modal-body modal-body">
+          <p style="text-align: left;">Your activation link has been sent by mail. <br/>Please check your company email. 
+            <br/>If you do not receive an email, please contact us at: info@cashd.com.au</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a href="/" class="btn btn-primary px-5 btn-gotIt" style="color: #fff">Go to Login</a>
+          <a class="btn btn-secondary px-5 btn-goBack" style="color: #fff">Go Back</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal show support -->
+  <div id="jsShowErrInvitation" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title">Support</h5>
+        </div>
+        <div class="modal-body modal-body">
+          <p style="text-align: justify;">CashD does not recognise you, please contact CashD support (support@cashd.com.au) or contact your employer and request access. 
+            Your employer may not be registered yet.</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a class="btn btn-secondary px-5 btn-goBack" style="color: #fff">Go Back</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <script type="text/javascript" src="../../web-files/bower_components/jwt-decode/jwt-decode.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../../web-files/assets/pages/auth/signup.js"></script>
+
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+</body>
+
+</html>

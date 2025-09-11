@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <% include ../layouts/stylesheet %>
+    <link rel="stylesheet" type="text/css" href="/../../web-files/assets/css/lender-style.css">
+    <link rel="stylesheet"
+        href="/../../web-files/assets/css/bootstrap-select.min.css">
+</head>
+
+<body>
+    <% include ../layouts/preloader %>
+    <div id="jsLoader">
+        <div style="top: 40%; left: 0px;" class="loader">
+            <div class="loader-chiled"></div>
+        </div>
+    </div>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <% include ../layouts/navbar %>
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <% include ../layouts/leftbar %>
+                    <!-- Toast -->
+                    <div id='jsErr' class="toast-err">
+                        <p>Connection timeout.</p>
+                        <div class="relative w-full sm:w-1/2 bg-gray-200">
+                            <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+                        </div>
+                    </div>
+                    <!--End Toast-->
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page body start -->
+                                    <div class="page-body">
+                                        <div class="card">
+                                            <div class="card-block">
+                                                <input id="jsToken" hidden value="<%= csrfToken %>">
+                                                <input name="lenderSupper" hidden value="<%= JSON.stringify(lenderSupper) %>">
+                                                <input type="text" hidden name="key" value="<%= key %>">
+                                                <!--  -->
+                                                <section class="multi_step_form mt-4">
+                                                    <div class="auth-box">
+                                                        <div>
+                                                            <h4 class="text-center">Create a new Lender</h4>
+                                                            <div class="row">
+                                                                <div class="col-sm-2"></div>
+                                                                <div class="col-sm-8">
+                                                                    <form id="jsValidationLenderName" class="mt-3">
+                                                                        <div class="form-group row">
+                                                                            <label for="inputLenderName"
+                                                                                class="col-sm-3 col-form-label">Lender
+                                                                                Name</label>
+                                                                            <div class="col-sm-9">
+                                                                                <input type="text" class="form-control"
+                                                                                    id="inputLenderName"
+                                                                                    placeholder="Lender name" required>
+                                                                                    <div class="invalid-feedback">
+                                                                                        Please provide a lender name.
+                                                                                    </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="inputAccountType"
+                                                                                class="col-sm-3 col-form-label">Monoova
+                                                                                Account
+                                                                                Type</label>
+                                                                            <div class="col-sm-9">
+                                                                                <select
+                                                                                    class="form-control selectpicker"
+                                                                                    name="inputAccountType"
+                                                                                    id="inputAccountType" required>
+                                                                                    <% lenderSupper.forEach((lender) => { %>
+                                                                                        <option data-cashd="<%= lender.is_cashd %>" value="<%= lender._id %>"><%= lender.lender_name %></option>
+                                                                                    <% }) %>
+                                                                                    <option data-cashd="false" value="null">New
+                                                                                        Account
+                                                                                    </option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <label for="inputFundingType"
+                                                                                class="col-sm-3 col-form-label">Funding
+                                                                                Type</label>
+                                                                            <div class="col-sm-9">
+                                                                                <select
+                                                                                    class="selectpicker form-control"
+                                                                                    name="inputFundingType"
+                                                                                    id="inputFundingType" required>
+                                                                                    <option value="SELF_FINANCED">Self
+                                                                                        Funded
+                                                                                    </option>
+                                                                                    <option value="EXTERNAL_FINANCED">
+                                                                                        External
+                                                                                        Funded</option>
+                                                                                    <option value="CASHD_FINANCED">CashD Funded</option>
+                                                                                    <option value="SELF_CASHD_FINANCED">Self & CashD Funded</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group row">
+                                                                            <div class="col-sm-12 text-center">
+                                                                                <button id="jsNext" type="button"
+                                                                                    class="btn btn-primary btn-md btn-step my-3">NEXT</button>
+                                                                            </div>
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                                <div class="col-sm-2"></div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="jsShowStep" class="mt-4">
+                                                            <div class="row m-b-20">
+                                                                <div class="col-md-12">
+                                                                    <h5 id="jsTitle" class="text-center">
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
+                                                            <form id="msform">
+                                                                <!-- progressbar -->
+                                                                <ul class="progressbar" id="progressbar">
+                                                                    <li class="active">Step 1</li>
+                                                                    <li>Step 2</li>
+                                                                    <li>Step 3</li>
+                                                                </ul>
+                                                                <!-- fieldsets 1 -->
+                                                                <fieldset id="jsBankAccount">
+                                                                    <h3 class="text-center py-2">Bank Account
+                                                                        (Automatcher)</h3>
+
+                                                                    <h5 class="text-left mt-2">Live Mode</h5>
+                                                                    <div class="form-group row mt-3">
+                                                                        <label for="inputAccountNameLive"
+                                                                            class="col-sm-3 col-form-label text-left">Account
+                                                                            Name</label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputAccountNameLive"
+                                                                                placeholder="Account name" required>
+                                                                                <div class="text-left invalid-feedback">
+                                                                                    Please provide a account name.
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputAccountNumberLive"
+                                                                            class="col-sm-3 col-form-label text-left">Account
+                                                                            Number</label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputAccountNumberLive"
+                                                                                placeholder="Account number" required>
+                                                                                <div class="text-left invalid-feedback">
+                                                                                    Please provide a account number.
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputBSBLive"
+                                                                            class="col-sm-3 col-form-label text-left">BSB <span style="color: #acacac; font-size: 14px;">(ex.XXX-XXX)</span></label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputBSBLive" placeholder="BSB" maxlength="7" required>
+                                                                            <div id="jsShowValidateLive" class="text-left invalid-feedback">
+                                                                                Please provide a bsb.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <h5 class="text-left mt-5">Test Mode</h5>
+                                                                    <div class="form-group row mt-3">
+                                                                        <label for="inputAccountNameTest"
+                                                                            class="col-sm-3 col-form-label text-left">Account
+                                                                            Name</label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputAccountNameTest"
+                                                                                placeholder="Account name" required>
+                                                                            <div class="text-left invalid-feedback">
+                                                                                Please provide a account name.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputAccountNumberTest"
+                                                                            class="col-sm-3 col-form-label text-left">Account
+                                                                            Number</label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputAccountNumberTest"
+                                                                                placeholder="Account number" required>
+                                                                            <div class="text-left invalid-feedback">
+                                                                                Please provide a account number.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputBSBTest"
+                                                                            class="col-sm-3 col-form-label text-left">BSB <span style="color: #acacac; font-size: 14px;">(ex.XXX-XXX)</span></label>
+                                                                        <div class="col-sm-9">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputBSBTest" placeholder="BSB" maxlength="7" required>
+                                                                            <div id="jsShowValidateTest" class="text-left invalid-feedback">
+                                                                                Please provide a bsb.
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="form-group row">
+                                                                        <div class="col-sm-12">
+                                                                            <button type="button"
+                                                                                class="btn btn-default btn-md btn-step my-3 mx-2"
+                                                                                id="jsBack">BACK</button>
+                                                                            <button id="jsSubmitMonoova" type="button"
+                                                                                class="btn btn-primary btn-md btn-step my-3">NEXT</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <!-- end fieldsets 1 -->
+                                                                <!-- fieldsets 2 -->
+                                                                <fieldset id="jsMonoovaConfig">
+                                                                    <h3 class="text-center py-2">MonoovaConfig</h3>
+                                                                    <h5 class="text-left py-2">Live Mode</h5>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputLiveMonoovaAccount"
+                                                                            class="col-sm-4 col-form-label pl-5 text-left">Monoova
+                                                                            Account Number</label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputLiveMonoovaAccount"
+                                                                                placeholder="Monoova account number">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputLiveMonoovaFeeAccount"
+                                                                            class="col-sm-4 col-form-label pl-5 text-left">Monoova
+                                                                            Fee Account Number</label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputLiveMonoovaFeeAccount"
+                                                                                placeholder="Monoova fee account number">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputLiveApiKey"
+                                                                            class="col-sm-4 col-form-label pl-5 text-left">ApiKey</label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputLiveApiKey" placeholder="Api key">
+                                                                        </div>
+                                                                    </div>
+                                                                    <h5 class="text-left py-2">Test Mode</h5>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputTestMonoovaAccount"
+                                                                            class="col-sm-4 col-form-label pl-5 text-left">Monoova
+                                                                            Account Number</label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputTestMonoovaAccount"
+                                                                                placeholder="Monoova account number" required>
+                                                                                <div class="text-left invalid-feedback">
+                                                                                    Please provide a monoova account number.
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputTestApiKey"
+                                                                            class="col-sm-4 col-form-label pl-5 text-left">ApiKey</label>
+                                                                        <div class="col-sm-8">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputTestApiKey" placeholder="Api key" required>
+                                                                                <div class="text-left invalid-feedback">
+                                                                                    Please provide a api key.
+                                                                                </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <div class="col-sm-12">
+                                                                            <button type="button"
+                                                                                class="btn btn-default btn-md btn-step my-3 mx-2 jsBackStep">BACK</button>
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md btn-step my-3"
+                                                                                id="jsNextCommission">NEXT
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <!-- end fieldsets 2 -->
+                                                                <!-- fieldsets 3 -->
+                                                                <fieldset id="jsCommission">
+                                                                    <h3 class="text-center py-2">Commission Rule</h3>
+                                                                    <div class="form-group row">
+                                                                        <label for="inputInterest"
+                                                                            class="col-sm-4 col-form-label text-left">Commission
+                                                                            / interest</label>
+                                                                        <div class="col-sm-8 custom-form">
+                                                                            <div id="jsValidateInter" style="width: 75%;">
+                                                                                <input type="number" class="form-control"
+                                                                                id="inputInterest"
+                                                                                placeholder="Commission or interest" min="0" required>
+                                                                                <div class="text-left invalid-feedback">
+                                                                                    Commission or interest has a minimum value of 0. 
+                                                                                </div>
+                                                                            </div>
+                                                                            <select id="unit"
+                                                                                class="form-control ml-2 selectpicker"
+                                                                                name="unit">
+                                                                                <option value="DOLLAR">$
+                                                                                </option>
+                                                                                <option value="PERCENT">%
+                                                                                </option>
+                                                                            </select>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- <div class="form-group row">
+                                                                        <label for="inputMonoovaBalance"
+                                                                            class="col-sm-4 col-form-label text-left">Monoova
+                                                                            Balance</label>
+                                                                        <div class="col-sm-8 custom-form">
+                                                                            <input type="text" class="form-control"
+                                                                                id="inputMonoovaBalance"
+                                                                                placeholder="Monoova balance">
+                                                                            <button type="button"
+                                                                                class="form-control ml-2"><i
+                                                                                    class="icofont icofont-spinner-alt-3"></i></button>
+                                                                        </div>
+                                                                    </div> -->
+                                                                    <div class="form-group row">
+                                                                        <label
+                                                                            class="col-sm-4 col-form-label text-left">Commission
+                                                                            Rule</label>
+                                                                        <div class="col-sm-8 text-left">
+                                                                            ((transaction X Rate)/1.11 -
+                                                                            $1.80)/2
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="form-group row">
+                                                                        <div class="col-sm-12">
+                                                                            <button type="button"
+                                                                                class="btn btn-default btn-md btn-step my-3 mx-2 jsBackStep">BACK</button>
+                                                                            <button type="button"
+                                                                                class="btn btn-primary btn-md btn-step my-3"
+                                                                                id="jsNextSubmit">SUBMIT
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
+                                                                </fieldset>
+                                                                <!-- end fieldsets 3 -->
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </section>
+                                                <!--  -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../layouts/script %>
+    <script type="text/javascript" src="/../../web-files/bower_components/crypto-js/crypto-js.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script type="text/javascript" src="/../../web-files/assets/js/bootstrap-select.min.js"></script>
+    <!-- Custom js -->
+    <script type="text/javascript" src="../../web-files/assets/pages/lender/lender.js"></script>
+</body>

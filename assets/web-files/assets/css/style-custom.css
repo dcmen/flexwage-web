@@ -1,0 +1,295 @@
+.form-group-input {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.form-group-input input {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+}
+
+.form-group-input label {
+    position: relative;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.form-group-input label:before {
+    content: '';
+    -webkit-appearance: none;
+    background-color: transparent;
+    border: 2px solid #000f17;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    margin-right: 10px;
+}
+
+.form-group-input input:checked + label:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 4px;
+    left: 9px;
+    width: 6px;
+    height: 14px;
+    border: solid #000f17;;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.content-self-live, .content-self-test {
+    margin-left: 40px;
+}
+
+.content-self-title {
+    font-size: 16px;
+}
+
+#jsSelfDiv {
+    display: none;
+}
+
+.active {
+    display: block !important;
+}
+
+.GL-full {
+    display: none;
+}
+
+.hide {
+    display: none !important;
+}
+
+.show {
+    display: block !important;
+}
+
+.GL-header {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#jsSearchGL, #jsSearchDeduction {
+    width: 30%;
+}
+
+.btn-back {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.text--color {
+    color: rgb(121, 122, 122);
+}
+
+.form-control--height {
+    height: 30px !important;
+    padding: 4px 5px 5px 5px;
+    display: inline-block;
+    width: auto;
+}
+
+.filter-pay {
+    width: 35%;
+}
+
+.progress {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(247, 247, 247, 0);
+    border-radius: 50%;
+    border: 4px solid rgb(255, 2, 2);
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+      display: flex;
+      justify-content: center;
+      align-items: center; 
+    color: rgb(255, 2, 2);
+    font-size: 17px;
+    font-weight: 600;
+  }
+
+.modal-show-run {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 30px;
+}
+
+.modal-show-run:last-child {
+    padding-right: 0px;
+    justify-content: space-between;
+}
+
+.modal-show-run-text {
+    text-align: left;
+}
+
+.modal-show-run p {
+    font-weight: 600;
+}
+
+.modal-show-run p:first-child {
+    color: rgb(255, 4, 4);
+    padding-bottom: 3px;
+}
+
+.modal-show-run p:last-child {
+    color: rgb(2 193 28);
+}
+
+.modal-deduction {
+    position: fixed;
+    bottom: -130px;
+    right: 10px;
+    z-index: 100;
+    width: 320px;
+    height: 130px;
+    background-color: #fff;
+    border-radius: 10px;
+    border: 4px solid #a9a9a9;
+    padding: 10px 15px;
+    transition: all 1s;
+}
+
+.show-run-deduction {
+    bottom: 10px;
+}
+
+.text-center span.jsDateRunDeduction {
+    color: #adabab;
+}
+
+.iziModal-content {
+    padding: 0 !important;
+}
+
+.payroll-name {
+    position: absolute;
+    right: 30px;
+    top: 0;
+    font-size: 1.1rem !important;
+    color: rgb(0, 45, 170) !important;
+    font-weight: 600;
+}
+.none-hover {
+    border: none;
+    cursor: default;
+}
+.none-hover:hover {
+    background-color: inherit;
+    border-color: #ffc107;
+}
+.tooltip-inner {text-align: left; max-width: 350px;}
+.signature-pad--actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.signature-pad--body {
+    border: 1px solid #000;
+    margin-bottom: 5px;
+    width: 468px;
+}
+
+.tooltip-inner {text-align: left; max-width: 350px;}
+
+#bankSetupDiv .card-header h5 {
+    font-size: 17px !important;
+}
+
+div#listEmployeesNotMatched_paginate {
+    float: left;
+}
+
+.lds-ring {
+    display: inline-block;
+    position: relative;
+    width: 30px;
+    height: 30px;
+  }
+  .lds-ring div {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    margin: 2px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: #fff transparent transparent transparent;
+  }
+  .lds-ring div:nth-child(1) {
+    animation-delay: -0.45s;
+  }
+  .lds-ring div:nth-child(2) {
+    animation-delay: -0.3s;
+  }
+  .lds-ring div:nth-child(3) {
+    animation-delay: -0.15s;
+  }
+  @keyframes lds-ring {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .icon-container {
+    position: absolute;
+    right: 23px;
+    top: calc(50% - 8px);
+  }
+  .loader-input {
+    position: relative;
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    animation: around 5.4s infinite;
+  }
+  
+  @keyframes around {
+    0% {
+      transform: rotate(0deg)
+    }
+    100% {
+      transform: rotate(360deg)
+    }
+  }
+  
+  .loader-input::after, .loader-input::before {
+    content: "";
+    background: inherit;
+    position: absolute;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    border-width: 2px;
+    border-color: #333 #333 transparent transparent;
+    border-style: solid;
+    border-radius: 20px;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    animation: around 0.7s ease-in-out infinite;
+  }
+  
+  .loader-input::after {
+    animation: around 0.7s ease-in-out 0.1s infinite;
+    background: transparent;
+  }

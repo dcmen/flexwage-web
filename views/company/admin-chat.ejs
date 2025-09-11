@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <!--[if lt IE 10]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css"/>
+    <link href="/../../web-files/assets/css/custom-chat.css" rel="stylesheet"/>
+</head>
+<body class="chats-tab-open">
+<!-- Main Layout Start -->
+<div class="main-layout">
+    <!-- Sidebar Start -->
+    <aside class="sidebar">
+        <!-- Tab Content Start -->
+        <div class="tab-content">
+            <!-- Chat Tab Content Start -->
+            <div class="tab-pane active" id="chats-content">
+                <div class="d-flex flex-column h-100">
+                    <div class="hide-scrollbar h-100" id="chatContactsList">
+                        <!-- Chat Header Start -->
+                        <div class="sidebar-header sticky-top p-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <!-- Chat Tab Pane Title Start -->
+                                <h5 class="font-weight-semibold mb-0">Chats</h5>
+                                <!-- Chat Tab Pane Title End -->
+                            </div>
+                        </div>
+                        <!-- Chat Header End -->
+                        <!-- Chat Contact List Start -->
+                        <ul class="contacts-list" id="chatContactTab" data-chat-list=""></ul>
+                        <!-- Chat Contact List End -->
+                    </div>
+                </div>
+            </div>
+            <!-- Chats Tab Content End -->
+        </div>
+        <!-- Tab Content End -->
+    </aside>
+    <!-- Sidebar End -->
+    <!-- Main Start -->
+    <main class="main main-visible">
+        <!-- Chats Page Start -->
+        <div class="chats">
+            <div class="chat-body">
+                <!-- Chat Header Start-->
+                <div class="chat-header">
+                    <!-- Chat Back Button (Visible only in Small Devices) -->
+                    <button class="btn btn-secondary btn-icon btn-minimal btn-sm text-muted d-xl-none" type="button" data-close="">
+                        <!-- Default :: Inline SVG -->
+                        <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                        </svg>
+                    </button>
+                    <!-- Chat participant's Name -->
+                    <div class="media chat-name align-items-center text-truncate">
+                        <div class="avatar avatar-online d-none d-sm-inline-block mr-3">
+                            <img src="<%= staff.user && staff.user.avatar_path ? url + staff.user.avatar_path : '/../../web-images/4.png' %>" alt="<%= staff.fullname %>" />
+                        </div>
+                        <div class="media-body align-self-center">
+                            <h6 class="text-truncate mb-0"><%= staff.fullname %></h6>
+                        </div>
+                    </div>
+                    <!-- Chat Options -->
+                    <ul class="nav flex-nowrap">
+                        <li class="nav-item list-inline-item d-none d-sm-block mr-0">
+                            <div class="dropdown">
+                                <a class="nav-link text-muted px-1" href="#" role="button" title="Details" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <!-- Default :: Inline SVG -->
+                                    <svg class="hw-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                stroke-width="2"
+                                                d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                        />
+                                    </svg>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right">
+                                    <a
+                                            class="dropdown-item align-items-center d-flex text-danger"
+                                            data-toggle="modal"
+                                            data-target="#remove-conversation"
+                                            href="javascript:void(0)"
+                                            onclick="removeConversation('<%= staff._id %>', '<%= sender.company._id %>');"
+                                    >
+                                        <!-- Default :: Inline SVG -->
+                                        <svg class="hw-20 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path
+                                                    stroke-linecap="round"
+                                                    stroke-linejoin="round"
+                                                    stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                            />
+                                        </svg>
+                                        <span>Delete</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <!-- Chat Header End-->
+                <!-- Chat Content Start-->
+                <div class="chat-content p-2" id="messageBody">
+                    <div class="container">
+                        <!-- Message Day Start -->
+                        <div class="message-day"></div>
+                        <!-- Message Day End -->
+                    </div>
+                    <!-- Scroll to finish -->
+                    <div class="chat-finished" id="chat-finished"></div>
+                </div>
+                <!-- Chat Content End-->
+                <!-- Chat Footer Start-->
+                <div class="chat-footer">
+                    <textarea class="form-control emojionearea-form-control" id="messageInput" rows="1" placeholder="Type your message here..."></textarea>
+                    <div class="btn btn-primary btn-icon send-icon rounded-circle text-light mb-1" role="button" id="btnSendMessage">
+                        <svg class="hw-24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                        </svg>
+                    </div>
+                </div>
+                <!-- Chat Footer End-->
+            </div>
+        </div>
+        <!-- Chats Page End -->
+    </main>
+    <!-- Main End -->
+    <div class="backdrop"></div>
+    <div class="modal fade" id="remove-conversation" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <h5>Are you sure you want to delete this conversation ?</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">No</button>
+                    <button type="button" class="btn btn-primary waves-effect waves-light" id="btnYes">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- All Modals End -->
+</div>
+<!-- Main Layout End -->
+<script type="text/javascript" src="/../../web-files/bower_components/jquery/js/jquery.min.js"></script>
+<script type="text/javascript" src="/../../web-files/bower_components/popper.js/js/popper.min.js"></script>
+<script type="text/javascript" src="/../../web-files/bower_components/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/../../web-files/assets/js/moment.min.js"></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+   https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-messaging.js"></script>
+<script type="text/javascript">
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyB6LlVaiqII1pPnRRA8QyQaPCSwHlp2O_U",
+        authDomain: "cashd-324d3.firebaseapp.com",
+        databaseURL: "https://cashd-324d3.firebaseio.com",
+        projectId: "cashd-324d3",
+        storageBucket: "cashd-324d3.appspot.com",
+        messagingSenderId: "208800833949",
+        appId: "1:208800833949:web:af744fb1ac23b3f7b98f74",
+        measurementId: "G-YRBM4VC4VV"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    //firebase.analytics();
+    const db = firebase.database();
+
+    $(document).ready(function () {
+        // Update lastMessage
+        updateReadMessage();
+
+        checkConversationHaveMessage();
+
+        // Render all conversation in company
+        renderListConversation();
+
+        // Render all message when init
+        renderMessage();
+
+        // Get last message
+        getLastMessage();
+
+        // Render new message when have change
+        <!--listenNewMessage(<%- JSON.stringify(sender) %>, <%- JSON.stringify(staff) %>, '<%= sender.company._id %>');-->
+
+        // Toggle chat
+        $('[data-close]').on('click', function (e) {
+            e.preventDefault()
+            $(".main").removeClass("main-visible");
+        });
+    });
+
+    $('#messageInput').on('keypress', function(e) {
+        var keyCode = e.keyCode || e.which;
+        if (keyCode === 13) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    $('#btnSendMessage').dblclick(function(e) {
+        e.preventDefault();
+        alert('Message has being sent. Please wait!');
+    });
+
+    $('#btnSendMessage').click(function(e) {
+        e.preventDefault();
+        sendMessage();
+    });
+
+    const messaging = firebase.messaging();
+
+    async function sendMessage() {
+        let message = document.getElementById("messageInput").value;
+        if (!message) {
+            alert("You must enter content");
+        } else {
+            let token = await messaging.getToken();
+            if (!token) {
+                messaging.requestPermission()
+                    .then(async function () {
+                        console.log("Notification permission granted.");
+                        // get the token in the form of promise
+                        return messaging.getToken()
+                    })
+                    .then(async function (token) {
+                        let messageForSender = await saveMessage(token, <%- JSON.stringify(sender) %>, <%- JSON.stringify(staff) %>, '<%= sender.company._id %>');
+                        // Save for receiver
+                        await saveMessageForAdmin('', <%- JSON.stringify(staff) %>, <%- JSON.stringify(sender) %>, '<%= sender.company._id %>');
+
+                        document.getElementsByClassName("message-day")[0].innerHTML += messageForSender;
+                    })
+                    .catch(async function (err) {
+                        console.log("Unable to get permission to notify.", err);
+                    });
+            } else {
+                let messageForSender = await saveMessage(token, <%- JSON.stringify(sender) %>, <%- JSON.stringify(staff) %>, '<%= sender.company._id %>');
+                // Save for receiver
+                await saveMessageForAdmin('', <%- JSON.stringify(staff) %>, <%- JSON.stringify(sender) %>, '<%= sender.company._id %>');
+
+                document.getElementsByClassName("message-day")[0].innerHTML += messageForSender;
+            }
+
+            // Scroll to end of chat
+            document.getElementById('chat-finished').scrollIntoView({
+                block: 'end',               // "start" | "center" | "end" | "nearest",
+                behavior: 'smooth'          //"auto"  | "instant" | "smooth",
+            });
+
+            // Reset message
+            document.getElementById("messageInput").value = "";
+
+            return;
+        }
+    }
+
+    messaging.onMessage(function (payload) {
+        renderMessage();
+        // var notify;
+        // notify = new Notification(payload.notification.title, {
+        //     body: payload.notification.body,
+        //     icon: payload.notification.icon,
+        //     tag: "Dummy"
+        // });
+    });
+
+    function listenNewMessage(sender, receiver, companyId) {
+        db.ref("users-droid")
+            .child(companyId)
+            .child(sender._id)
+            .child("messages")
+            .child(`s-${receiver._id}`).on('child_added', function (data) {
+            if (data.val()) {
+                renderMessage();
+                getLastMessage();
+            }
+        });
+    }
+
+    self.addEventListener('notificationclick', function (event) {
+        event.notification.close();
+    });
+
+    async function checkConversationHaveMessage() {
+        let currentUser = <%- JSON.stringify(user) %>;
+        if (!currentUser.is_admin) currentUser = <%- JSON.stringify(sender) %>;
+        const staffUser = <%- JSON.stringify(staff) %>;
+        let messages = await db.ref()
+            .child("users-droid")
+            .child(`${currentUser.company_id ? currentUser.company_id : staffUser.company._id}`)
+            .child(`${currentUser.is_admin ? `s-${currentUser._id}` : currentUser._id}`)
+            .get();
+
+        let conversations;
+        if (!messages.val()) {
+            let url = `/admin/conversations/${staffUser.company._id}`;
+            if (!currentUser.is_admin && staffUser.is_admin) {
+                url = `/admin/s-conversations/${currentUser.company._id}/${staffUser._id}`;
+            }
+            conversations = `<li class="contacts-item friends active">
+                                   <a class="contacts-link" href="${url}">
+                                     <div class="avatar avatar-online">
+                                       <img
+                                         src="${staffUser.avatar_path ? staffUser.avatar_path : staffUser.avatar ? staffUser.avatar : '/../../web-images/4.png'}"
+                                         alt="${staffUser.name}"
+                                       />
+                                     </div>
+                                     <div class="contacts-content">
+                                       <div class="contacts-info">
+                                         <h6 class="chat-name">${staffUser.fullname}</h6>
+                                       </div>
+                                     </div>
+                                   </a>
+                                 </li>`;
+
+            document.getElementsByClassName("contacts-list")[0].innerHTML += conversations;
+        } else {
+            let conversationData = messages.val();
+            let idConversation = staffUser.is_admin ? `s-${staffUser._id}` : staffUser._id;
+            $.get(`/admin/con-get-avatar/${staffUser._id}`, function (data) {
+                if (data) {
+                    if (conversationData.conversations[idConversation]) {
+                        conversations = `<li class="contacts-item friends active">
+                                                                   <a class="contacts-link" href="/admin/conversations/${idConversation}">
+                                                                     <div class="avatar avatar-online">
+                                                                       <img
+                                                                         src="${data.avatar_path ? `https://api.cashd.co:4002/${data.avatar_path}` : data.avatar ? `https://api.cashd.co:4002/${data.avatar}` : '/../../web-images/4.png'}"
+                                                                         alt="${conversationData.conversations[idConversation].name}"
+                                                                       />
+                                                                     </div>
+                                                                     <div class="contacts-content">
+                                                                       <div class="contacts-info">
+                                                                         <h6 class="chat-name">${conversationData.conversations[idConversation].name}</h6>
+                                                                         <div class="chat-time">${moment(Math.abs(conversationData.conversations[idConversation].lastTime)).local().format('h:mm A')}</div>
+                                                                       </div>
+                                                                       <div class="contacts-texts">
+                                                                         <p class="text-truncate">${conversationData.conversations[idConversation].lastMessage}
+                                                                         </p>
+                                                                          ${conversationData.conversations[idConversation].newMessage > 0 ? '<div class="badge badge-rounded badge-primary ml-1">'
+                            + conversationData.conversations[idConversation].newMessage +
+                            '</div>' : ''}
+                                                                       </div>
+                                                                     </div>
+                                                                   </a>
+                                                                 </li>`;
+                    } else {
+                        let url = `/admin/conversations/${staffUser.company._id}`;
+                        if (!currentUser.is_admin && staffUser.is_admin) {
+                            url = `/admin/s-conversations/${currentUser.company._id}/${staffUser._id}`;
+                        }
+                        conversations = `<li class="contacts-item friends active">
+                                               <a class="contacts-link" href="${url}">
+                                                 <div class="avatar avatar-online">
+                                                   <img
+                                                     src="${staffUser.avatar_path ? staffUser.avatar_path : staffUser.avatar ? staffUser.avatar : '/../../web-images/4.png'}"
+                                                     alt="${staffUser.name}"
+                                                   />
+                                                 </div>
+                                                 <div class="contacts-content">
+                                                   <div class="contacts-info">
+                                                     <h6 class="chat-name">${staffUser.fullname}</h6>
+                                                   </div>
+                                                 </div>
+                                               </a>
+                                             </li>`;
+                    }
+
+                    document.getElementsByClassName("contacts-list")[0].innerHTML += conversations;
+                }
+            });
+        }
+    }
+
+    async function renderListConversation() {
+        let currentStaff = <%- JSON.stringify(staff) %>;
+        let currentUser = <%- JSON.stringify(sender) %>;
+        let listConversation = await db.ref()
+            .child("users-droid")
+            .child(`${currentStaff.is_admin ? currentUser.company._id : currentStaff.company._id}`)
+            .child(currentUser._id)
+            .child("conversations")
+            .get();
+
+        let conversations = '';
+        listConversation = listConversation.val();
+        if (listConversation) {
+            Object.keys(listConversation).map(item => {
+                if (item !== `s-${currentStaff._id}`) {
+                    $.get(`/admin/con-get-avatar/${item.startsWith("s-") ? item.split("-")[1] : item}`, function (data) {
+                        let url = `/admin/conversations/${item.startsWith("s-") ? item.split("-")[1] : item}`;
+                        if (item === `s-${currentStaff._id}`) {
+                            url = `/admin/s-conversations/${currentUser.company._id}/${item.startsWith("s-") ? item.split("-")[1] : item}`;
+                        }
+                        conversations = `<li class="contacts-item friends ${item === currentStaff._id ? 'active' : 'unread'}">
+                                                  <a class="contacts-link" href="${url}">
+                                                    <div class="avatar avatar-online">
+                                                      <img
+                                                        src="${data.avatar_path ? `https://api.cashd.co:4002/${data.avatar_path}` : data.avatar ? `https://api.cashd.co:4002/${data.avatar}` : '/../../web-images/4.png'}"
+                                                        alt="${listConversation[item].name}"
+                                                      />
+                                                    </div>
+                                                    <div class="contacts-content">
+                                                      <div class="contacts-info">
+                                                        <h6 class="chat-name">${listConversation[item].name}</h6>
+                                                        <div class="chat-time">${moment(listConversation[item].createdAt).local().format('h:mm A')}</div>
+                                                      </div>
+                                                      <div class="contacts-texts">
+                                                        <p class="text-truncate">${listConversation[item].lastMessage}
+                                                        </p>
+                                                         ${listConversation[item].newMessage > 0 ? '<div class="badge badge-rounded badge-primary ml-1">'
+                            + listConversation[item].newMessage +
+                            '</div>' : ''}
+                                                      </div>
+                                                    </div>
+                                                  </a>
+                                                </li>`;
+                        document.getElementsByClassName("contacts-list")[0].innerHTML += conversations;
+                    });
+                }
+            });
+        }
+    }
+
+    async function updateReadMessage() {
+        let temp = await db.ref()
+            .child("users-droid")
+            .child("<%= sender.company._id %>")
+            .child("<%= sender._id %>")
+            .child("conversations")
+            .child("s-<%= staff._id %>")
+            .get();
+
+        if (temp.val()) {
+            db.ref()
+                .child("users-droid")
+                .child("<%= sender.company._id %>")
+                .child("<%= sender._id %>")
+                .child("conversations")
+                .child("s-<%= staff._id %>")
+                .update({
+                    newMessage: 0
+                });
+        }
+    }
+
+    async function renderMessage() {
+        let senderJson = <%- JSON.stringify(sender) %>;
+        let listSenderMessage = await db.ref()
+            .child("users-droid")
+            .child("<%= sender.company._id %>")
+            .child("<%= sender._id %>")
+            .child("messages")
+            .child("s-<%= staff._id %>")
+            .get();
+        listSenderMessage = listSenderMessage.val();
+
+        let senderMessage = [];
+        if (listSenderMessage) {
+            Object.keys(listSenderMessage).map(item => {
+                if (listSenderMessage[item].senderId === "<%= sender._id %>") {
+                    senderMessage.push(listSenderMessage[item]);
+                }
+            });
+
+            let listReceiverMessage = await db.ref()
+                .child("users-droid")
+                .child("<%= sender.company._id %>")
+                .child("s-<%= staff._id %>")
+                .child("messages")
+                .child("<%= sender._id %>")
+                .get();
+            listReceiverMessage = listReceiverMessage.val();
+            if (listReceiverMessage) {
+                let receiverMessage = [];
+                Object.keys(listReceiverMessage).map(item => {
+                    if (listReceiverMessage[item].senderId !== senderJson._id) {
+                        receiverMessage.push(listReceiverMessage[item]);
+                    }
+                });
+
+                let listMessages = [...senderMessage, ...receiverMessage];
+                // Merge 2 array message content and sort
+                listMessages.sort(function (a, b) {
+                    return a.time - b.time;
+                });
+
+                let content = "";
+                // Group message by date
+                let groups = {};
+                listMessages.forEach((message) => {
+                    const date = moment(message.time).format('DD/MM/YYYY');
+                    if (!groups[date]) {
+                        groups[date] = [message];
+                    } else {
+                        groups[date].push(message);
+                    }
+
+                    return groups;
+                });
+                let today = moment().startOf('day').format('DD/MM/YYYY');
+                let yesterday = moment().startOf('day').subtract(1, 'day').format('DD/MM/YYYY');
+                Object.keys(groups).map(item => {
+                    if (item === today) {
+                        content += `<div class="message-divider sticky-top pb-2" data-label="Today">&nbsp;</div>`;
+                    } else if (item === yesterday) {
+                        content += `<div class="message-divider sticky-top pb-2" data-label="Yesterday">&nbsp;</div>`;
+                    } else {
+                        content += `<div class="message-divider sticky-top pb-2" data-label="${item}">&nbsp;</div>`;
+                    }
+                    let newGroups = {};
+                    for (let i = 0; i < groups[item].length; i++) {
+                        let groupName = moment(groups[item][i].time).format('h:mm');
+                        if (!newGroups[groupName]) {
+                            newGroups[groupName] = [];
+                        }
+                        newGroups[groupName].push(groups[item][i]);
+                    }
+                    let myGroupArr = [];
+                    for (let groupName in newGroups) {
+                        if (newGroups[groupName].length > 1) myGroupArr.push({ group: newGroups[groupName] });
+                        else myGroupArr = [...myGroupArr, newGroups[groupName][0]];
+                    }
+                    myGroupArr.map((element) => {
+                        let senderId = senderJson.is_admin ? `s-${senderJson._id}` : senderJson._id;
+                        if (Object.keys(element)[0] === 'group') {
+                            element[Object.keys(element)[0]].map((item, index) => {
+                                if (item.senderId === senderId) {
+                                    content += `<div class="message self" style="margin-bottom: 0.5rem;">
+                                       <div class="message-wrapper">
+                                         ${ index !== 0 ? '' : `<div style="margin-right: 3.25rem; color: #adb5bd; font-size: .75rem;"><span>${moment(element.time).local().format('h:mm A')}</span></div>`}
+                                           <div class="message-content">
+                                               <span>${item.message}</span></div>
+                                       </div>
+                                 </div>`;
+                                } else {
+                                    content += `<div class="message">
+                                       <div class="message-wrapper">
+                                             ${ index !== 0 ? '' : `<div style="margin-left: 3.25rem; color: #adb5bd; font-size: .75rem;"><span>${moment(element.time).local().format('h:mm A')}</span></div>`}
+                                           <div class="message-content"><span>${item.message}</span>
+                                           </div>
+                                       </div>
+                                   </div>`;
+                                }
+                            })
+                        } else {
+                            if (element.senderId === senderId) {
+                                content += `<div class="message self" style="margin-bottom: 0.5rem;">
+                                       <div class="message-wrapper">
+                                         <div style="margin-right: 3.25rem; color: #adb5bd; font-size: .75rem;"><span>${moment(element.time).local().format('h:mm A')}</span></div>
+                                           <div class="message-content">
+                                               <span>${element.message}</span></div>
+                                       </div>
+                                 </div>`;
+                            } else {
+                                content += `<div class="message">
+                                       <div class="message-wrapper">
+                                            <div style="margin-left: 3.25rem; color: #adb5bd; font-size: .75rem;"><span>${moment(element.time).local().format('h:mm A')}</span></div>
+                                           <div class="message-content"><span>${element.message}</span>
+                                           </div>
+                                       </div>
+                                   </div>`;
+                            }
+                        }
+
+
+                        return content;
+                    });
+                });
+
+                document.getElementsByClassName("message-day")[0].innerHTML = content;
+            }
+        } else {
+            let noMessage = `<div class="d-flex flex-column justify-content-center text-center h-100 w-100">
+                                 <div class="container">
+                                 <h5>You have no messages!</h5>
+                         </div>
+                         </div>`;
+            document.getElementsByClassName("message-day")[0].innerHTML = noMessage;
+        }
+
+        // Scroll to end of chat
+        document.getElementById('chat-finished').scrollIntoView({
+            block: 'end',               // "start" | "center" | "end" | "nearest",
+            behavior: 'smooth'          //"auto"  | "instant" | "smooth",
+        });
+    }
+
+    async function saveMessage(token, sender, receiver, companyId) {
+        let message = document.getElementById("messageInput").value;
+        if (!message) {
+            return;
+        }
+        let information = {
+            "avatar": `https://api.cashd.co:4002/${sender.is_admin ? sender.avatar_path : sender.avatar}`,
+            "email": sender.email,
+            "fullName": sender.fullname,
+            "userId": sender._id
+        };
+        let conversations = {
+            "conversationId": `${receiver.is_admin ? `s-${receiver._id}` : receiver._id}`,
+            "createAt": Date.parse(new Date().toUTCString()),
+            "email": receiver.email,
+            "lastMessage": message,
+            "lastTime": Date.parse(new Date().toUTCString()),
+            "lastType": 0,
+            "name": receiver.fullname,
+            "newMessage": 1
+        };
+
+        // For information
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(sender._id)
+            .child("information")
+            .set(information);
+
+        // For conversations
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(sender._id)
+            .child("conversations")
+            .child(`${receiver.is_admin ? `s-${receiver._id}` : receiver._id}`)
+            .set(conversations);
+
+        if (token) {
+            // For instances
+            db.ref()
+                .child("users-droid")
+                .child(companyId)
+                .child(sender._id)
+                .child("instances")
+                .child(token)
+                .set({platform: "Web"});
+        }
+
+        // New message
+        let valueSnapshot = await db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(sender._id)
+            .child("messages")
+            .once("value");
+
+        if (valueSnapshot.val() === null) {
+            db.ref()
+                .child("users-droid")
+                .child(companyId)
+                .child(sender._id)
+                .child("messages")
+                .set({"new_messages": 1});
+        }
+
+
+        // For message
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(sender._id)
+            .child("messages")
+            .child(`${receiver.is_admin ? `s-${receiver._id}` : receiver._id}`)
+            .push({
+                "message": message,
+                "senderId": '<%= sender._id %>',
+                "status": false,
+                "time": Date.parse(new Date().toUTCString()),
+                "type": 0
+            });
+
+        // Get message when save success then append to html
+        let messageObject = {};
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(sender._id)
+            .child("messages")
+            .child(`${receiver.is_admin ? `s-${receiver._id}` : receiver._id}`)
+            .on("child_added", function (snapshot) {
+                messageObject = snapshot.val();
+            });
+
+        let recentMessage = `<div class="message self">
+                                       <div class="message-wrapper">
+         <div style="margin-right: 3.25rem; color: #adb5bd; font-size: .75rem;"><span>${moment(messageObject.time).local().format('h:mm A')}</span></div>
+                                           <div class="message-content">
+                                               <span>${messageObject.message}</span></div>
+                                       </div>
+
+                       </div>`;
+
+        return recentMessage;
+    }
+
+    async function saveMessageForAdmin(token, sender, receiver, companyId) {
+        let message = document.getElementById("messageInput").value;
+        let information = {
+            "avatar": "https://api.cashd.co:4002/web-images/uploads/avatar-1617675176490.jpg",
+            "email": sender.email,
+            "fullName": sender.fullname,
+            "userId": sender._id
+        };
+        let conversations = {
+            "conversationId": receiver._id,
+            "createAt": Date.parse(new Date().toUTCString()),
+            "email": receiver.email,
+            "lastMessage": message,
+            "lastTime": -Date.parse(new Date().toUTCString()),
+            "lastType": 0,
+            "name": receiver.fullname,
+            "newMessage": 1
+        };
+
+        // For information
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(`s-${sender._id}`)
+            .child("information")
+            .set(information);
+
+        // For conversations
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(`s-${sender._id}`)
+            .child("conversations")
+            .child(receiver._id)
+            .set(conversations);
+
+        if (token) {
+            // For instances
+            db.ref()
+                .child("users-droid")
+                .child(companyId)
+                .child(`s-${sender._id}`)
+                .child("instances")
+                .child(token)
+                .set({platform: "Web"});
+        }
+
+        // New message
+        let valueSnapshot = await db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(`s-${sender._id}`)
+            .child("messages")
+            .once("value");
+
+        if (valueSnapshot.val() === null) {
+            db.ref()
+                .child("users-droid")
+                .child(companyId)
+                .child(`s-${sender._id}`)
+                .child("messages")
+                .set({"new_messages": 1});
+        }
+
+
+        // For message
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(`s-${sender._id}`)
+            .child("messages")
+            .child(receiver._id)
+            .push({
+                "message": message,
+                "senderId": '<%= sender._id %>',
+                "status": false,
+                "time": Date.parse(new Date().toUTCString()),
+                "type": 0
+            });
+
+        // Get message when save success then append to html
+        let messageObject = {};
+        db.ref()
+            .child("users-droid")
+            .child(companyId)
+            .child(`s-${sender._id}`)
+            .child("messages")
+            .child(receiver._id)
+            .on("child_added", function (snapshot) {
+                messageObject = snapshot.val();
+            });
+
+        let recentMessage = `<div class="message self">
+                                       <div class="message-wrapper">
+         <div style="margin-right: 3.25rem; color: #adb5bd; font-size: .75rem;"><span>${moment(messageObject.time).local().format('h:mm A')}</span></div>
+                                           <div class="message-content">
+                                               <span>${messageObject.message}</span></div>
+                                       </div>
+
+                       </div>`;
+
+        return recentMessage;
+    }
+
+    function getLastMessage() {
+        db.ref()
+            .child("users-droid")
+            .child('<%= sender.company._id %>')
+            .child('<%= sender._id %>')
+            .child("messages")
+            .child('s-<%= staff._id %>')
+            .orderByChild('time')
+            .limitToLast(1)
+            .on("value", function (snapshot) {
+                if (snapshot.val()) {
+                    let lastMessageObj = snapshot.val()[Object.keys(snapshot.val())];
+                    if (lastMessageObj.senderId !== '<%= sender._id %>') {
+                        if (lastMessageObj.senderId !== '<%= sender._id %>') {
+                            document.getElementsByClassName("message-day")[0].innerHTML += `<div class="message">
+                                       <div class="message-wrapper">
+         <div style="margin-left: 2.5rem; color: #adb5bd; font-size: .75rem;"><span>${moment(lastMessageObj.time).local().format('h:mm A')}</span></div>
+                                           <div class="message-content"><span>${lastMessageObj.message}</span>
+                                           </div>
+                                       </div>
+                                   </div>`;
+                        } else {
+                            document.getElementsByClassName("message-day")[0].innerHTML += `<div class="message">
+                                       <div class="message-wrapper">
+         <div style="margin-right: 3.25rem; color: #adb5bd; font-size: .75rem;"><span>${moment(lastMessageObj.time).local().format('h:mm A')}</span></div>
+                                           <div class="message-content"><span>${lastMessageObj.message}</span>
+                                           </div>
+                                       </div>
+                                   </div>`;
+                        }
+                        if (lastMessageObj.message && lastMessageObj.time) {
+                            document.querySelectorAll('[data-id]')[0].innerHTML = lastMessageObj.message;
+                            document.querySelectorAll('[data-time]')[0].innerHTML = moment(lastMessageObj.time).local().format('h:mm A');
+                        }
+                    }
+
+
+                    // Scroll to end of chat
+                    document.getElementById('chat-finished').scrollIntoView({
+                        block: 'end',               // "start" | "center" | "end" | "nearest",
+                        behavior: 'smooth'          //"auto"  | "instant" | "smooth",
+                    });
+                }
+            });
+
+
+    }
+
+    function removeConversation(staff_id, company_id) {
+        $('#btnYes').on("click", function() {
+            db.ref()
+                .child("users-droid")
+                .child(company_id)
+                .child(staff_id)
+                .get()
+                .then((querySnapshot) => {
+                    if (querySnapshot.val() && Object.keys(querySnapshot.val().conversations)) {
+                        db.ref()
+                            .child("users-droid")
+                            .child(company_id)
+                            .child(Object.keys(querySnapshot.val().conversations)[0])
+                            .remove();
+                        db.ref()
+                            .child("users-droid")
+                            .child(company_id)
+                            .child(staff_id)
+                            .remove();
+                    }
+
+                    location.reload();
+                });
+        });
+
+    }
+</script>
+</body>
+</html>

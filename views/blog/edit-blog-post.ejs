@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  <!-- Meta -->
+  <style>
+    /* config input tag area add post */
+    .bootstrap-tagsinput {
+      border: 1px solid #305ed3;
+      line-height: 30px;
+      border-radius: 2px;
+      width: 100% !important;
+    }
+  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Tags css -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css">
+  <% include ../layouts/stylesheet %>
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page-header start -->
+                  <div class="page-header">
+                    <div class="row align-items-end">
+                      <div class="col-lg-8">
+                        <div class="page-header-title">
+                          <div class="d-inline">
+                            <h4>Edit Post</h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="page-header-breadcrumb">
+                          <ul class="breadcrumb-title">
+                            <li class="breadcrumb-item">
+                              <a href="/admin"> <i class="feather icon-home"></i> </a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Page Blog</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Post</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Edit Post</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Page-header end -->
+                  <!-- Page body start -->
+                  <div class="page-body">
+                    <form action="/admin/edit-blog-post/<%= post._id %>/?_csrf=<%=csrfToken%>" method="POST" enctype="multipart/form-data">
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Post Image</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block text-center">
+                              <img src="../../<%= post.imagePath %>" id="image-upload" alt="Default Post Image"
+                                class="img-fluid">
+                              <div class="form-group mt-3">
+                                <input type="file" class="form-control" id="upload-path" name="imagePath">
+                                <span class="messagesSuggestion"></span>
+                                <span class="messagesImage"></span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-8">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Edit Post</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Title<i style = color:red>*</i></label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" maxlength="200" name="title"
+                                  required placeholder="Enter Title Less Than 200 Character" value="<%= post.title %>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="col-sm-2">
+                                  <label class="col-form-label">Short Content<i style = color:red>*</i></label>
+                                  <label>(Maximum 200 characters)</label>
+                                </div>
+                                <div class="col-sm-10">
+                                  <textarea type="text" maxlength="200" class="form-control" rows="5" cols="5" name="shortContent" required><%= post.shortContent %></textarea>
+                                  <span class="messages-short"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Content</label>
+                                <div class="col-sm-10">
+                                  <textarea type="text" class="form-control" rows="5" cols="5" name="content" required><%= post.content %></textarea>
+                                  <span class="messages-content"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Category</label>
+                                <div class="col-sm-10">
+                                  <select name="categoryID" class="form-control" required>
+                                    <option value="">Select One Category Only</option>
+                                    <% category.forEach(function(values, index){ %>
+                                      <option value="<%= values._id %>"
+                                        <% if (values._id == post.categoryID) { %>
+                                          selected
+                                        <% } %>
+                                        ><%= values.name %>
+                                      </option>
+                                    <% }); %>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Tag</label>
+                                <div class="col-sm-10">
+
+                                  <div class="tags_add">
+                                    <input onchange="tagChange()" id="tagID" type="text" class="form-control" value="
+                                      <% tag.forEach(function(values, index){ %>
+                                        <%= values %>,
+                                      <% }); %>
+                                    " data-role="tagsinput" name="tagID" required placeholder="Enter Tag">
+                                  </div>
+                                  <span class="messagesTag"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                  <select name="status" class="form-control">
+                                    <option value="">Select One Value Only</option>
+                                    <option value="true" <%= post.status === true ? 'selected' : '' %>>Active</option>
+                                    <option value="false" <%= post.status === false ? 'selected' : '' %>>Disable</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <label class="col-sm-2"></label>
+                                <div class="col-sm-10">
+                                  <button type="submit" class="btn btn-primary m-b-0">Submit</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- Page body end -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <!-- Tags js -->
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+
+<script>
+  CKEDITOR.on('instanceReady', function( ev ) {
+    var blockTags = ['div','h1','h2','h3','h4','h5','h6','p','pre','li','blockquote','ul','ol',
+    'table','thead','tbody','tfoot','td','th',];
+    for (var i = 0; i < blockTags.length; i++)
+    {
+      ev.editor.dataProcessor.writer.setRules( blockTags[i], {
+          indent : false,
+          breakBeforeOpen : true,
+          breakAfterOpen : false,
+          breakBeforeClose : false,
+          breakAfterClose : true
+      });
+    }
+  })
+  var edit = CKEDITOR.replace('content');
+  edit.on('change', function(e) {
+    var cmm = edit.getData();
+    if(cmm.replace(/<[^>]*>?/gm, '').length <1){
+      $('.messages-content').html('<p class="text-danger mt-3">Content is required!</p>');
+      $('#add_submit_btn').addClass('d-none');
+    }
+    else{
+      $('#add_submit_btn').removeClass('d-none');
+      $('.messages-content').html('');
+    }
+  });
+</script>
+
+<script>
+  function readImage(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        $('#image-upload').attr('src', e.target.result);
+      }
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+  $('#upload-path').change(function () {
+    readImage(this);
+  });
+</script>
+
+<script>
+  $('.messagesSuggestion').html('<div class="alert alert-success mt-3 text-center"><p style="font-size: 18px">Image should have width = <b>872px</b> and height = <b>422px</b></p></div>');
+  var srcElement = document.getElementById('add_submit_btn');
+  var _URL = window.URL || window.webkitURL;
+  $("#upload-path").change(function (e) {
+    var file, img;
+    if ((file = this.files[0])) {
+      img = new Image();
+      img.onload = function () {
+        if (this.width !== 870 && this.height !== 422) {
+          $('.messagesImage').html('<div class="alert alert-danger mt-3 text-center"><i class="icofont icofont-warning" style="font-size: 30px;"></i><p style="font-size: 18px;"> Invalid Image. Please upload file image has width = <b>870px</b> and height = <b>422px</b></p>'
+                                  + '<p>(Your image have width = ' + this.width + 'px and height = ' + this.height +'px)</p></div>');
+          $('.messagesSuggestion').html('');
+          srcElement.style.display = 'none';
+        } else {
+          $('.messagesImage').html('<div class="alert alert-success mt-3 text-center"><p class="text-success mt-3" style="font-size: 20px"><i class="icofont icofont-tick-mark ml-2" style="font-size: 25px;"></i><b> Ready to upload!</b></p><div>');
+          $('.messagesSuggestion').html('');
+          srcElement.style.display = 'block';
+        }
+        // alert(this.width + " " + this.height);
+      };
+      img.src = _URL.createObjectURL(file);
+    }
+  });
+</script>
+
+<script>
+  var tag = document.getElementById('tagID').value;
+  if (tag === ''){
+    $('.messagesTag').html('<p class="text-danger mt-3">Please enter Tag!</p>');
+  } else {
+    $('.messagesTag').html('');
+  }
+  function tagChange(){
+    var tag = document.getElementById('tagID').value;
+    if (tag === ''){
+      $('.messagesTag').html('<p class="text-danger mt-3">Please enter Tag!</p>');
+    } else {
+      $('.messagesTag').html('');
+    }
+  }
+</script>
+</body>
+
+</html>

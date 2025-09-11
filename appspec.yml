@@ -1,0 +1,30 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /usr/local/share/applications/cashd-web-admin
+permissions:
+  - object: /usr/local/share/applications/cashd-web-admin
+    owner: ec2-user
+    group: ec2-user
+hooks:
+  ApplicationStop:
+    - location: cicd_scripts/application_stop.sh
+      timeout: 120
+      runas: ec2-user
+  BeforeInstall:
+    - location: cicd_scripts/before_install.sh
+      timeout: 120
+      runas: ec2-user
+  AfterInstall:
+    - location: cicd_scripts/after_install.sh
+      timeout: 120
+      runas: ec2-user
+  ApplicationStart:
+    - location: cicd_scripts/start_application.sh
+      timeout: 150
+      runas: ec2-user
+  ValidateService:
+    - location: cicd_scripts/validate_service.sh
+      timeout: 121
+      runas: ec2-user

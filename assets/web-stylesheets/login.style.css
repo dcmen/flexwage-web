@@ -1,0 +1,227 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+/* .content-image {
+    height: 100vh;
+    background-image: url("/web-images/tempsnip.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+} */
+
+.content-image img {
+    height: 100vh;
+    width: 100%;
+    object-fit: fill;
+}
+
+.input-container {
+    position: relative;
+}
+
+.hs-eu {
+    background: #093149;
+    margin: 0 auto;
+    max-width: 100%;
+    padding: 20px;
+    position: absolute;
+    bottom: 0;
+    margin-right: 1px;
+}
+
+.hs-eu-cookie {
+    border-top: 0px solid transparent;
+    border-bottom: 0px solid transparent;
+    box-shadow: none;
+    bottom: 0 !important;
+    top: auto !important;
+}
+
+.hs-eu-policy {
+    margin: 0 0 12px;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 400 !important;
+    line-height: inherit;
+    text-shadow: none !important;
+}
+
+.hs-eu-policy p {
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+}
+
+.hs-eu-confirmation-button {
+    background-color: #259be4 !important;
+    border: 1px solid #259be4 !important;
+    margin-right: 12px !important;
+    color: #fff;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: 400 !important;
+    line-height: inherit;
+    text-align: left;
+    text-shadow: none !important;
+}
+
+.form-login, .form-register {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
+}
+
+@media only screen and (max-width: 600px) {
+    .form-login, .form-register {
+        width: 80%;
+        margin-top: 30%;
+    }
+}
+.input-input {
+    height: 54px;
+    font-size: 16px;
+    width: 100%;
+    display: block;
+    border: 1px solid #ced6db;
+    border-radius: 4px;
+    color: #093149;
+    padding-left: 12px;
+    background-color: #fff;
+    background-image: none;
+}
+
+.input-icon {
+    height: 54px;
+    line-height: 54px;
+    font-size: 20px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 12px;
+    margin-top: 0;
+    color: #ced6db;
+}
+
+.input-label {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #093149;
+    font-weight: 600;
+    display: block;
+    text-align: left;
+    cursor: default;
+}
+
+.form-login a {
+    color: #1f77bc;
+}
+
+.form-login input:focus {
+    outline: none;
+}
+
+.pull-right {
+    float: right !important;
+}
+
+.login-password, .control-group {
+    margin-top: 1.35em;
+}
+
+.button {
+    background-color: #1f77bc;
+    border-color: transparent;
+    color: #fff;
+    font-size: 18px;
+    height: 54px;
+    font-weight: 600;
+    padding: 0 32px;
+    line-height: 54px;
+    width: 100%;
+    cursor: pointer;
+    border: 1px solid transparent;
+    box-shadow: none;
+    border-radius: 4px;
+    -webkit-font-smoothing: subpixel-antialiased;
+    text-shadow: none;
+    text-decoration: none;
+    user-select: none;
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+}
+.button:hover {
+    background-color: #2188d6;
+}
+.instLogin_forbidMsg {
+    margin-bottom: 48px;
+    text-align: center;
+}
+
+.btn.btn-simple {
+    font-size: 12px;
+    background-color: white;
+    border: 1px solid #afafaf;
+}
+.btn:hover {
+    color: #333;
+    text-decoration: none;
+}
+.login-footer {
+    position: absolute;
+    bottom: 0;
+    margin-top: 1.35em;
+    text-align: center;
+    width: 100%;
+}
+.padding {
+    padding: 24px;
+}
+
+.card p {
+    margin: 0;
+}
+
+.fix-size {
+    max-width: 360px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 35px;
+    margin-top: 5%;
+    box-shadow: 0 2px 4px 0 rgba(9,48,73,0.12);
+}
+
+.form-control-custom {
+    margin-bottom: 20px;
+}
+
+.title-txt {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: #686666;
+}
+
+.txt-please {
+    font-size: 15px;
+}
+
+#organisation-select {
+    font-size: 14px;
+    appearance: none;
+    background-image: url("/web-images/selectCaret.png");
+    background-size: 22px 22px;
+    background-position: right center;
+    background-repeat: no-repeat;
+}
+
+.wr-border-color {
+    border-color: red;
+    outline: none;
+}

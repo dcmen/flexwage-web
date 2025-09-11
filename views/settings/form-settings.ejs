@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+</head>
+
+<body>
+    <div id="jsModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content shadow p-3 mb-5 bg-white rounded custom-modal">
+            <div style="border: none; height: 30px;" class="modal-header text-a">
+            </div>
+            <div class="modal-body">
+              <p style="font-size: 16px; text-align: justify; margin: 0;">Are you sure you want to change the transaction fee? <br/>
+                Note: Once you changed, we will apply this value to all companies on the system</p>
+            </div>
+            <div style="border-top: none; text-align: center;" class="modal-footer justify-content-between">
+              <button style="width: 100%;" id="jsNo" type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+              <button style="width: 100%;" id="jsYes" type="button" class="btn btn-primary">Yes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id='jsErr'>
+        <p>Connection timeout</p>
+        <div class="relative w-full sm:w-1/2 bg-gray-200">
+          <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+        </div>
+      </div>
+  <% include ../layouts/preloader %>
+  <div id="jsLoader">
+    <div class="loader">
+      <div class="loader-chiled"></div>
+    </div>
+  </div>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page body start -->
+                  <% if(messages.length > 0) { %>
+                  <div class="row">
+                    <div class="col-sm-2"></div>
+                    <div class="col-sm-8">
+                      <div class="alert alert-danger mt-3">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                          <i class="icofont icofont-close-line-circled"></i>
+                        </button>
+                        <%= messages %>
+                      </div>
+                    </div>
+                    <div class="col-sm-2"></div>
+                  </div>
+                  <% } else { %>
+                  <span class="messagesSuggestion"></span>
+                  <% } %>
+                  <div class="page-body">
+                    <input type="text" name="key" hidden value="<%= key %>">
+                    <input type="text" name="setting" hidden value="<%= JSON.stringify(data) %>">
+                    <form id="jsForm"  action="/admin/general-settings" method="POST">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8">
+                          <div class="card">
+                            <div class="card-header">
+                              <div class="form-group row">
+                                <h4 class="col-sm-4"> General settings</h4>
+                                <div class="col-sm-8">
+                                  <button id="btnSubmit" type="submit"
+                                    class="btn btn-primary m-b-0 float-right">Save</button>
+                                </div>
+                              </div>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <div class="form-group unit-custom row">
+                                <label class="col-sm-3 col-form-label">Transaction Fee</label>
+                                <div class="col-sm-8">
+                                  <input type="hidden" name="id_setting" value="<%= setting ? setting._id : null %>">
+                                  <input type="hidden" name="feeValue" value="<%= setting.transaction_fee_value %>">
+                                  <input type="hidden" name="feeType" value="<%= setting.transaction_fee_type %>">
+                                  <input type="text" class="form-control"
+                                    name="transaction_fee" required
+                                    value="<%= setting.transaction_fee_value ? setting.transaction_fee_value : 0 %>">
+                                  <small style='color: #fd0000;'></small>
+                                </div>
+                                <div class="col-sm-1">
+                                  <select id="selectedUnit" name="transaction_fee_type" class="form-control">
+                                      <option value="DOLLAR" <%= setting.transaction_fee_type == 'DOLLAR' ? 'selected' : '' %>>$</option>
+                                      <option value="PERCENT" <%= setting.transaction_fee_type == 'PERCENT' ? 'selected' : '' %>>%</option>
+                                  </select>
+                                </div>
+                              </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-2"></div>
+                      </div>
+                    </form>
+                    <!-- Transaction Rate -->
+                    <form id="jsFormRate" action="/admin/general-settings-rate" method="POST">
+                      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                      <input type="hidden" name="id_setting" value="<%= setting ? setting._id : null %>">
+                      <div class="row">
+                        <div class="col-sm-2"></div>
+                        <div class="col-sm-8">
+                          <div class="card">
+                            <div class="card-header">
+                              <div class="form-group row">
+                                <h4 class="col-sm-4">Rate settings</h4>
+                                <div class="col-sm-8">
+                                  <button type="submit"
+                                    class="btn btn-primary m-b-0 float-right">Save</button>
+                                </div>
+                              </div>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <div class="form-group unit-custom row">
+                                <label class="col-sm-3 col-form-label">Frequency Rate</label>
+                                <div class="col-sm-7">
+                                  <input type="text" class="form-control"
+                                    name="frequency_transaction_of_rate" required
+                                    value="<%= setting.frequency_transaction_of_rate ? setting.frequency_transaction_of_rate : 0 %>">
+                                  <p id="jsRateErr" style='color: #fd0000;'></p>
+                                </div>
+                                <div class="col-sm-2"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-2"></div>
+                      </div>
+                    </form>
+                    <!-- Lender super -->
+                    <div class="row">
+                      <div class="col-sm-2"></div>
+                      <div class="col-sm-8">
+                        <div class="card">
+                          <div class="card-header">
+                            <div class="form-group row mb-0">
+                              <h4 class="col-sm-12">Monoova mAccount Settings</h4>
+                            </div>
+                          </div>
+                          <div class="card-block">
+                            <div id="jsShowContentPage">
+                              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                  <a class="nav-link active" id="lender-tab" ><b>Monoova mAccount</b></a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="finance-tab"><b>Finance</b></a>
+                                </li>
+                                <li class="nav-item">
+                                  <a class="nav-link" id="mWallet-tab"><b>mWallet</b></a>
+                                </li>
+                              </ul>
+                              <div class="tab-content mt-3">
+                                <div class="tab-pane fade show active" id="lender">
+                                  <div class="d-flex justify-content-end">
+                                    <div>
+                                      <a href="/admin/settings/supper-lender" class="btn btn-primary m-b-0 float-right">Add New</a>
+                                    </div>
+                                  </div>
+                                  <div class="mt-3 dt-responsive table-responsive">
+                                    <table id="lenderTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Name</th>
+                                          <th scope="col">Start Date</th>
+                                          <th scope="col">Status</th>
+                                          <th scope="col">Action</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div class="tab-pane fade" id="finance">
+                                  <div class="mt-3 dt-responsive table-responsive">
+                                    <table id="financeTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                      <thead>
+                                        <tr>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Name</th>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Name of Bank</th>
+                                          <th style="padding-top: 2px; padding-bottom: 2px;" scope="col" colspan="6" class="text-center">Test Mode</th>
+                                          <th style="padding-top: 2px; padding-bottom: 2px;" scope="col" colspan="6" class="text-center">Live Mode</th>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Date</th>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Interest rate</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Account Name</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">BSB</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Acc #</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Credit</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Debit</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Balance</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Account Name</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">BSB</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Acc #</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Credit</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Debit</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important; border-right-width: 1px;" scope="col">Balance</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div class="tab-pane fade" id="mWallet">
+                                  <div class="mt-3 dt-responsive table-responsive">
+                                    <table id="mWalletTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                      <thead>
+                                        <tr>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Name</th>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Name of Bank</th>
+                                          <th style="padding-top: 2px; padding-bottom: 2px;" scope="col" colspan="2" class="text-center">Test Mode</th>
+                                          <th style="padding-top: 2px; padding-bottom: 2px;" scope="col" colspan="2" class="text-center">Live Mode</th>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Date</th>
+                                          <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Action</th>
+                                        </tr>
+                                        <tr>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">mWallet Acc #</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Balance</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">mWallet Acc #</th>
+                                            <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Balance</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div> 
+                            </div>
+                            <div id="jsDetailFinance" class="hide">
+                              <button class="jsBack btn btn-outline-secondary btn-sm btn-back">
+                                  <i class="icofont icofont-swoosh-left custom--size">Back</i>
+                              </button>
+                              <div class="financial-detail pt-5">
+                                  <h5 class="font-weight-bold">Financial Details</h5>
+                                  <div class="pl-3 pt-3">
+                                    <form>
+                                      <div class="form-group">
+                                        <div class="dt-responsive table-responsive">
+                                            <table style="width: 100%;" id="financialDetailTable"
+                                                class="table table-bordered nowrap">
+                                                <thead class="thead-dark">
+                                                  <tr>
+                                                    <th>Transaction type</th>
+                                                    <th>Remark</th>
+                                                    <th>Direction</th>
+                                                    <th>Amount</th>
+                                                    <th>Date</th>
+                                                  </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+                                      </div>
+                                    </form>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-2"></div>
+                    </div>
+                                                            <!-- Bank setting -->
+                                                            <!-- <form id="jsBankForm">
+                                                              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                                              <div class="row">
+                                                                <div class="col-sm-2"></div>
+                                                                <div class="col-sm-8">
+                                                                  <div class="card">
+                                                                    <div class="card-header">
+                                                                      <div class="form-group row">
+                                                                        <h4 class="col-sm-4">Bank settings</h4>
+                                                                        <div class="col-sm-8">
+                                                                          <button id="jsSubmit" type="button" class="btn btn-primary m-b-0 float-right">Save</button>
+                                                                        </div>
+                                                                      </div>
+                                                                      <hr>
+                                                                    </div>
+                                                                    <div class="card-block">
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Bank name</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_name" required
+                                                                            value="<%= data.bank_name %>" maxlength="3">
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Bank account name</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_account_name" required
+                                                                            value="<%= data.bank_account_name %>" maxlength="50">
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Bank account number</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_account_number" required maxlength="9">
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Bank BSB number</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_bsb_number" required
+                                                                            value="<%= data.bank_bsb_number_encryption ? data.bank_bsb_number_encryption : data.bank_bsb_number %>" maxlength="7">
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Bank User ID</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_user_id" required
+                                                                            value="<%= data.bank_user_id %>" maxlength="27">
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Bank APCA ID</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_apca_id" required
+                                                                            value="<%= data.bank_apca_id %>" maxlength="7">
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Description</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_description" required
+                                                                            value="<%= data.bank_description %>" maxlength="13">
+                                                                        </div>
+                                                                      </div>
+                                                                      <div class="form-group row">
+                                                                        <label class="col-sm-3 col-form-label">Company name</label>
+                                                                        <div class="col-sm-9">
+                                                                          <input type="text" class="form-control" name="bank_company_name" required
+                                                                            value="<%= data.bank_company_name %>" maxlength="17">
+                                                                        </div>
+                                                                      </div>
+                                                                    </div>
+                                                                  </div>
+                                                                </div>
+                                                                <div class="col-sm-2"></div>
+                                                              </div>
+                                                            </form> -->
+                    </div>
+                  </div>
+                  <!-- Page body end -->
+                </div>
+              </div>
+              <!-- Page body end -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- i18next.min.js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script src="../../web-files/assets/js/moment.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+  <script type="text/javascript" src="/../../web-files/bower_components/crypto-js/crypto-js.min.js"></script>
+  <script src="../../web-files/assets/pages/setting/settingfee.js"></script>
+  <script src="../../web-files/assets/pages/setting/lender-table.js"></script>
+</body>
+
+</html>

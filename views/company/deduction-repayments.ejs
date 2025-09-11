@@ -1,0 +1,112 @@
+<form class="form-setup-type mt-3">
+  <span class="font-weight-bold">Repayment Methods</span>
+  <div style="margin-left: -2px;" class="row mt-4">
+    <div class="col-lg-10 col-sm-11 col-xl-9">
+      <div class="row">
+        <div class="col-md-12 text-border pb-4">
+          <span class="font-weight-bold text-u-border">ABA file methods</span>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="form-check ml-4">
+                <input class="form-check-input" <%= (system.code == "KEYPAY" && !company.deduction_repayment_type) || company.deduction_repayment_type == "ABA_FILE_VIA_PAYROLL_SYSTEM" ? 'checked' : ''  %> type="radio" name="deductionRepaymentType" id="exampleRadios1" value="ABA_FILE_VIA_PAYROLL_SYSTEM">
+                <label class="form-check-label pl-0" for="exampleRadios1">
+                  ABA
+                  file
+                  via
+                  Payroll
+                  system
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check ml-4">
+                <input class="form-check-input" <%= (system.code == "XERO" && !company.deduction_repayment_type) || company.deduction_repayment_type == "CASHD_GENERATED_ABA_FILE" ? 'checked' : ''  %> type="radio" name="deductionRepaymentType" id="exampleRadios4" value="CASHD_GENERATED_ABA_FILE">
+                <label class="form-check-label pl-0" for="exampleRadios4">
+                  CashD
+                  generated
+                  ABA
+                  file
+                  (+Invoice
+                  option)
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 mt-4 text-border pb-4">
+          <span class="font-weight-bold text-u-border">Direct Debit methods</span>
+          <div class="row mt-3">
+            <div class="col-md-6">
+              <div class="form-check ml-4">
+                <input class="form-check-input" <%= company.deduction_repayment_type == "DIRECT_DEBIT_AUTO_PAY" ? 'checked' : ''  %> type="radio" name="deductionRepaymentType" id="exampleRadios2" value="DIRECT_DEBIT_AUTO_PAY">
+                <label class="form-check-label pl-0" for="exampleRadios2">
+                  Direct
+                  Debit
+                  Auto
+                  pay
+                </label>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-check ml-4">
+                <input class="form-check-input" <%= company.deduction_repayment_type == "DIRECT_DEBIT_BY_APPROVAL" ? 'checked' : ''  %> type="radio" name="deductionRepaymentType" id="exampleRadios3" value="DIRECT_DEBIT_BY_APPROVAL">
+                <label class="form-check-label pl-0" for="exampleRadios3">
+                  Direct
+                  Debit
+                  by
+                  approval
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 jsDDForm">
+            <span class="font-weight-bold">Direct Debit authority form</span>
+            <div class="col-md-12 mt-3">
+              <div class="form-check ml-4">
+                <input class="form-check-input" type="checkbox" <%= directDebitForm ? 'checked' : '' %> id="directDebitAuthority">
+                <label class="form-check-label pl-0" for="directDebitAuthority">
+                  Click to
+                  receive
+                  / reset
+                  direct
+                  debit
+                  authority
+                </label>
+              </div>
+            </div>
+          </div>
+          <div id="setupScheduleTime" class="row mt-4">
+            <div class="col-md-12">
+              <span class="font-weight-bold">Set Schedule of Direct Debit payment</span>
+              <div class="col-md-12">
+                <div class="form-group row mt-4">
+                  <label class="col-md-3 pr-0 col-form-label">Time to make repayment automatically:</label>
+                  <div class="col-md-4">
+                    <select name="makeRepaymentDate" class="form-control">
+                      <option value="-1" selected disabled>Choose date</option>
+                      <option value="0" <%= company.make_repayment_date == 0 ? 'selected' : '' %>>End date of pay period</option>
+                      <option value="1" <%= company.make_repayment_date == 1 ? 'selected' : '' %>>One day after the end of pay period</option>
+                      <option value="2" <%= company.make_repayment_date == 2 ? 'selected' : '' %>>Two days after the end of pay period</option>
+                      <option value="3" <%= company.make_repayment_date == 3 ? 'selected' : '' %>>Three days after the end of pay period</option>
+                      <option value="4" <%= company.make_repayment_date == 4 ? 'selected' : '' %>>Four days after the end of pay period</option>
+                      <option value="5" <%= company.make_repayment_date == 5 ? 'selected' : '' %>>Five days after the end of pay period</option>
+                      <option value="6" <%= company.make_repayment_date == 6 ? 'selected' : '' %>>Six days after the end of pay period</option>
+                    </select>
+                  </div>
+                  <div class="col-md-2">
+                    <input type="time" name="makePaymentTime" class="form-control input-time" value="17:00" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div class="mt-3">
+  <button id="jsSaveDeductionRepayment" class="btn btn-success">Save</button>
+</div>

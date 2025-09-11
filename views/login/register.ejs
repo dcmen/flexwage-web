@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>CashD Register</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+    <link rel="icon" href="/../../web-files/assets/images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/web-stylesheets/login.style.css">
+    <link rel="stylesheet" type="text/css" href="/../../web-files/assets/icon/feather/css/feather.css">
+</head>
+
+<body>
+    <!--[if lt IE 7]>
+        <p class="browsehappy">
+        You are using an <strong>outdated</strong> browser. Please
+        <a href="#">upgrade your browser</a> to improve your experience.
+        </p>
+    <![endif]-->
+    <section>
+        <div class="row p-0 m-0">
+            <div style="height: 100vh;" class="col-12 col-lg-6 col-sm-12 p-0 position-relative">
+                <form id="jsform-register" class="form-register" action="/console/register" method="POST">
+                    <h1 class="text-center mt-5 mb-5">Register</h1>
+                    <div class="instLogin_forbidMsg-rg mb-4 text-center" id="show-err">
+                        <% if (messages && messages.length > 0 ) { %>
+                            <p style="color: red;"><%= messages %></p>
+                        <% } %>
+                    </div>
+                    <div class="register-email mt-2 mb-3">
+                        <!-- <a href="#" class="pull-right">Not verified?</a> -->
+                        <!-- <label class="input-label" for="email">First Name</label> -->
+                        <div class="input-container">
+                            <span class="register-ctl">
+                                <input id="first_name" tabindex="1" value="" placeholder="Frist Name" type="text"
+                                    class="input-input" name="first_name" maxlength="255">
+                            </span>
+                            <div class="input-icon"><i class="feather icon-user"></i></div>
+                        </div>
+                    </div>
+                    <div class="input-margin register-email  mb-3">
+                        <!-- <a href="#" class="pull-right">Not verified?</a> -->
+                        <!-- <label class="input-label" for="text">Last Name</label> -->
+                        <div class="input-container">
+                            <span class="register-ctl">
+                                <input id="last_name" tabindex="1" placeholder="Last Name" value="" type="text"
+                                    class="input-input" name="last_name" maxlength="255">
+                            </span>
+                            <div class="input-icon"><i class="feather icon-user"></i></div>
+                        </div>
+                    </div>
+                    <div class="input-margin register-email  mb-3">
+                        <!-- <a href="#" class="pull-right">Not verified?</a> -->
+                        <!-- <label class="input-label" for="email">Email</label> -->
+                        <div class="input-container">
+                            <span class="register-ctl">
+                                <input id="email" tabindex="1" value="" placeholder="Email"
+                                    type="email" class="input-input" name="email" maxlength="255">
+                            </span>
+                            <div class="input-icon"><i class="feather icon-user"></i></div>
+                        </div>
+                    </div>
+                    <div class="input-margin register-password  mb-3">
+                        <!-- <a href="#" class="pull-right">Forgot Password?</a> -->
+                        <!-- <label class="input-label" for="password">Password</label> -->
+                        <div class="input-container">
+                            <span class="register-ctl">
+                                <input id="password" tabindex="1" value="" placeholder="Password" autocomplete="new-password"
+                                    type="password" class="input-input" maxlength="255">
+                            </span>
+                            <div class="input-icon"><i class="feather icon-lock"></i></div>
+                        </div>
+                    </div>
+                    <div class="input-margin register-password  mb-3">
+                        <!-- <a href="#" class="pull-right">Forgot Password?</a> -->
+                        <!-- <label class="input-label" for="confim_password">Confirm Password</label> -->
+                        <div class="input-container">
+                            <span class="register-ctl">
+                                <input id="confim_password" tabindex="1" value="" placeholder="Confrim Passowrd"
+                                autocomplete="new-password" type="password" class="input-input" name="password"
+                                    maxlength="255">
+                            </span>
+                            <div class="input-icon"><i class="feather icon-lock"></i></div>
+                        </div>
+                    </div>
+                    <div class="control-group mt-5">
+                        <div class="controls">
+                            <span class="controls-span">
+                                <input type="button" name="btnLoginSubmit" id="btnLoginSubmit" value="Get started"
+                                    class="button" tabindex="4">
+                            </span>
+                        </div>
+                    </div>
+                </form>
+                <p class="text-center mt-2">Already have an account?<a href="/console/login">Login</a></p>
+            </div>
+            <div class="col-0 col-sm-6 p-0 d-none d-lg-block">
+                <div class="content-image">
+                    <img src="/web-images/tempsnip.png" alt="" srcset="">
+                    <div class="hs-eu">
+                        <div class="hs-eu-cookie">
+                            <div class="hs-eu-policy">
+                                <p>
+                                    We use cookies to ensure you get the best experience on our
+                                    website, including collecting statistics to improve functionality
+                                    and to deliver specific content to you. Find out more by reading
+                                    our
+                                    <u><a href="https://cashd.co/terms" target="_blank" rel="noopener">privacy policy.</a></u>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <% include ../layouts/script %>
+    <script src="../../web-files/assets/pages/register/register.js"></script>
+</body>
+
+</html>

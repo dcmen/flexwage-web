@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <% include ../layouts/stylesheet %>
+  <link rel='stylesheet' href='/web-stylesheets/styleclient.css' />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+    <button id="jsToggelMenu" class="btn-toggle-menu"><i id="jsToggelIcon" class="feather icon-menu"></i></button>
+    <ul class="navbar-content">
+      <li class="d-flex align-items-center"><a class="btn btn-line-height" href="/oauth/clients/add"><i
+            class="feather icon-edit"></i>New OAthor Client</a></li>
+      <li class="search-li">
+        <form class="form-inline custom-form">
+          <input class="input-search" type="search" placeholder="Search" aria-label="Search">
+          <i id="search" style="font-size: 17px;" class="feather icon-search"></i>
+        </form>
+      <li class="d-flex align-items-center"><a href="/oauth/clients" class="btn btn-line-height"><i
+            class="feather icon-refresh-cw pr-1"></i> Reset</a></li>
+      </li>
+      <div class="div-none"></div>
+    </ul>
+  </nav>
+  <section>
+    <div class="mt-5 container-scroll">
+      <div id="show_mess"></div>
+      <div id="jsTable">
+        <% if (messagesInfo) { %>
+        <div class="alert alert-success mb-3" role="alert">
+          <%= messagesInfo %>
+        </div>
+        <% } %>
+        <input id="jsClient" hidden type="text" value="<%= JSON.stringify(clients) %>">
+        <input id="jsPagination" hidden type="text" value="<%= JSON.stringify(pagination) %>">
+      </div>
+    </div>
+  </section>
+  <!-- JS, Popper.js, and jQuery -->
+  <% include ../layouts/script %>
+  <script src="../../web-files/assets/pages/client/client.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%= title %></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <% include ../layouts/stylesheet %>
+        <link rel='stylesheet' href='/web-stylesheets/styleclient.css' />
+    </head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+        <ul class="navbar-content">
+            <li class="d-flex align-items-center"><a class="btn btn-line-height" href="/oauth/clients"><i class="icofont icofont-ui-edit"></i> Cancel Edit</a></li>
+            <li class="d-flex align-items-center"><a id="jsSubmit" class="btn btn-line-height"><i class="icofont icofont-rotation"></i> Save This OAuth Client</a></li>
+        </ul>
+    </nav>
+    <div>
+        <p class="text p-3">New OAuth Client</p>
+    </div>
+    <section>
+        <div class="container">
+            <% if (messagesErr) { %>
+                <div class="alert alert-danger" role="alert">
+                    <%= messagesErr %>
+                </div>
+            <% } %>
+            <% if (messagesInfo) { %>
+                <div class="alert alert-success" role="alert">
+                    <%= messagesInfo %>
+                </div>
+            <% } %>
+            <form id="jsNewOauth" action="/oauth/clients/add" method="POST">
+                <input hidden name="_csrf" value="<%= csrfToken %>">
+                <div class="form-group">
+                    <label for="name">Name <span style="color: rgb(255, 4, 4);">*</span>
+                        <span id="err-name" style="color: rgb(255, 4, 4);"></span>
+                    </label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea class="form-control" name="description" id="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="logo_uri">Logo Uri</label>
+                    <p style="color: rgb(137 137 137); margin: 2px;">Please provide an image which is 50x50 and from a HTTPS source. Not being HTTPS may cause browser warning during client authentication.</p>
+                    <input type="text" class="form-control" name="logo_uri" id="logo_uri" placeholder="Logo uri">
+                </div>
+                <div class="form-group">
+                    <label for="redirect_uri">Redirect Uri <span style="color: rgb(255, 4, 4);">*</span>
+                        <span id="err-redirect_uri" style="color: rgb(255, 4, 4);"></span>
+                    </label>
+                    <input type="text" class="form-control" name="redirect_uri" id="redirect_uri" placeholder="Redirect uri">
+                </div>
+            </form>
+        </div>
+    </section>
+    <!-- JS, Popper.js, and jQuery -->
+    <% include ../layouts/script %>
+    <script>
+        const form = document.getElementById('jsNewOauth');
+        const submit = document.getElementById('jsSubmit');
+        const errUri = document.getElementById('err-redirect_uri');
+        const errName = document.getElementById('err-name');
+
+        submit.addEventListener('click', () => {
+            let isTrue = true;
+            let name = document.getElementById('name').value;
+            let redirect_uri = document.getElementById('redirect_uri').value;
+            if (name == '') {
+                errName.innerText = 'Please insert your name';
+                isTrue = false;
+            }
+            if (redirect_uri == '') {
+                errUri.innerText = 'Please insert your redirect uri';
+                isTrue = false;
+            }
+            if (isTrue) {
+                form.submit();
+            }
+        });
+    </script>
+</body>
+
+</html>

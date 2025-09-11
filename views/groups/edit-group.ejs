@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+  <% include ../layouts/stylesheet %>
+  <style>
+    .btn-add {
+      display: inline-block;
+      height: 22px;
+      width: 22px;
+      font-size: 12px;
+      text-align: center;
+      color: rgb(1, 153, 8) !important;
+      border: 2px solid rgb(1, 153, 8);
+      border-radius: 50%;
+      overflow: hidden;
+      margin-left: 10px;
+      line-height: 1.5;
+    }
+
+    .btn-add:hover {
+      opacity: 0.7;
+    }
+
+    .table-reponsive {
+      max-width: 70%;
+    }
+
+    .err-required {
+      border: 1px solid #ff0000 !important;
+    }
+
+    .err-required::placeholder {
+      /* Chrome, Firefox, Opera, Safari 10.1+ */
+      color: red;
+      opacity: 1;
+      /* Firefox */
+    }
+
+    .err-required:-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: red;
+    }
+
+    .err-required::-ms-input-placeholder {
+      /* Microsoft Edge */
+      color: red;
+    }
+
+    button.close-img {
+        position: absolute;
+        right: 5px;
+        top: 5px;
+        border: 1px;
+        border-radius: 50%;
+    }
+
+    button.close-img:focus {
+      outline: none;
+    }
+
+    button.close-img:hover {
+      background-color: #e2ebfb;
+    }
+
+    @media (max-width: 1200px) {
+      .table-reponsive {
+        max-width: 80%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="jsLoader">
+    <div style="top: 40%; left: 0px;" class="loader">
+      <div class="loader-chiled"></div>
+    </div>
+  </div>
+  <% if (messages != null && messages.error) { %>
+    <div class="toast-err mt-1 show error">
+        <p><%= messages.error %></p>
+        <div class="relative w-full sm:w-1/2 bg-gray-200">
+            <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+        </div>
+    </div>
+  <% } %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <!-- Toast -->
+          <div id='jsErr'>
+            <p>Connection timeout.</p>
+            <div class="relative w-full sm:w-1/2 bg-gray-200">
+              <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+            </div>
+          </div>
+          <!-- End toast -->
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page-body start -->
+                  <div class="page-body">
+                    <!--profile cover start-->
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <form id="formAddGroup" class="needs-validation" novalidate method="POST"
+                          action="/admin/group/<%= group._id %>?_csrf=<%=csrfToken%>" enctype="multipart/form-data">
+                          <div class="row">
+                            <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+                            <input type="hidden" name="managerIds">
+                            <input type="hidden" name="companyIds">
+                            <input type="hidden" name="imageExistence" value="<%= group.logo ? 'true' : false %>">
+                            <div class="col-md-3">
+                              <div class="card">
+                                <div class="card-block text-center">
+                                  <button type="button" class="close-img <%= group.logo ? '' : 'hide' %>">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                  <img id="previewLogo" class="avatar-staff img-fluid" alt="User avatar"
+                                    src="<%= group && group.logo ? group.logo  : '../../web-images/favicon.png' %>" onerror="javascript: this.src = '../../web-images/favicon.png'" />
+                                  <div class="mt-3">
+                                    <label for="logo-group">
+                                      <input type="file" accept="image/*" name="logoGroup" class="form-control"
+                                        id="logo-group">
+                                    </label>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-md-9">
+                              <div class="card" id="the">
+                                <div class="card-header">
+                                  <h1 class="card-header-text">Add New Group</h1>
+                                </div>
+                                <div class="card-block">
+                                  <div class="view-info">
+                                    <div class="row">
+                                      <div class="col-lg-12">
+                                        <div class="general-info">
+                                          <div class="row">
+                                            <div class="col-lg-12 col-xl-12">
+                                              <div class="form-row">
+                                                <div class="col-md-6 mb-3">
+                                                  <label for="role">Group name</label>
+                                                  <input style="border: 1px solid #a7a7a7;" type="text" name="groupName"
+                                                    class="form-control" required placeholder="Please enter group name" value="<%= group.group_name %>">
+                                                </div>
+                                              </div>
+                                              <div class="mt-2">
+                                                <p class="d-flex"><strong>Managers(<span id="countManager"><%= group.managers.length %></span>)</strong><a id="jsOnAddManager"
+                                                    class="btn-add"><i class="icofont icofont-plus"></i></a></p>
+                                                <div class="dt-responsive table-responsive">
+                                                  <table id="manageTable"
+                                                    class="table table-striped table-bordered nowrap">
+                                                    <thead>
+                                                      <tr>
+                                                        <th>#</th>
+                                                        <th>Name</th>
+                                                        <th>E-mail</th>
+                                                        <th>Mobile</th>
+                                                        <th>Address</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                  </table>
+                                                </div>
+                                              </div>
+                                              <div class="mt-3">
+                                                <p class="d-flex"><strong>Companies(<span id="countCompany"><%= group.companies.length %></span>)</strong><a id="jsOnAddCompanies"
+                                                    class="btn-add"><i class="icofont icofont-plus"></i></a></p>
+                                                <div class="dt-responsive table-responsive">
+                                                  <table id="companyTable2"
+                                                    class="table table-striped table-bordered nowrap">
+                                                    <thead>
+                                                      <tr>
+                                                        <th>#</th>
+                                                        <th>Company Name</th>
+                                                        <th>System Name</th>
+                                                        <th>Connection Status</th>
+                                                        <th>Address</th>
+                                                        <th>ABN</th>
+                                                        <th>Email</th>
+                                                        <th>Phone</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                      </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    </tbody>
+                                                  </table>
+                                                </div>
+                                              </div>
+                                              <div class="mt-3">
+                                                <button id="jsSubmitGroup" class="btn btn-primary">Save Group</button>
+                                              </div>
+                                            </div>
+                                            <!-- end of table col-lg-6 -->
+                                          </div>
+                                          <!-- end of row -->
+                                        </div>
+                                        <!-- end of general info -->
+                                      </div>
+                                      <!-- end of col-lg-12 -->
+                                    </div>
+                                    <!-- end of row -->
+                                  </div>
+                                  <!-- end of view-info -->
+
+                                </div>
+                                <!-- end of card-block -->
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                        <!-- Modal manager -->
+                        <div id="jsModalManagerPick" class="modal fade">
+                          <div style="margin-top: 7% !important;"
+                            class="modal-dialog modal-dialog-centered table-reponsive" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Managers</h4>
+                                <form id="jsSearchManager" class="mr-4">
+                                  <div class="input-group mb-0">
+                                    <input name="nameManager" type="text" class="form-control"
+                                      placeholder="Search this name">
+                                    <div class="input-group-append">
+                                      <button class="btn btn-secondary" type="submit">
+                                        <i class="icofont icofont-ui-search"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </form>
+                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <table style="width: 100%;" id="manageTablePick" class="table table-bordered nowrap">
+                                  <thead class="thead-light">
+                                    <tr>
+                                      <th class="max-width"></th>
+                                      <th>Name</th>
+                                      <th>E-mail</th>
+                                      <th>Mobile</th>
+                                      <th>Address</th>
+                                      <th>Status</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div class="modal-footer">
+                                <button id="jsAddManagerPick" class="btn btn-primary">Add</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- End modal manager-->
+                        <!-- Modal company -->
+                        <div id="jsModalCompanyPick" class="modal fade">
+                          <div style="margin-top: 7% !important;"
+                            class="modal-dialog modal-dialog-centered table-reponsive" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Companies</h4>
+                                <form id="jsSearchCompany" class="mr-4">
+                                  <div class="input-group mb-0">
+                                    <input name="nameCompany" type="text" class="form-control"
+                                      placeholder="Search this name">
+                                    <div class="input-group-append">
+                                      <button class="btn btn-secondary" type="submit">
+                                        <i class="icofont icofont-ui-search"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </form>
+                                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">&times;</span>
+                                </button>
+                              </div>
+                              <div class="modal-body">
+                                <table style="width: 100%;" id="companyTable2Pick" class="table table-bordered nowrap">
+                                  <thead class="thead-light">
+                                    <tr>
+                                      <th class="max-width"></th>
+                                      <th>Company Name</th>
+                                      <th>System Name</th>
+                                      <th>Connection Status</th>
+                                      <th>Address</th>
+                                      <th>ABN</th>
+                                      <th>Email</th>
+                                      <th>Phone</th>
+                                      <th>Status</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div class="modal-footer">
+                                <button id="jsAddCompanyPick" class="btn btn-primary">Add</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- End modal company-->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <!-- Custom -->
+  <script>
+    let managers = <%- JSON.stringify(group.managers) %>;
+    let companies = <%- JSON.stringify(group.companies) %>;
+  </script>
+    <script type="text/javascript" src="../../web-files/assets/pages/group/edit.js"></script>
+</body>
+
+</html>

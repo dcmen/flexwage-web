@@ -1,0 +1,119 @@
+<div id="jsModalConversationAdmin" class="iziModal" data-izimodal-transitionin="fadeInDown" data-izimodal-transitionout="bounceOutDown" data-izimodal-fullscreen="">
+
+</div>
+    <!-- Warning Section Starts -->
+    <!-- Older IE warning message -->
+    <!--[if lt IE 10]>
+<div class="ie-warning">
+    <h1>Warning!!</h1>
+    <p>You are using an outdated version of Internet Explorer, please upgrade <br/>to any of the following web browsers to access this website.</p>
+    <div class="iew-container">
+        <ul class="iew-download">
+            <li>
+                <a href="http://www.google.com/chrome/">
+                    <img src="../../web-files/assets/images/browser/chrome.png" alt="Chrome">
+                    <div>Chrome</div>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.mozilla.org/en-US/firefox/new/">
+                    <img src="../../web-files/assets/images/browser/firefox.png" alt="Firefox">
+                    <div>Firefox</div>
+                </a>
+            </li>
+            <li>
+                <a href="http://www.opera.com">
+                    <img src="../../web-files/assets/images/browser/opera.png" alt="Opera">
+                    <div>Opera</div>
+                </a>
+            </li>
+            <li>
+                <a href="https://www.apple.com/safari/">
+                    <img src="../../web-files/assets/images/browser/safari.png" alt="Safari">
+                    <div>Safari</div>
+                </a>
+            </li>
+            <li>
+                <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+                    <img src="../../web-files/assets/images/browser/ie.png" alt="">
+                    <div>IE (9 & above)</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <p>Sorry for the inconvenience!</p>
+</div>
+<![endif]-->
+    <!-- Warning Section Ends -->
+    <!-- Required Jquery -->
+    <script type="text/javascript" src="/../../web-files/bower_components/jquery/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/../../web-files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="/../../web-files/bower_components/popper.js/js/popper.min.js"></script>
+    <script type="text/javascript" src="/../../web-files/bower_components/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jquery slimscroll js -->
+    <script type="text/javascript" src="/../../web-files/bower_components/jquery-slimscroll/js/jquery.slimscroll.js">
+    </script>
+    <!-- modernizr js -->
+    <script type="text/javascript" src="/../../web-files/bower_components/modernizr/js/modernizr.js"></script>
+    <script type="text/javascript" src="/../../web-files/bower_components/modernizr/js/css-scrollbars.js"></script>
+    <!-- Custom js -->
+    <script type="text/javascript" src="/../../web-files/assets/js/SmoothScroll.js"></script>
+    <script src="/../../web-files/assets/js/pcoded.min.js"></script>
+    <script src="/../../web-files/assets/js/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="/../../web-files/assets/js/vartical-layout.min.js"></script>
+    <script type="text/javascript" src="/../../web-files/assets/js/script.js"></script>
+    <!--modal-->
+    <script type="text/javascript" src="../../web-files/assets/pages/layouts/modal.js"></script>
+    <!--navbar-->
+    <script type="text/javascript" src="../../web-files/assets/pages/layouts/navbar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izimodal/1.5.1/js/iziModal.min.js"></script>
+    <script>
+        $(document).on("click", "#jsConversation", function() {
+            var url = window.location.origin + "/admin/conversations";
+
+            $('#jsModalConversationAdmin').iziModal('destroy');
+
+            $("#jsModalConversationAdmin").iziModal({
+                title: "Conversation",
+                iconClass: 'icon-stack',
+                overlayColor: 'rgba(255, 255, 255, 0.4)',
+                width: 700,
+                padding: 20,
+                fullscreen: true,
+                openFullscreen: true,
+                closeOnEscape: true,
+                closeButton: true,
+                onOpening: function() {
+                    $('#mobile-collapse').click();
+                    $('nav.header-navbar').addClass('d-none');
+                },
+                onClosing: function() {
+                    $('#mobile-collapse').click();
+                    $('.header-navbar').removeClass('d-none');
+                },
+                onResize: function () {
+                    $('[data-close]').click();
+                },
+                iframe: true,
+                iframeURL: url
+            });
+
+            $('#jsModalConversationAdmin').iziModal('open');
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.3/purify.min.js"></script>  
+    <script>
+        $(document).on("blur", "input[type=email], input[type=text], input[type=password], textarea", function () {
+            var element = $(this).val();
+            var clean = DOMPurify.sanitize(element);
+            $(this).val(clean);
+        });
+        const arrayTag = document.getElementsByTagName("a");
+        for (let index = 0; index < arrayTag.length; index++) {
+            const value = arrayTag[index].getAttribute("href");
+            if (value != null) {
+                var href = DOMPurify.sanitize(value);
+                arrayTag[index].setAttribute("href", href);
+            }
+        }
+    </script>

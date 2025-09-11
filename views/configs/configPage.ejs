@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page body start -->
+                  <div class="page-body">
+                    <form action="/admin/config-page/<%= data._id %>" method="POST">
+                      <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Information</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Address</label>
+                                <div class="col-sm-10">
+                                  <!-- <input type="text" class="form-control" name="address" required
+                                    value="<%= data.information[0].address %>" maxlength="80"> -->
+                                  <textarea type="text" type="text" class="form-control" rows="5" cols="5"
+                                  class="form-control" name="address"><%= data.information[0].address %></textarea>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Phone</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="phone" required
+                                  value="<%= data.information[0].phone %>" maxlength="20">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="email" required
+                                  value="<%= data.information[0].email %>" maxlength="20">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Website</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="website" required
+                                  value="<%= data.information[0].website %>" maxlength="20">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <div class="card-header">
+
+                              <div class="form-group row">
+                                <h4 class="col-sm-2">Social</h4>
+                                <div class="col-sm-10">
+                                  <button type="submit" class="btn btn-primary m-b-0 float-right">Submit</button>
+                                </div>
+                              </div>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Facebook</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="facebook" required
+                                  value="<%= data.social[0].facebook %>" maxlength="50">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Google</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="google" required
+                                  value="<%= data.social[0].google %>" maxlength="20">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Twitter</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="twitter" required
+                                  value="<%= data.social[0].twitter %>" maxlength="20">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Instagra</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="instagram" required
+                                  value="<%= data.social[0].instagram %>" maxlength="20">
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>SEO Website</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Title</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="title" required
+                                  value="<%= data.seo[0].title %>">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Keywords</label>
+                                <div class="col-sm-10">
+                                  <textarea name="keyword" cols="5" rows="6" class="form-control"><%= data.seo[0].keyword %></textarea>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Content</label>
+                                <div class="col-sm-10">
+                                  <textarea name="content" cols="5" rows="6" class="form-control"
+                                    ><%= data.seo[0].content %></textarea>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="card">
+                              <div class="card-header">
+                                <h4>Map</h4>
+                                <hr>
+                              </div>
+                              <div class="card-block">
+                                <div class="form-group row">
+                                  <label class="col-sm-2 col-form-label">Long</label>
+                                  <div class="col-sm-10">
+                                    <input type="text" class="form-control" name="longtitude" required
+                                    value="<%= data.map[0].longtitude %>" maxlength="20">
+                                  </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Lat</label>
+                                    <div class="col-sm-10">
+                                      <input type="text" class="form-control" name="latitude" required
+                                      value="<%= data.map[0].latitude %>" maxlength="20">
+                                    </div>
+                                  </div>
+                              </div>
+                            </div>
+                          </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- Page body end -->
+                </div>
+              </div>
+              <!-- Page body end -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script>
+  <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+
+  <script>
+    var edit = CKEDITOR.replace('address');
+  </script>
+</body>
+
+</html>

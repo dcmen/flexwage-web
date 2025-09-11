@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+</head>
+
+<body class="fix-menu">
+  <% include ../layouts/preloader %>
+  <iframe src="https://api.yourpayroll.com.au/oauth/authorise?client_id=WEwlIIWHZW3uLX1vH4EujHH1&response_type=code&redirect_uri=http://cashd.co/callback" height="200" id='keypay' width="300" title="Iframe Example" referrerpolicy="same-origin"></iframe>
+  <!-- Warning Section Starts -->
+  <% include ../layouts/script %>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="/../../web-files/assets/js/login/login.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+</body>
+
+</html>

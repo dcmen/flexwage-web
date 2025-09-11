@@ -1,0 +1,291 @@
+<nav class="pcoded-navbar">
+    <div class="pcoded-inner-navbar main-menu">
+        <div class="pcoded-navigatio-lavel">Menu</div>
+        <ul class="pcoded-item pcoded-left-item">
+            <% if(role === 'Admin') { %>
+                <li
+                        class="<%= pageName === 'company-management' || pageName === 'staff-company' || pageName === 'edit-staff-company' ? 'active' : '' %>">
+                    <a href="/admin/company-management">
+                        <span class="pcoded-micon"><i class="feather icon-briefcase"></i></span>
+                        <span class="pcoded-mtext">Companies</span>
+                    </a>
+                </li>
+                <li class="<%= pageName === 'retailers' || pageName === 'retailer' ? 'active' : '' %>">
+                    <a href="/admin/retailers">
+                        <span class="pcoded-micon"><i class="feather icon-shopping-cart"></i></span>
+                        <span class="pcoded-mtext">Retailers</span>
+                    </a>
+                </li>
+                <li class="pcoded-hasmenu <%= pageName === 'staff-management' || pageName === 'user-staff-management' || pageName === 'admin-management' || pageName === 'block-user' || pageName === 'edit-manager' || pageName === 'create-manager' ? 'active pcoded-trigger' : '' %>">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="icofont icofont-user"></i></span>
+                        <span class="pcoded-mtext">Users</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        <li class="<%= pageName === 'admin-management' ? 'active' : '' %>">
+                            <a href="/admin/admin-management">
+                                <span class="pcoded-mtext">Admin Users</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'staff-management' || pageName === 'user-staff-management' ? 'active' : '' %>">
+                            <a href="/admin/staff-management">
+                                <span class="pcoded-mtext">CashD Users</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'block-user' ? 'active' : '' %>">
+                            <a href="/admin/block-user">
+                                <span class="pcoded-mtext">Blocked Users</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <!-- <li class="<%= pageName === 'contact-management' ? 'active' : '' %>">
+                    <a href="/admin/contact-management">
+                        <span class="pcoded-micon"><i class="feather icon-mail"></i></span>
+                        <span class="pcoded-mtext">Contact Management</span>
+                    </a>
+                </li> -->
+                <!-- <li
+                        class="pcoded-hasmenu <%= pageName !== '' && pageName !== 'dashboard' && pageName !== 'block-user'
+                        && pageName !== 'company-management' && pageName !== 'staff-management'
+                        && pageName !== 'blog-post-management' && pageName !== 'blog-category'
+                        && pageName !== 'blog-tag' && pageName !== 'user-management'
+                        && pageName !== 'config-management' && pageName !== 'contact-management'
+                        && pageName !== 'documents' && pageName !== 'transactions'
+                        && pageName !== 'settings' && pageName !== 'staff-company'
+                        && pageName !== 'user-staff-management'
+                        && pageName !== 'edit-staff-company' && pageName !== 'retailers'
+                        && pageName !== 'retailer' && pageName !== 'lenders' && pageName !== 'lender'
+                        && pageName !== 'supper-lender' && pageName !== 'logs' && pageName !== 'notifications'
+                        && pageName !== 'logs-registration' && pageName !== 'logs-rate' && pageName !== 'user-logs' && pageName !== 'error-code' ? 'active pcoded-trigger' : '' %>">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="feather icon-layers"></i></span>
+                        <span class="pcoded-mtext">Landing Page Content</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        <li class="<%= pageName === 'banner-management' ? 'active' : '' %>">
+                            <a href="/admin/banner-management">
+                                <span class="pcoded-mtext">Banner</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'feature-management' ? 'active' : '' %>">
+                            <a href="/admin/feature-management">
+                                <span class="pcoded-mtext">Feature</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'about-management' ? 'active' : '' %>">
+                            <a href="/admin/about-management">
+                                <span class="pcoded-mtext">About</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'hiw-management' ? 'active' : '' %>">
+                            <a href="/admin/hiw-management">
+                                <span class="pcoded-mtext">How does it work?</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'awesome-management' ? 'active' : '' %>">
+                            <a href="/admin/awesome-management">
+                                <span class="pcoded-mtext">Awesome Features</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'video-management' ? 'active' : '' %>">
+                            <a href="/admin/video-management">
+                                <span class="pcoded-mtext">Video</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'funfact-management' ? 'active' : '' %>">
+                            <a href="/admin/funfact-management">
+                                <span class="pcoded-mtext">Funfact</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'screenshot-management' ? 'active' : '' %>">
+                            <a href="/admin/screenshot-management">
+                                <span class="pcoded-mtext">Screenshot</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'team-management' ? 'active' : '' %>">
+                            <a href="/admin/team-management">
+                                <span class="pcoded-mtext">Team Member</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'feedback-management' ? 'active' : '' %>">
+                            <a href="/admin/feedback-management">
+                                <span class="pcoded-mtext">Feedback</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'pricing-management' ? 'active' : '' %>">
+                            <a href="/admin/pricing-management">
+                                <span class="pcoded-mtext">Pricing</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'faq-management' ? 'active' : '' %>">
+                            <a href="/admin/faq-management">
+                                <span class="pcoded-mtext">FAQs</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'download-management' ? 'active' : '' %>">
+                            <a href="/admin/download-management">
+                                <span class="pcoded-mtext">Download</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li> -->
+                <!-- <li
+                        class="pcoded-hasmenu <%= pageName !== '' && pageName !== 'dashboard' && pageName !== 'company-management' && pageName !== 'block-user'
+                        && pageName !== 'staff-management' && pageName !== 'user-management' && pageName !== 'config-management'
+                        && pageName !== 'banner-management' && pageName !== 'feature-management' && pageName !== 'about-management'
+                        && pageName !== 'hiw-management' && pageName !== 'awesome-management' && pageName !== 'video-management'
+                        && pageName !== 'funfact-management' && pageName !== 'screenshot-management' && pageName !== 'team-management'
+                        && pageName !== 'feedback-management' && pageName !== 'pricing-management' && pageName !== 'faq-management'
+                        && pageName !== 'download-management' && pageName !== 'contact-management'
+                        && pageName !== 'documents' && pageName !== 'transactions' && pageName !== 'settings'
+                        && pageName !== 'staff-company' && pageName !== 'user-staff-management'
+                        && pageName !== 'edit-staff-company' && pageName !== 'edit-staff-company' && pageName !== 'retailers'
+                        && pageName !== 'retailer' && pageName !== 'lenders' && pageName !== 'lender'
+                        && pageName !== 'logs' && pageName !== 'supper-lender' && pageName !== 'notifications'
+                        && pageName !== 'logs-registration' && pageName !== 'logs-rate' && pageName !== 'user-logs'
+                        && pageName !== 'error-code' && pageName !== 'admin-management' ? 'active pcoded-trigger' : '' %>">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="feather icon-edit"></i></span>
+                        <span class="pcoded-mtext">Blog Management</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        <li class="<%= pageName === 'blog-post-management' ? 'active' : '' %>">
+                            <a href="/admin/blog-post-management">
+                                <span class="pcoded-mtext">Post Management</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'blog-category' ? 'active' : '' %>">
+                            <a href="/admin/blog-category">
+                                <span class="pcoded-mtext">Category</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'blog-tag' ? 'active' : '' %>">
+                            <a href="/admin/blog-tag">
+                                <span class="pcoded-mtext">Tag</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li> -->
+                <!-- <li class="<%= pageName === 'user-management' ? 'active' : '' %>">
+                <a href="/admin/user-management">
+                    <span class="pcoded-micon"><i class="feather icon-user"></i></span>
+                    <span class="pcoded-mtext">Admin Management</span>
+                </a>
+                </li> -->
+                <li class="<%= pageName === 'documents' ? 'active' : '' %>">
+                    <a href="/admin/documents">
+                        <span class="pcoded-micon"><i class="feather icon-file-plus"></i></span>
+                        <span class="pcoded-mtext">Documents</span>
+                    </a>
+                </li>
+                <li class="<%= pageName === 'transactions' ? 'active' : '' %>">
+                    <a href="/admin/transactions">
+                        <span class="pcoded-micon"><i class="feather icon-navigation-2"></i></span>
+                        <span class="pcoded-mtext">Transactions</span>
+                    </a>
+                </li>
+                <li
+                        class="<%= pageName === 'settings' || pageName === 'supper-lender' ? 'active' : '' %>">
+                    <a href="/admin/settings">
+                        <span class="pcoded-micon"><i class="feather icon-settings"></i></span>
+                        <span class="pcoded-mtext">Settings</span>
+                    </a>
+                </li>
+                <li class="<%= pageName === 'lenders' || pageName === 'lender' ? 'active' : '' %>">
+                    <a href="/admin/lenders">
+                        <span class="pcoded-micon"><i class="icofont icofont-money-bag"></i></span>
+                        <span class="pcoded-mtext">Lenders</span>
+                    </a>
+                </li>
+                <li
+                        class="pcoded-hasmenu <%= pageName === 'logs' || pageName === 'logs-registration' || pageName === 'logs-rate' ? 'active pcoded-trigger' : '' %>">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="icofont icofont-list"></i></span>
+                        <span class="pcoded-mtext">Logs</span>
+                    </a>
+                    <ul class="pcoded-submenu">
+                        <li class="<%= pageName === 'logs-registration' ? 'active' : '' %>">
+                            <a href="/admin/logs/registration">
+                                <span class="pcoded-mtext">Registration Page 1</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'user-logs' ? 'active' : '' %>">
+                            <a href="/admin/user-logs">
+                                <span class="pcoded-mtext">User Logs</span>
+                            </a>
+                        </li>
+                        <li class="<%= pageName === 'logs-rate' ? 'active' : '' %>">
+                            <a href="/admin/logs/rate">
+                                <span class="pcoded-mtext">Rate App</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="<%= pageName === 'conversations' ? 'active' : '' %>" id="jsConversation">
+                    <a href="javascript:void(0)">
+                        <span class="pcoded-micon"><i class="icofont icofont-support"></i></span>
+                        <span class="pcoded-mtext">Support</span>
+                    </a>
+                </li>
+                <li class="<%= pageName === 'error-code' ? 'active' : '' %>">
+                    <a href="/admin/error-code">
+                        <span class="pcoded-micon"><i class="icofont icofont-error"></i></span>
+                        <span class="pcoded-mtext">Error Codes</span>
+                    </a>
+                </li>
+        </li>
+        <% } else { %>
+            <li
+                class="<%= pageName === 'company-management' || pageName === 'staff-company' || pageName === 'edit-staff-company' ? 'active' : '' %>">
+                    <a href="/admin/company-management">
+                        <span class="pcoded-micon"><i class="feather icon-briefcase"></i></span>
+                        <span class="pcoded-mtext">Companies</span>
+                    </a>
+            </li>
+            <!-- <li class="<%= pageName === 'retailer' ? 'active' : '' %>">
+          <a href="/admin/retailer">
+            <span class="pcoded-micon"><i class="feather icon-shopping-cart"></i></span>
+            <span class="pcoded-mtext">Retailer</span>
+          </a>
+        </li> -->
+            <li class="<%= pageName === 'staff-management' || pageName === 'user-staff-management' ? 'active' : '' %>">
+                <a href="/admin/staff-management">
+                    <span class="pcoded-micon"><i class="feather icon-users"></i></span>
+                    <span class="pcoded-mtext">Users</span>
+                </a>
+            </li>
+            <li class="<%= pageName === 'block-user' ? 'active' : '' %>">
+                <a href="/admin/block-user">
+                    <span class="pcoded-micon"><i class="feather icon-user-x"></i></span>
+                    <span class="pcoded-mtext">Blocked Users</span>
+                </a>
+            </li>
+            <!-- <li class="<%= pageName === 'documents' ? 'active' : '' %>">
+      <a href="/admin/documents">
+        <span class="pcoded-micon"><i class="feather icon-file-plus"></i></span>
+        <span class="pcoded-mtext">Documents</span>
+      </a>
+    </li>
+    <li class="<%= pageName === 'transactions' ? 'active' : '' %>">
+      <a href="/admin/transactions">
+        <span class="pcoded-micon"><i class="feather icon-navigation-2"></i></span>
+        <span class="pcoded-mtext">Transactions & Reconcile</span>
+      </a>
+    </li> -->
+        <!-- <li class="<%= pageName === 'user-logs' ? 'active' : '' %>">
+            <a href="/admin/user-logs">
+                <span class="pcoded-micon"><i class="icofont icofont-users-social"></i></span>
+                <span class="pcoded-mtext">User Logs</span>
+            </a>
+        </li> -->
+        <% } %>
+        <li class="<%= pageName === 'notifications' ? 'active' : '' %>">
+            <a href="/admin/notifications">
+                <span class="pcoded-micon"><i class="icofont icofont-alarm"></i></span>
+                <span class="pcoded-mtext">Notifications</span>
+            </a>
+        </li>
+        </ul>
+    </div>
+</nav>

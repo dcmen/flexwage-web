@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  <!-- Meta -->
+  <style>
+    /* config input tag area add post */
+    .bootstrap-tagsinput {
+      border: 1px solid #305ed3;
+      line-height: 30px;
+      border-radius: 2px;
+      width: 100% !important;
+    }
+  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Tags css -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/bower_components/bootstrap-tagsinput/css/bootstrap-tagsinput.css">
+  <% include ../layouts/stylesheet %>
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page-header start -->
+                  <div class="page-header">
+                    <div class="row align-items-end">
+                      <div class="col-lg-8">
+                        <div class="page-header-title">
+                          <div class="d-inline">
+                            <h4>Edit Post</h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="page-header-breadcrumb">
+                          <ul class="breadcrumb-title">
+                            <li class="breadcrumb-item">
+                              <a href="/admin"> <i class="feather icon-home"></i> </a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Page Blog</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Post</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Edit Post</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Page-header end -->
+                  <!-- Page body start -->
+                  <div class="page-body">
+                    <form action="/admin/edit-blog-category/<%= post._id %>/?_csrf=<%=csrfToken%>" method="POST">
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Edit Post</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Category Name</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" maxlength="15" name="name" value="<%= post.name %>">
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                  <select name="status" class="form-control">
+                                    <option value="">Select One Value Only</option>
+                                    <option value="true" <%= post.status === true ? 'selected' : '' %>>Active</option>
+                                    <option value="false" <%= post.status === false ? 'selected' : '' %>>Disable</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <label class="col-sm-2"></label>
+                                <div class="col-sm-10">
+                                  <button type="submit" class="btn btn-primary m-b-0">Submit</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- Page body end -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <!-- Tags js -->
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-tagsinput/js/bootstrap-tagsinput.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+</body>
+
+</html>

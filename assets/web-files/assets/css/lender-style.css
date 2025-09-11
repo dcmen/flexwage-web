@@ -1,0 +1,102 @@
+.btn--width {
+    min-width: 250px;
+}
+
+input[type='radio']:after {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #d1d3d1;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
+
+input[type='radio']:checked:after {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    top: -2px;
+    left: -1px;
+    position: relative;
+    background-color: #0257ff;
+    content: '';
+    display: inline-block;
+    visibility: visible;
+    border: 2px solid white;
+}
+
+.custom-form {
+    display: flex;
+}
+
+.custom-form input {
+    width: 100%;
+}
+
+.custom-form select, .custom-form button {
+    width: 15%;
+}
+
+.content-step {
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
+
+.progressbar {
+    max-width: 100%;
+}
+
+#progressbar {
+    display: flex;
+}
+#progressbar li {
+    width: 100%;
+}
+
+.multi_step_form #msform fieldset {
+    padding: 20px 170px 0;
+}
+
+#jsShowStep {
+    display: none;
+}
+
+.dropdown.bootstrap-select.form-control {
+    border: 1px solid #ccc;
+}
+
+button.btn.dropdown-toggle.btn-light:focus {
+    outline: none !important;
+}
+
+input.form-control {
+    min-height: 42px;
+}
+
+#jsCommission .dropdown.bootstrap-select.form-control.ml-2 {
+    width: 15%;
+    height: 42.5px;
+}
+
+#msform a.selected {
+    color: #fff;
+}
+
+#msform a {
+    color: inherit;
+}
+
+.input--err {
+    border-color: #ff0000 !important;
+}
+
+.input--err:focus {
+    border-color: #ff0000 !important;
+    box-shadow: 0 0 0 0.2rem rgb(255 0 0 / 25%) !important;
+}

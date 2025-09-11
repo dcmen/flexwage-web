@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <% include ../layouts/stylesheet %>
+    <link rel="stylesheet" type="text/css" href="/../../web-files/assets/css/lender-style.css">
+    <link rel="stylesheet"
+        href="/../../web-files/assets/css/bootstrap-select.min.css">
+</head>
+
+<body>
+    <% include ../layouts/preloader %>
+    <div id="jsLoader">
+        <div style="top: 40%; left: 0px;" class="loader">
+            <div class="loader-chiled"></div>
+        </div>
+    </div>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <% include ../layouts/navbar %>
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <% include ../layouts/leftbar %>
+                    <!-- Toast -->
+                    <% if (messages.length > 0) { %>
+                        <div id='jsErr' class="toast-err mt-1 show error">
+                            <p><%= messages %></p>
+                            <div class="relative w-full sm:w-1/2 bg-gray-200">
+                                <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+                            </div>
+                        </div>
+                    <% } %>
+                    <!--End Toast-->
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page body start -->
+                                    <div class="page-body">
+                                        <form id="formEdit" method="POST" action="/admin/edit-lender/<%= lender._id %>/?_csrf=<%=csrfToken%>">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h3 class="card-header-text">Edit Lender</h3>
+                                                </div>
+                                                <div class="card-block">
+                                                    <div class="view-info">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <div class="general-info">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12 col-xl-12">
+                                                                            <div>
+                                                                                <div class="form-row">
+                                                                                  <div class="col-md-6 mb-3">
+                                                                                    <label for="validationFirstName">Lender Name</label>
+                                                                                    <input name="lender_name" type="text" class="form-control" id="validationLenderName" value="<%= lender.lender_name %>" required>
+                                                                                  </div>
+                                                                                  <div class="col-md-6 mb-3">
+                                                                                    <label for="validationEmail">Monoova Account Type</label>
+                                                                                    <select
+                                                                                        class="form-control selectpicker"
+                                                                                        name="monoova_account_type"
+                                                                                        id="inputAccountType">
+                                                                                        <%
+                                                                                            var options = [ "NEW_ACCOUNT", "CASHD" ];
+                                                                                            for ( var i = 0; i < options.length; i++ )
+                                                                                            {
+                                                                                                var selected = ( lender.monoova_account_type == options[i] ) ? "selected" : "";
+                                                                                                %><option value="<%=options[ i ] %>" <%=selected %>><%=i == "0" ? "New Account" : "CashD" %></option>
+                                                                                        <% } %>
+                                                                                    </select>
+                                                                                  </div>
+                                                                                </div>
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label for="validationLastName">Funding Type</label>
+                                                                                        <select
+                                                                                            class="selectpicker form-control"
+                                                                                            name="funding_type"
+                                                                                            id="inputFundingType">
+                                                                                            <%
+                                                                                            var options = [];
+                                                                                            var name = [];
+                                                                                            if (lender.monoova_account_type == "NEW_ACCOUNT") {
+                                                                                                options = [ "SELF_FINANCED", "EXTERNAL_FINANCED" ];
+                                                                                                name = ["Self Funded", "External Funded"];
+                                                                                            } else {
+                                                                                                options = ["CASHD_FINANCED"];
+                                                                                                name = ["CashD Funded"];
+                                                                                            }
+                                                                                            for ( var i = 0; i < options.length; i++ )
+                                                                                            {
+                                                                                                var selected = ( lender.funding_type == options[i] ) ? "selected" : "";
+                                                                                                %><option value="<%=options[ i ] %>" <%=selected %>><%= name[i] %></option>
+                                                                                            <% } %>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <label for="validationMobile">Account Name</label>
+                                                                                        <input type="text" name="test_receivables_account_name" class="form-control" value="<%= lender.test_receivables_account_name %>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                      <label for="validationEmail">Account Number</label>
+                                                                                      <input type="text" name="test_receivables_account_number" class="form-control" value="<%= lender.test_receivables_account_number%>">
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                      <label for="validationMobile">BSB</label>
+                                                                                      <input type="text" name="test_receivables_account_bsb" class="form-control" value="<%= lender.test_receivables_account_bsb %>">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <% if(lender.live_account_number) {%>
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                        <label for="validationEmail">Monoova Account Number Live</label>
+                                                                                        <input type="text" name="live_account_number" class="form-control" value="<%= lender.live_account_number %>">
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                        <label for="validationMobile">API Key Live</label>
+                                                                                        <input type="text" name="live_api_key" class="form-control" value="<%= lender.live_api_key %>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="form-row">
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                        <label for="validationEmail">Monoova Account Number Test</label>
+                                                                                        <input type="text" name="test_account_number" class="form-control" value="<%= lender.test_account_number %>">
+                                                                                        </div>
+                                                                                        <div class="col-md-6 mb-3">
+                                                                                        <label for="validationMobile">API Key Test</label>
+                                                                                        <input type="text" name="test_api_key" class="form-control" value="<%= lender.test_api_key %>">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                <% } %>
+                                                                                <div class="form-row">
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                        <div class="row">
+                                                                                            <div class="col-md-8 mb-3">
+                                                                                                <label for="validationEmail">Commission / interest</label>
+                                                                                                <input type="text" name="interest_rate_value" class="form-control" value="<%= lender.interest_rate_value %>">
+                                                                                            </div>
+                                                                                            <div class="col-md-4 mb-3">
+                                                                                                <label>&nbsp;</label>
+                                                                                                <select id="unit"
+                                                                                                    class="form-control selectpicker"
+                                                                                                    name="interest_rate_type">
+                                                                                                    <%
+                                                                                                        var options = [ "DOLLAR", "PERCENT" ];
+                                                                                                        for ( var i = 0; i < options.length; i++ )
+                                                                                                        {
+                                                                                                            var selected = ( lender.interest_rate_type == options[i] ) ? "selected" : "";
+                                                                                                            %><option value="<%=options[ i ] %>" <%=selected %>><%=i == "0" ? "$" : "%" %></option>
+                                                                                                    <% } %>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-6 mb-3">
+                                                                                      <label for="validationMobile">Commission Rule</label>
+                                                                                      <p class="form-control">((transaction X Rate)/1.11 - $1.80)/2</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <button class="btn btn-primary" type="submit">SAVE</button>
+                                                                            </div>
+                                                                        </div>
+        
+                                                                        <!-- end of table col-lg-6 -->
+                                                                    </div>
+                                                                    <!-- end of row -->
+                                                                </div>
+                                                                <!-- end of general info -->
+                                                            </div>
+                                                            <!-- end of col-lg-12 -->
+                                                        </div>
+                                                        <!-- end of row -->
+                                                    </div>
+                                                    <!-- end of view-info -->
+        
+                                                </div>
+                                                <!-- end of card-block -->
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../layouts/script %>
+    <!-- Select 2 -->
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/../../web-files/assets/js/bootstrap-select.min.js"></script>
+    <!-- Custom js -->
+    <script src="../../web-files/assets/pages/lender/edit.js"></script>
+</body>

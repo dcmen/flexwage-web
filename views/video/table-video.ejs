@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+
+  <style>
+    @media (min-width: 320px) and (max-width: 767px) {
+        * {
+            width: 100%;
+        }
+            #promo-video-area {
+            padding: 2em 0;
+            top: 0;
+        }
+        .video-play-icon i {
+            font-size: 26px;
+            height: 60px;
+            line-height: 60px;
+            width: 60px;
+        }
+        #promo-video-area.home-style-3 {
+            padding: 5em 0;
+        }
+        .container {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        iframe {
+            width: 100%;
+            height: 192px;
+        }
+    }
+    @media (min-width: 768px) and (max-width: 991px) {
+        #promo-video-area {
+            top: 80px;
+        }
+        *{
+            width: 100%;
+        }
+        iframe {
+            width: 100% !important;
+            height: 366px;
+        }
+    }
+    @media (min-width: 992px) and (max-width: 1169px) {
+        .social {
+            margin-top: 15px;
+        }
+        #footer-area {
+            background-color: #2b323f;
+            padding-bottom: 40px;
+            padding-top: 21em;
+        }
+        iframe {
+            width: 100% !important;
+            height: 501px;
+        }
+    }
+    @media (min-width: 1170px) and (max-width: 1366px) {
+        iframe {
+            width: 100% !important;
+            height: 580px;
+        }
+    }
+    @media (min-width: 1367px) and (max-width: 1920px) {
+        iframe {
+            width: 100% !important;
+            height: 603px;
+        }
+    }
+  </style>
+
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+
+                  <!-- Page-body start -->
+                  <div class="page-body">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="card">
+                          <div class="card-header">
+                            <h4>Video management</h4>
+                            <div class="card-header-right"><i class="icofont icofont-spinner-alt-5"></i></div>
+                          </div>
+                          <form action="/admin/update-header-video/?_csrf=<%=csrfToken%>" method="POST">
+                            <div class="card-block" style="padding: 0 20px">
+                              <div class="form-group row">
+                                <div class="col-sm-2">
+                                  <label class="col-form-label">Status</label>
+                                </div>
+                                <div id="divMsg4" style="display: block;" class="col-sm-9">
+                                  <label class="col-form-label"><%= header[0].status === true ? 'Show' : 'Hide' %></label>
+                                </div>
+                                <div id="divMsg3" style="display: none;" class="col-sm-9">
+                                  <select name="status" class="form-control">
+                                    <option value="true" <%= header[0].status === true ? 'selected' : '' %>>Show
+                                    </option>
+                                    <option value="false" <%= header[0].status === false ? 'selected' : '' %>>Hide
+                                    </option>
+                                  </select>
+                                </div>
+                                <div class="col-sm-1">
+                                  <input type="button" class="btn btn-sm btn-success" value="Edit" onClick="showHideDiv('divMsg'); showHideDiv2('divMsg2'); showHideDiv2('divMsg3'); showHideDiv2('divMsg4'); showHideDiv2('divMsg5')">
+                                </div>
+                              </div>
+                            </div>
+                            <div class="card-block" style="padding: 0 20px">
+                              <div class="form-group row">
+                                <div class="col-sm-2">
+                                  <label class="col-form-label">Video Path</label>
+                                </div>
+                                <div id="divMsg2" style="display:block" class="col-sm-9">
+                                  <label class="col-form-label"><%= header[0].description %></label>
+                                </div>
+                                <div id="divMsg" style="display:none" class="col-sm-9">
+                                  <input type="text" class="form-control" id="desHeaderOld" name="desHeaderOld" placeholder="Enter New Video Path" value="<%= header[0].description %>" style="margin-bottom: 10px">
+                                  <input type="text" class="d-none" value="" id="desHeader" name="desHeader">
+                                  <span id="error"></span>
+                                </div>
+                                <div class="col-sm-2"></div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="col-sm-2"></div>
+                                <div id="divMsg5" style="display: none;" class="col-sm-10">
+                                  <button id="btn_submit" type="submit" class="btn btn-primary m-b-0">Submit</button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                        <!-- Zero config.table start -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Preview</h4>
+                                <div class="card-header-right"><i class="icofont icofont-spinner-alt-5"></i></div>
+                            </div>
+                            <div class="card-block text-center">
+                                <div class="iframe-video-show animated wow animated wow bounceIn" data-wow-duration="1s" data-wow-delay=".3s">
+                                    <iframe src="<%= header[0].description %>" width="1280" height="720"
+                                    frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Zero config.table end -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Page-body end -->
+                </div>
+              </div>
+              <!-- Main-body end -->
+              <div id="styleSelector">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/jszip.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/pdfmake.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/vfs_fonts.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script>
+
+<!-- convert youtube link to embedded iframe link -->
+<script>
+  var oldUrl = document.getElementById('desHeaderOld').value;
+  $('#desHeader').val(oldUrl);
+  $('#desHeaderOld').change(function() {
+    var url = $('#desHeaderOld').val();
+  
+    var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    var match = url.match(regExp);
+
+    if (match && match[2].length == 11) {
+      var newUrl = match[2];
+      $('#desHeader').val('//www.youtube.com/embed/' + newUrl);
+      $('#btn_submit').removeClass('d-none');
+      $('#error').html('');
+    } else {
+      var error = 'The path is wrong!';
+      $('#btn_submit').addClass('d-none');
+      $('#error').html('<p class="text-danger mt-3">'+error+'</p>');
+    }
+  });
+</script>
+  
+<script type="text/javascript">
+  function showHideDiv(ele) {
+    var srcElement = document.getElementById(ele);
+    if (srcElement != null) {
+      if (srcElement.style.display == "block") {
+        srcElement.style.display = 'none';
+      }
+      else {
+        srcElement.style.display = 'block';
+      }
+      return false;
+    }
+  }
+</script>
+
+<script type="text/javascript">
+  function showHideDiv2(ele) {
+    var srcElement = document.getElementById(ele);
+    if (srcElement != null) {
+      if (srcElement.style.display == "block") {
+        srcElement.style.display = 'none';
+      }
+      else {
+        srcElement.style.display = 'block';
+      }
+      return false;
+    }
+  }
+</script>
+
+<script type="text/javascript">
+  function showHideDiv3(ele) {
+    var srcElement = document.getElementById(ele);
+    if (srcElement != null) {
+      if (srcElement.style.display == "block") {
+        srcElement.style.display = 'none';
+      }
+      else {
+        srcElement.style.display = 'block';
+      }
+      return false;
+    }
+  }
+</script>
+
+<script type="text/javascript">
+  function showHideDiv4(ele) {
+    var srcElement = document.getElementById(ele);
+    if (srcElement != null) {
+      if (srcElement.style.display == "block") {
+        srcElement.style.display = 'none';
+      }
+      else {
+        srcElement.style.display = 'block';
+      }
+      return false;
+    }
+  }
+</script>
+
+<script type="text/javascript">
+  function showHideDiv5(ele) {
+    var srcElement = document.getElementById(ele);
+    if (srcElement != null) {
+      if (srcElement.style.display == "block") {
+        srcElement.style.display = 'none';
+      }
+      else {
+        srcElement.style.display = 'block';
+      }
+      return false;
+    }
+  }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= pageName %></title>
+  <!-- Referrer-Policy -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <!-- Favicon icon -->
+  <link rel="icon" href="/web-files/assets/images/favicon.ico" type="image/x-icon">
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="/web-files/assets/icon/icofont/css/icofont.css">
+  <!-- Google font-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,600,800" rel="stylesheet">
+  <!-- Required Fremwork -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/css/jquery.mCustomScrollbar.css">
+  <link rel="stylesheet" type="text/css" href="../../web-stylesheets/style.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="/web-stylesheets/reckon-trial.css">
+</head>
+
+<body class="bg-color">
+  <div id="jsLoader">
+    <div class="loader">
+      <div class="loader-chiled"></div>
+    </div>
+  </div>
+  <div class="container-body">
+    <input hidden name="_csrf" value="<%= csrfToken %>">
+    <input hidden name="encryptionKey" value="<%= encryptionKey %>">
+    <div id='jsErr'>
+      <p>The connection has timed out</p>
+      <div class="relative w-full sm:w-1/2 bg-gray-200">
+        <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+      </div>
+    </div>
+    <header class="header">
+      <div class="header-logo">
+        <img src="/web-images/Group467.png" alt="logo">
+      </div>
+      <div class="logo-reckon d-none d-sm-block">
+        <img src="/web-images/ReckonLogo-Horizontal.png" alt="logo-reckon" />
+      </div>
+    </header>
+    <main>
+      <!-- Page Contact Person  -->
+      <div id="divInfoUse" class="content pt-5">
+        <p class="txt-color">Your employees can now choose how and when they get paid with the CashD on demand pay solution.</p>
+        <p class="txt-color">It’s easy to get your business set up!</p> 
+        <p class="txt-color">Simply complete the form below and one of our consultants will give you a call to get you onboard.</p>
+        <h4 class="title-txt mb-0 mt-5">Contact Person for trial</h4>
+        <p><span class="note-one"><i>
+              Please note: the nominated person needs to have login access to
+              your Reckon book
+            </i></span>
+        </p>
+        <div class="content-form">
+          <form class="row" id="formRegister">
+            <div class="col-md-9">
+              <div class="row">
+                <div class="col-md-9">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" checked name="isNominate" id="inlineRadio1" value="false">
+                    <label class="form-check-label" for="inlineRadio1">My details</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="isNominate" id="inlineRadio2" value="true">
+                    <label class="form-check-label" for="inlineRadio2">Nominate someone else</label>
+                  </div>
+                  <h4 class="title-txt mt-3">My Details</h4>
+                  <div class="form-row mt-3">
+                    <div class="form-group col-md-6">
+                      <label for="inputEmail4">First Name</label>
+                      <input type="text" class="form-control" name="firstName" id="firstName" placeholder="" required>
+                    </div>
+                    <div class="form-group col-md-6">
+                      <label for="lastName">Last Name</label>
+                      <input type="text" name="lastName" class="form-control" id="lastName" placeholder="" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail">Email Address</label>
+                    <input type="email" class="form-control" name="email" id="inputEmail" placeholder="" required>
+                  </div>
+                  <div class="form-group">
+                    <label for="inputMobile">Company Name</label>
+                    <input type="text" class="form-control" name="companyName" id="inputCompanyName" placeholder="" required>
+                  </div>
+                  <div class="form-row">
+                    <div class="col-md-12 mb-3">
+                      <label for="validationMobile">Mobile Number</label>
+                      <div class="form-row custom-mobile">
+                        <div class="col-6 mb-1">
+                          <select class="form-control" name="mobileCountryCode" id="mobileCountryCode">
+                            <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                            <optgroup label="Other countries">
+                              <% countryCode.forEach(function(item) { %>
+                              <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                              <% }) %>
+                            </optgroup>
+                          </select>
+                        </div>
+                        <div class="col-6 pl-1">
+                          <input name="mobile" type="text" class="form-control" placeholder="Mobile" pattern="[0-9]*" required>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Nominate someone else -->
+                  <div id="divPersonDetail">
+                    <!-- Code  -->
+                  </div>
+                  <!-- End nominate someone else -->
+                </div>
+                <div class="col-md-12 form-group">
+                  <div class="custom-control custom-checkbox jsCheckEmployerTerm">
+                    <input class="custom-control-input" name="checkEmployerTerm" type="checkbox" id="checkEmployerTerm" required>
+                    <label class="custom-control-label" for="checkEmployerTerm">
+                      By clicking on the check box I agree to the <span class="copy-a">Employer
+                        Terms</span> which I have read and understood.
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="text-center col-md-12 mt-3 mb-3">
+              <button type="submit" id="jsSubmitRegister" class="mt-3 btn btn-primary btn-primary--custom">Register</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- End Contact Person -->
+    </main>
+    <footer>
+      <div class="row">
+        <div class="col-4">
+          <a href="mailto:support@CashD.com.au">
+            <img src="/web-images/icon-mail-black.png" alt="img-email">
+            <span class="d-none d-md-inline">support@CashD.com.au</span>
+          </a>
+        </div>
+        <div class="col-4">
+          <a href="https://cashd.com.au">
+            <img src="/web-images/icon-web.png" alt="img-email">
+            <span class="d-none d-md-inline">CashD.com.au</span>
+          </a>
+        </div>
+        <div class="col-4">
+          <a href="https://www.linkedin.com/company/cashd">
+            <img src="/web-images/linkedin-icon-for-website-7.png" alt="img-email">
+            <span class="d-none d-md-inline">LinkedIn</span>
+          </a>
+        </div>
+      </div>
+      <p class="text-center">Copyright © CashD 2021. All Rights Reserved</p>
+    </footer>
+    <!-- Modal success -->
+    <div id="divModalSuccess" class="modal-bg hide">
+      <div class="modal-success">
+        <div class="modal-txt">
+          <p>Thank you for your registration.</p>
+          <p>Your nominated person will be contacted via email.</p>
+          <p>Please ensure they complete the registration process.</p>
+        </div>
+        <div class="text-center">
+          <button id="btnClosePage" class="btn">Close</button>
+        </div>
+      </div>
+    </div>
+    <!-- End modal -->
+
+    <!-- Modal Term Employer -->
+    <div style="z-index: 2000;" id="popupTermEmployer" class="modal fade">
+      <div style="max-width: 90%; margin-top: 3% !important;" class="modal-dialog" role="document">
+        <div class="modal-content" style="position: relative;">
+          <div class="modal-header pt-2 pb-2">
+            <div></div>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <i class="icofont-close-line"></i>
+            </button>
+          </div>
+          <div style="height: 75vh" class="modal-body p-0">
+            <iframe loading="lazy" style="border: none;" allowfullscreen="true" width="100%" height="100%" src="https://cashd.com.au/web-terms-conditions" title="Employer Terms" referrerpolicy="unsafe-url" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
+          </div>
+          <div class="modal-footer pt-2 pb-2">
+            <button id="onCheckedTermEmployer" type="submit" class="btn btn-primary">Agree</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End  -->
+
+    <!-- Modal failed -->
+    <div id="divModalFailed" class="modal-bg hide">
+      <div class="modal-fail">
+        <div class="modal-txt">
+          <h5>…Oops, an error occurred. Please try again.</h5>
+          <p class="pt-2">If this problem persists, please <a href="mailto:support@CashD.com.au">contact support</a></p>
+        </div>
+        <div class="text-center mt-3">
+          <button id="btnClosePopupFailed" class="btn">Close</button>
+        </div>
+      </div>
+    </div>
+    <!-- End modal -->
+  </div>
+
+  <!-- Required Jquery -->
+  <script type="text/javascript" src="/web-files/bower_components/jquery/js/jquery.min.js"></script>
+  <script type="text/javascript" src="/web-files/bower_components/jquery-ui/js/jquery-ui.min.js"></script>
+  <script type="text/javascript" src="/web-files/bower_components/popper.js/js/popper.min.js"></script>
+  <script type="text/javascript" src="/web-files/bower_components/bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="/web-files/bower_components/crypto-js/crypto-js.min.js"></script>
+  <script type="text/javascript" src="/web-files/assets/pages/auth/reckon-trial.js"></script>
+</body>
+
+</html>

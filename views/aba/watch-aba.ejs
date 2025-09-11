@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css"
+        href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+    <% include ../layouts/stylesheet %>
+</head>
+
+<body>
+    <% include ../layouts/preloader %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <% include ../layouts/navbar %>
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <% include ../layouts/leftbar %>
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <!-- tab content start -->
+                                                <div class="tab-content">
+                                                    <!-- tab panel personal start -->
+                                                    <div class="tab-pane active" id="personal" role="tabpanel">
+                                                            <div class="page-header">
+                                                                <div class="row align-items-end">
+                                                                    <div class="col-lg-8">
+                                                                        <div class="page-header-title">
+                                                                            <div class="d-inline">
+                                                                                <h4>Deduction</h4>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card card--custom">
+                                                                <div class="card-block">
+                                                                    <div class="view-info">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div class="general-info">
+                                                                                    <div class="row">
+                                                                                        <!-- <div class="col-xl-2"></div> -->
+                                                                                        <div class="col-lg-12 col-xl-6">
+                                                                                            <div
+                                                                                                class="table-responsive">
+                                                                                                <table
+                                                                                                    class="table m-0">
+                                                                                                    <tbody>
+                                                                                                        <tr class="table--border" >
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Name
+                                                                                                            </th>
+                                                                                                            <td ><%= deduction.name ? deduction.name : "N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Amount
+                                                                                                            </th>
+                                                                                                            <td><%= deduction.amount ? deduction.amount : "N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Decode
+                                                                                                            </th>
+                                                                                                            <td><%= deduction.decode%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <!-- <div class="col-xl-2"></div> -->
+                                                                                        <div class="col-lg-12 col-xl-6">
+                                                                                            <div
+                                                                                                class="table-responsive">
+                                                                                                <table
+                                                                                                    class="table m-0">
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <th style="border: none;"
+                                                                                                                scope="row">
+                                                                                                                Total Deduction
+                                                                                                            </th>
+                                                                                                            <td style="border: none;" >
+                                                                                                                <%= deduction.total_deduction ? deduction.total_deduction : "N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Resource
+                                                                                                            </th>
+                                                                                                            <td><%= deduction.resource_from ? deduction.resource_from : "N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Code
+                                                                                                            </th>
+                                                                                                            <td><%= deduction.code%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <!-- end of table col-lg-6 -->
+                                                                                    </div>
+                                                                                    <!-- end of row -->
+                                                                                </div>
+                                                                                <!-- end of general info -->
+                                                                            </div>
+                                                                            <!-- end of col-lg-12 -->
+                                                                        </div>
+                                                                        <!-- end of row -->
+                                                                    </div>
+                                                                    <!-- end of view-info -->
+
+                                                                </div>
+                                                                <!-- end of card-block -->
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--profile cover start-->
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                    <div class="col-sm-3 col-md-3 ">
+                                                        <img id="anh" class="avatar-staff card img-fluid"
+                                                            src="https://kenh14cdn.com/thumb_w/620/2018/8/23/3982186221625155571155223343703731530104832n-153501089325697867593.jpg" />
+                                                    </div>
+                                                    <div class="col-sm-9 col-md-9">
+                                                        <div class="card" id="the">
+                                                            <div class="card-header">
+                                                                <h class="card-header-text">Staff Info</h>
+                                                            </div>
+                                                            <div class="card-block">
+                                                                <div class="view-info">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <div class="general-info">
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-12 col-xl-9">
+                                                                                        <div class="table-responsive">
+                                                                                            <table class="table m-0">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Full Name
+                                                                                                        </th>
+                                                                                                        <td><%= deduction.staff.fullname ? deduction.staff.fullname : 'N/A' %>
+                                                                                                        </td>
+                                                                                                    </tr>
+
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Email</th>
+                                                                                                        <td><%= deduction.staff.email ? deduction.staff.email:'N/A' %>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Mobile
+                                                                                                            Number</th>
+                                                                                                        <td><%= deduction.staff.mobile ? deduction.staff.mobile: "N/A" %>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Address</th>
+                                                                                                        <td> <%= deduction.staff.address ? deduction.staff.address:"N/A"%>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!-- end of table col-lg-6 -->
+                                                                                </div>
+                                                                                <!-- end of row -->
+                                                                            </div>
+                                                                            <!-- end of general info -->
+                                                                        </div>
+                                                                        <!-- end of col-lg-12 -->
+                                                                    </div>
+                                                                    <!-- end of row -->
+                                                                </div>
+                                                                <!-- end of view-info -->
+
+                                                            </div>
+                                                            <!-- end of card-block -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--profile cover end-->
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <!-- tab content start -->
+                                                <div class="tab-content">
+                                                    <!-- tab panel personal start -->
+                                                    <div class="tab-pane active" id="personal" role="tabpanel">
+                                                            <div class="page-header">
+                                                                <div class="row align-items-end">
+                                                                    <div class="col-lg-8">
+                                                                        <div class="page-header-title">
+                                                                            <div class="d-inline">
+                                                                                <h4>Company</h4>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="card card--custom">
+                                                                <div class="card-block">
+                                                                    <div class="view-info">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12">
+                                                                                <div class="general-info">
+                                                                                    <div class="row">
+                                                                                        <!-- <div class="col-xl-2"></div> -->
+                                                                                        <div class="col-lg-12 col-xl-6">
+                                                                                            <div
+                                                                                                class="table-responsive">
+                                                                                                <table
+                                                                                                    class="table m-0">
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <th style="border: none;"
+                                                                                                                scope="row">
+                                                                                                                Company
+                                                                                                                Name
+                                                                                                            </th>
+                                                                                                            <td style="border: none;" >
+                                                                                                                <%= deduction.company.company_name? deduction.company.company_name: "N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                        <tr>
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Abn
+                                                                                                            </th>
+                                                                                                            <td><%= deduction.company.abn?deduction.company.abn:"N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <!-- <div class="col-xl-2"></div> -->
+                                                                                        <div class="col-lg-12 col-xl-6">
+                                                                                            <div
+                                                                                                class="table-responsive">
+                                                                                                <table
+                                                                                                    class="table m-0">
+                                                                                                    <tbody>
+                                                                                                        <tr class="table--border" >
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Company
+                                                                                                                Phone
+                                                                                                            </th>
+                                                                                                            <td ><%= deduction.company.phone_company?deduction.company.phone_company:"N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr  >
+                                                                                                        <tr>
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Company
+                                                                                                                Email
+                                                                                                            </th>
+                                                                                                            <td><%=deduction.company.phone_company?deduction.company.email_company:"N/A"%>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                        <!-- end of table col-lg-6 -->
+                                                                                    </div>
+                                                                                    <!-- end of row -->
+                                                                                    <div class="row">
+                                                                                        <div class="col-lg-12 col-xl-12">
+                                                                                            <div
+                                                                                                class="table-responsive">
+                                                                                                <table
+                                                                                                    class="table m-0">
+                                                                                                    <tbody>
+                                                                                                        <tr>
+                                                                                                            <th
+                                                                                                                scope="row">
+                                                                                                                Company
+                                                                                                                Address
+                                                                                                            </th>
+                                                                                                            <td>
+                                                                                                                <% if(!deduction.company.postcode && !deduction.company.suburb && !deduction.company.city && !deduction.company.state) { %>
+                                                                                                                    <%= 'N/A' %>
+                                                                                                                <% } else { %>
+                                                                                                                    <%= deduction.company.postcode && typeof deduction.company.postcodev !== "undefined" ? deduction.company.postcodev + "," : "" %>
+                                                                                                                    <%= deduction.company.suburb && typeof deduction.company.suburb !== "undefined" ? deduction.company.suburb + "," : "" %>
+                                                                                                                    <%= deduction.company.city && typeof deduction.company.city !== "undefined" ? deduction.company.city + "," : "" %>
+                                                                                                                    <%= deduction.company.state && typeof deduction.company.state !== "undefined" ? deduction.company.state : "" %>
+                                                                                                                <% } %>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                    </tbody>
+                                                                                                </table>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- end of general info -->
+                                                                            </div>
+                                                                            <!-- end of col-lg-12 -->
+                                                                        </div>
+                                                                        <!-- end of row -->
+                                                                    </div>
+                                                                    <!-- end of view-info -->
+
+                                                                </div>
+                                                                <!-- end of card-block -->
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <% include ../layouts/script %>
+                                        <!-- data-table js -->
+                                        <script
+                                            src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js">
+                                            </script>
+                                        <script
+                                            src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js">
+                                            </script>
+                                        <script src="../../web-files/assets/pages/data-table/js/jszip.min.js"></script>
+                                        <script src="../../web-files/assets/pages/data-table/js/pdfmake.min.js"></script>
+                                        <script src="../../web-files/assets/pages/data-table/js/vfs_fonts.js"></script>
+                                        <script
+                                            src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js">
+                                            </script>
+                                        <script
+                                            src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js">
+                                            </script>
+                                        <script
+                                            src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js">
+                                            </script>
+                                        <script
+                                            src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js">
+                                            </script>
+                                        <script
+                                            src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js">
+                                            </script>
+                                        <script type="text/javascript"
+                                            src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+                                            </script>
+                                        <!-- modalEffects js nifty modal window effects -->
+                                        <script type="text/javascript" src="../../web-files/assets/js/modalEffects.js">
+                                        </script>
+                                        <script type="text/javascript" src="../../web-files/assets/js/classie.js"></script>
+                                        <!-- i18next.min.js -->
+                                        <script type="text/javascript"
+                                            src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+                                        <script type="text/javascript"
+                                            src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+                                            </script>
+                                        <script type="text/javascript"
+                                            src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+                                            </script>
+                                        <script type="text/javascript"
+                                            src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js">
+                                            </script>
+                                        <!-- Custom js -->
+                                        <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js">
+                                        </script>
+                                        <!-- <script>
+      var gLabel = document.getElementById("the");
+        var style = window.getComputedStyle(gLabel , null);
+        document.getElementById('anh').style.width = style.getPropertyValue("height");
+  </script> -->
+</body>
+
+</html>

@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <% include ../layouts/stylesheet %>
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css"
+          href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+</head>
+<% include ../layouts/preloader %>
+<div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+        <% include ../layouts/navbar %>
+        <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+                <% include ../layouts/leftbar %>
+                <div class="pcoded-content">
+                    <div class="pcoded-inner-content">
+                        <!-- Main-body start -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- Page-body start -->
+                                <div class="page-body">
+                                    <div class="row">
+                                        <!-- chart start -->
+                                        <div class="col-xl-12 col-md-12">
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    <h5>Users Logs</h5>
+                                                    <div class="card-header-right">
+                                                        <ul class="list-unstyled card-option">
+                                                            <li><i class="feather icon-maximize full-card"></i></li>
+                                                            <li><i class="feather icon-minus minimize-card"></i></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="card-block">
+                                                    <input type="hidden" name="totalUserLogDaily" value="<%= totalUserLogDaily %>">
+                                                    <input type="hidden" name="totalUserLogWeekly" value="<%= totalUserLogWeekly %>">
+                                                    <input type="hidden" name="totalUserLogFornightly" value="<%= totalUserLogFornightly %>">
+                                                    <input type="hidden" name="totalUserLogMonthly" value="<%= totalUserLogMonthly %>">
+                                                    <input type="hidden" name="totalUserLogYearly" value="<%= totalUserLogYearly %>">
+                                                    <figure class="highcharts-figure">
+                                                        <!--Staff chart-->
+                                                        <div class="row pb-3">
+                                                            <div class="col-md-6">
+                                                                <h4 class="float-right mt-2">All Users Logs</h4>
+                                                            </div>
+                                                            <div class="col-md-4"></div>
+                                                            <div class="col-md-2">
+                                                                <select class="form-control" id="userLogSelectedDate">
+                                                                    <option value="daily">Daily</option>
+                                                                    <option value="weekly">Weekly</option>
+                                                                    <option value="fornightly">Fornightly</option>
+                                                                    <option value="monthly">Monthly</option>
+                                                                    <option value="yearly">Yearly</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div id="userlogs-chart"></div>
+                                                    </figure>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- chart end -->
+                                        <div class="col-sm-12">
+                                            <!-- Zero config.table start -->
+                                            <div class="card">
+                                                <div class="card-block">
+                                                    <div class="dt-responsive table-responsive">
+                                                        <div class="d-flex justify-content-end">
+                                                            <form id="jsUserLogSearch">
+                                                                <div class="input-group mb-0">
+                                                                    <input name="userlogs-name" type="text"
+                                                                           class="form-control"
+                                                                           placeholder="Search this name">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-secondary" type="submit">
+                                                                            <i class="icofont icofont-ui-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <table id="userLogsTable"
+                                                               class="table table-striped table-bordered nowrap">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>User Name</th>
+                                                                <th>Company Name</th>
+                                                                <th>Date Login</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Zero config.table end -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Page-body end -->
+                            </div>
+                        </div>
+                        <!-- Main-body end -->
+                        <!-- <div id="styleSelector">
+
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ../layouts/script %>
+<!-- highcharts js -->
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<!-- data-table js -->
+<script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+<script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+</script>
+<script src="../../web-files/assets/js/moment.min.js"></script>
+<script src="../../web-files/assets/js/select2.min.js"></script>
+<!-- modalEffects js nifty modal window effects -->
+<script type="text/javascript" src="../../web-files/assets/js/modalEffects.js"></script>
+<script type="text/javascript" src="../../web-files/assets/js/classie.js"></script>
+<!-- i18next.min.js -->
+<script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+<script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+</script>
+<script type="text/javascript"
+        src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+</script>
+<script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+<!-- Custom js -->
+<script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script>
+<script src="../../web-files/assets/pages/data-table/js/listUserLogs-dataTable.js"></script>
+<script>
+    const totalUserLogDaily = JSON.parse($('input[name="totalUserLogDaily"]').val());
+    const copyTotalUserLogDaily = [...totalUserLogDaily];
+    const totalUserLogWeekly = JSON.parse($('input[name="totalUserLogWeekly"]').val());
+    const totalUserLogFornightly = JSON.parse($('input[name="totalUserLogFornightly"]').val());
+    const totalUserLogMonthly = JSON.parse($('input[name="totalUserLogMonthly"]').val());
+    const totalUserLogYearly = JSON.parse($('input[name="totalUserLogYearly"]').val());
+    //options chart
+    const optionsChart = (title, name, total) => {
+        return new Highcharts.chart(title, {
+            chart: {
+                scrollablePlotArea: {
+                    minWidth: 700
+                }
+            },
+            title: {
+                text: null
+            },
+            // subtitle: {
+            //     text: 'Source: Google Analytics'
+            // },
+            xAxis: {
+                type: 'datetime'
+            },
+            yAxis: [{ // left y axis
+                title: {
+                    text: null
+                }
+            }, { // right y axis
+                linkedTo: 0,
+                gridLineWidth: 0,
+                opposite: true,
+                title: {
+                    text: null
+                }
+            }],
+            plotOptions: {
+                series: {
+                    animation: {
+                        duration: 2000
+                    }
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            tooltip: {
+                shared: true,
+                useHTML: true
+            },
+            series: [{
+                name: name,
+                data: total,
+                type: 'line'
+            }]
+        });
+    }
+    //draw staff chart
+    let userLogChart = optionsChart('userlogs-chart', 'User Log In', totalUserLogDaily);
+    //update chart when change select
+    $('#userLogSelectedDate').on('change', function(e) {
+        const optionsList = [
+            {name: 'daily', option: {data: copyTotalUserLogDaily}},
+            {name: 'weekly', option: {data: totalUserLogWeekly}},
+            {name: 'fornightly', option: {data: totalUserLogFornightly}},
+            {name: 'monthly', option: {data: totalUserLogMonthly}},
+            {name: 'yearly', option: {data: totalUserLogYearly}},
+        ];
+        //update chart
+        optionsList.forEach(item => {
+            if (item.name == this.value) { userLogChart.series[0].update(item.option) }
+        });
+    });
+</script>
+</body>
+
+</html>

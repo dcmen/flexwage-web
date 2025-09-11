@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/css/lender-style.css" >
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="jsLoader">
+    <div style="top: 40%; left: 0px;" class="loader">
+      <div class="loader-chiled"></div>
+    </div>
+  </div>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <!-- Toast -->
+          <div id='jsErr' class="toast-err">
+            <p>Connection timeout.</p>
+            <div class="relative w-full sm:w-1/2 bg-gray-200">
+                <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+            </div>
+          </div>
+          <!--End Toast-->
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page body start -->
+                  <div class="page-body">
+                    <input hidden value="csrfToken" name="_csrf">
+                    <input type="text" hidden value="<%= key %>" name="key">
+                    <div class="card">
+                      <div class="card-block">
+                        <div id="jsShowContentPage">
+                          <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item">
+                              <a class="nav-link active" id="lender-tab" ><b>Lender</b></a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link" id="finance-tab"><b>Finance</b></a>
+                            </li>
+                            <!-- <li class="nav-item">
+                              <a class="nav-link" id="business-tab"><b>Business Rule</b></a>
+                            </li> -->
+                          </ul>
+                          <div class="tab-content mt-3">
+                            <div class="tab-pane fade show active" id="lender">
+                              <!-- <div>
+                                <a href="/admin/lender" type="button" class="btn btn-outline-secondary btn--width">Add</a>
+                              </div> -->
+                              <div class="d-flex justify-content-end">
+                                <form id="jsLenderSearch">
+                                    <div class="input-group mb-0">
+                                        <input type="text" name="lender-name" class="form-control" placeholder="Search this name">
+                                        <div class="input-group-append">
+                                          <button class="btn btn-secondary" type="submit">
+                                            <i class="icofont icofont-ui-search"></i>
+                                          </button>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="text-right pl-3">
+                                    <a href="/admin/lender" class="btn btn-info">Add New</a>
+                                </div>
+                              </div>
+                              <div class="mt-3 dt-responsive table-responsive">
+                                <table id="lenderTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Name of Lender</th>
+                                      <th scope="col">Funding Type</th>
+                                      <th scope="col">mAccount</th>
+                                      <th scope="col">Start Date</th>
+                                      <th scope="col">Status</th>
+                                      <th scope="col">Linked Company</th>
+                                      <th scope="col">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <div class="tab-pane fade" id="finance">
+                              <div class="d-flex justify-content-end">
+                                <form id="jsFinancialSearch">
+                                  <div class="input-group mb-0">
+                                      <input name="financial-name" type="text" class="form-control" placeholder="Search this name">
+                                      <div class="input-group-append">
+                                        <button class="btn btn-secondary" type="submit">
+                                          <i class="icofont icofont-ui-search"></i>
+                                        </button>
+                                      </div>
+                                  </div>
+                                </form>
+                              </div>
+                              <div class="mt-3 dt-responsive table-responsive">
+                                <table id="financeTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                  <thead>
+                                    <tr>
+                                      <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Name of Lender</th>
+                                      <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Funding Type</th>
+                                      <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Name of Bank</th>
+                                      <th style="padding-top: 2px; padding-bottom: 2px;" scope="col" colspan="6" class="text-center">Test Mode</th>
+                                      <th style="padding-top: 2px; padding-bottom: 2px;" scope="col" colspan="6" class="text-center">Live Mode</th>
+                                      <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Date</th>
+                                      <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Interest rate</th>
+                                      <th style="padding-bottom: 15px;" scope="col" rowspan="2" class="text-center">Action</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Account Name</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">BSB</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Acc #</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Credit</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Debit</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Balance</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Account Name</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">BSB</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col" class="text-center">Acc #</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Credit</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important;" scope="col">Debit</th>
+                                        <th style="font-size: 12px; padding-top: 2px !important; padding-bottom: 2px !important; border-right-width: 1px;" scope="col">Balance</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                            <!-- <div class="tab-pane fade" id="business">
+                              <div>
+                                <a href="/admin/lender" class="btn btn-outline-secondary btn--width">ADD business rule</a>
+                              </div>
+                              <div class="mt-3 dt-responsive table-responsive">
+                                <table id="businessTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Finance Type</th>
+                                      <th scope="col">Amount</th>
+                                      <th scope="col">Start</th>
+                                      <th scope="col">End</th>
+                                      <th scope="col">Interest rate</th>
+                                      <th scope="col">Name of Bank</th>
+                                      <th scope="col">Action</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div> -->
+                          </div> 
+                        </div>
+                        <div id="jsDetailFinance" class="hide">
+                          <button class="jsBack btn btn-outline-secondary btn-sm btn-back">
+                              <i class="icofont icofont-swoosh-left custom--size">Back</i>
+                          </button>
+                          <div class="financial-detail pt-5">
+                              <h5 class="font-weight-bold">Financial Details</h5>
+                              <div class="pl-3 pt-3">
+                                <form>
+                                  <div class="form-group">
+                                    <div class="dt-responsive table-responsive">
+                                        <table style="width: 100%;" id="financialDetailTable"
+                                            class="table table-bordered nowrap">
+                                            <thead class="thead-dark">
+                                              <tr>
+                                                <th>Transaction type</th>
+                                                <th>Remark</th>
+                                                <th>Direction</th>
+                                                <th>Amount</th>
+                                                <th>Date</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>          
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/jszip.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/pdfmake.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/vfs_fonts.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <script src="../../web-files/assets/js/moment.min.js"></script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script type="text/javascript" src="/../../web-files/bower_components/crypto-js/crypto-js.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/lender-table.js"></script>
+</body>

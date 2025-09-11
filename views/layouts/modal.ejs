@@ -1,0 +1,191 @@
+<!-- Modal normal sign in start -->
+<div id="user-profile" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="login-card card-block login-card-modal">
+      <form class="md-float-material" action="/admin/update-information/<%= user._id %>" method="POST">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <input type="hidden" value="<%= JSON.stringify(user) %>">
+
+        <div class="card m-t-15">
+          <div class="modal-header--custom">
+            <img class="logo-model image-user" src="/web-images/Logo1.png" alt="logo">
+            <h5 style="color: #fff;" class="modal-title">Update information</h5>
+          </div>
+          <div class="text-center mt-2" style="width: 100%; height: 100px;">
+            <div style="height: 100px; width: 100px; margin-left: auto; margin-right: auto;">
+              <img id="img-profile" src="<%= user && user.avatar_path ? user.avatar_path : '../../web-images/4.png' %>" onerror="javascript: this.src = '../../web-images/4.png'" alt="Avatar" style="height: 100%;">
+            </div>
+          </div>
+          <div class="auth-box card-block">
+            <div class="mb-3">
+              <div class="form-row">
+                <div class="col-md-6 mb-1">
+                  <input type="text" class="form-control" placeholder="First Name" name="first_name" value="<%= user.first_name %>">
+                </div>
+                <div class="col-md-6 pl-1">
+                  <input type="text" class="form-control" placeholder="Last Name" name="last_name" value="<%= user.last_name %>">
+                </div>
+              </div>
+            </div>
+            <div class="input-group">
+              <input type="text" class="form-control" value="<%= user.email %>" readonly>
+              <span class="md-line"></span>
+            </div>
+            <div>
+              <div class="form-row custom-mobile">
+                <div class="col-md-8 mb-1">
+                  <select class="form-control" name="countryCode" id="selectedCountryCode">
+                    <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                    <optgroup label="Other countries">
+                      <% countryCode.forEach(function(item) { %>
+                      <option data-countryCode="<%= item.code %>" <%= item.dial_code == user.mobile_country_code ? 'selected' : '' %> value="<%= item.dial_code %>"><%= item.name %></option>
+                      <% }) %>
+                    </optgroup>
+                  </select>
+                </div>
+                <div class="col-md-4 pl-1">
+                  <input name="mobile" type="text" class="form-control" value="<%= user.mobile %>" placeholder="Mobile" pattern="[0-9]*">
+                </div>
+              </div>
+            </div>
+            <!-- <div class="input-group">
+                        <input type="phone" class="form-control" placeholder="Phone" name="phone" value="<%= user.mobile %>">
+                        <span class="md-line"></span>
+                    </div> -->
+            <div class="row m-t-15">
+              <div class="col-md-12">
+                <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center">Update Information</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <!-- end of form -->
+    </div>
+  </div>
+</div>
+<!-- Modal normal sign in end-->
+
+<!-- Modal normal sign in start -->
+<!-- <div id="change-password" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="login-card card-block login-card-modal">
+            <form class="md-float-material form-changepass" action="/admin/change-password" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="card m-t-15">
+                    <div class="modal-header--custom">
+                        <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+                        <h5 style="color: #fff;" class="modal-title">Change Password</h5>
+                    </div>
+                    <% if (user.message) { %>
+                        <input type="hidden" name="message" value="<%= user.message %>">
+                    <div class="alert-error p-3">
+                        <div class="alert alert-danger mb-0">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <i class="icofont icofont-close-line-circled"></i>
+                            </button>
+                            <%= user.message %>
+                        </div>
+                    </div>
+                    <% } %> 
+                    <div class="auth-box card-block">
+                        <div class="form-group">
+                            <div class="form-group-position">
+                                <input type="password" class="form-control" id="currentPassword" name="current_password" placeholder="Enter Old Password">
+                                <span class="md-line"></span>
+                                <span toggle="#currentPassword" class="feather icon-eye toggle-password"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group-position">
+                                <input type="password" class="form-control" id="newPassword" name="new_password" placeholder="Enter New Password">
+                                <span class="md-line"></span>
+                                <span toggle="#newPassword" class="feather icon-eye toggle-password"></span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-group-position">
+                                <input type="password" class="form-control" id="retypeNewPassword" name="retypeNewPassword" placeholder="Re Enter New Password">
+                                <span class="md-line"></span>
+                                <span toggle="#retypeNewPassword" class="feather icon-eye toggle-password"></span>
+                            </div>
+                        </div>
+                        <div id="validationPass" class="invalid-feedback">
+                            Password is not matching
+                        </div>
+                        <div class="row m-t-15">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn-changePass btn btn-primary btn-md btn-block waves-effect text-center">Change Password</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+  </div> -->
+
+<div id="change-password" class="modal fade">
+  <div class="modal-dialog" role="document">
+    <form class="md-float-material form-changepass" action="/admin/change-password" method="POST">
+      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+      <div class="modal-content" style="position: relative;">
+        <div class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title">Change Password</h5>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <div class="form-group-position">
+              <label for="currentPassword">Current Password</label>
+              <input type="password" class="form-control" name="current_password" id="currentPassword" placeholder="Current Password">
+              <span toggle="#currentPassword" class="feather icon-eye toggle-password"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-group-position">
+              <label for="newPassword">New Password</label>
+              <input type="password" name="new_password" class="form-control" id="newPassword" placeholder="New Password">
+              <span toggle="#newPassword" class="feather icon-eye toggle-password"></span>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="form-group-position">
+              <label for="retypeNewPassword">Re-type new Password</label>
+              <input type="password" class="form-control" name="retypeNewPassword" id="retypeNewPassword" placeholder="Re-type new Password">
+              <span toggle="#retypeNewPassword" class="feather icon-eye toggle-password"></span>
+            </div>
+          </div>
+          <div id="validationPass" class="invalid-feedback">
+            Password is not matching
+          </div>
+        </div>
+        <div class="mt-2 modal-footer--custom">
+          <button type="submit" class="btn-changePass btn btn-primary btn-md btn-block waves-effect text-center">Change Password</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- Modal normal sign in end-->
+
+<!-- Modal DD Monoova -->
+<div style="z-index: 2000;" id="formDDMonoova" class="modal fade">
+  <div style="max-width: 90%; margin-top: 3% !important;" class="modal-dialog" role="document">
+    <div class="modal-content" style="position: relative;">
+      <div class="modal-header pt-2 pb-2">
+        <div></div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i class="icofont-close-line"></i>
+        </button>
+      </div>
+      <div style="height: 75vh" class="modal-body p-0">
+        <iframe loading="lazy" style="border: none;" allowfullscreen="true" width="100%" height="100%" src="https://www.monoova.com/ddrsa" title="Direct Debit Request Service Agreement"></iframe>
+      </div>
+      <div class="modal-footer pt-2 pb-2">
+        <button id="onDirectDebitRequest" type="submit" class="btn btn-primary">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- End  -->

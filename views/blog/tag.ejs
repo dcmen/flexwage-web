@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page-header start -->
+                  <div class="page-header">
+                    <div class="row align-items-end">
+                      <div class="col-lg-8">
+                        <div class="page-header-title">
+                          <div class="d-inline">
+                            <h4>Blog management</h4>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-lg-4">
+                        <div class="page-header-breadcrumb">
+                          <ul class="breadcrumb-title">
+                            <li class="breadcrumb-item">
+                              <a href="/admin"> <i class="feather icon-home"></i>
+                              </a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Page Content</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Blog</a>
+                            </li>
+                            <li class="breadcrumb-item"><a href="#!">Tag</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Page-header end -->
+
+                  <!-- Page-body start -->
+                  <div class="page-body">
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="card">
+                          <div class="card-header">
+                            <h4>Add Tag</h4>
+                            <div class="card-header-right"><i class="icofont icofont-spinner-alt-5"></i></div>
+                          </div>
+                          <form action="/admin/add-blog-tag/?_csrf=<%=csrfToken%>" method="POST">
+                            <div class="card-block">
+                              <div class="form-group row">
+                                <div class="col-sm-2">
+                                  <label class="col-form-label">Tag Name</label>
+                                </div>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="name" placeholder="Enter Tag Name" value="">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                  <select name="status" class="form-control" required>
+                                    <option value="">Select One Value Only</option>
+                                    <option value="true">Active</option>
+                                    <option value="false">Disable</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2"></label>
+                                <div class="col-sm-10">
+                                  <button type="submit" class="btn btn-primary m-b-0">Submit</button>
+                                </div>
+                              </div>
+                            </div>
+                          </form>
+                        </div>
+                        <!-- Zero config.table start -->
+                        <div class="card">
+                          <div class="card-header">
+                            <h4 class="float-left">List Tag</h4>
+                          </div>
+                          <div class="card-block">
+                            <div class="dt-responsive table-responsive">
+                              <table id="simpletable" class="table table-striped table-bordered nowrap">
+                                <thead>
+                                  <tr>
+                                    <th>STT</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Actiton</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <%  data.forEach(function(tag, index){ %>
+                                  <tr>
+                                    <td><%= index + 1 %></td>
+                                    <td><%= tag.name %></td>
+                                    <td>
+                                      <% if(tag.status) { %>
+                                        Active
+                                      <% } else { %>
+                                        Disable
+                                      <% } %>
+                                    </td>
+                                    <td>
+                                      <!-- <a href="/admin/edit-blog-tag/<%= tag._id %>"><button
+                                        class="btn btn-sm btn-primary"><i
+                                          class="icofont icofont-pencil-alt-1"></i></button></a> -->
+                                      <a href="/admin/delete-blog-tag/<%= tag._id %>">
+                                        <button class="btn btn-sm btn-danger"><i
+                                            class="icofont icofont-trash"></i></button>
+                                      </a>
+                                    </td>
+                                    <% }); %>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Zero config.table end -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Page-body end -->
+                </div>
+              </div>
+              <!-- Main-body end -->
+              <div id="styleSelector">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/jszip.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/pdfmake.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/vfs_fonts.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script>
+</body>
+
+</html>

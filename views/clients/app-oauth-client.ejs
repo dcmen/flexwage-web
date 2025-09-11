@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <% include ../layouts/stylesheet %>
+    <link rel='stylesheet' href='/web-stylesheets/styleclient.css' />
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-custom">
+        <ul class="navbar-content">
+            <li><a href="/oauth/clients" class="btn"><i class="icofont icofont-ui-edit"></i>Back to list</a></li>
+            <li><a href="/oauth/clients/add" class="btn"><i class="icofont icofont-ui-edit"></i>New oauth client</a></li>
+            <li><a id="jsEdit" class="btn"><i class="icofont icofont-ui-edit"></i>Edit record</a></li>
+        </ul>
+    </nav>
+    <div class="title-txt d-flex align-items-center">
+        <% if( client.logo_uri) { %>
+        <img id="imageLogo" src="<%= client.logo_uri %>" width="70px" height="70px" class="p-2 ml-2" alt="" srcset="">
+        <% } %>
+        <h4 class="text p-3"><%= client.name %></h4>
+    </div>
+    <section>
+        <div class="row">
+            <div class="col-md-3 set-width">
+                <ul class="left-menu">
+                    <li class="active" id="jsBtn1"><button class="left-menu-button">Main</button></li>
+                    <!-- <li id="jsBtn2"><button class="left-menu-button">Authorization Codes</button></li>
+                    <li id="jsBtn3"><button class="left-menu-button">Access Tokens</button></li>
+                    <li id="jsBtn4"><button class="left-menu-button">Refresf Tokens</button></li> -->
+                </ul>
+            </div>
+            <div class="col-md-9 pr-5 pt-5">
+                <div class="box-shadow">
+                    <form class="d-none show" id="jsMainOauth" action="/oauth/client/edit/<%= client._id %>" method="POST">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <div class="form-group">
+                            <label for="name">Name <span style="color: rgb(255, 4, 4);">*</span>
+                                <span id="err-name" style="color: rgb(255, 4, 4);"></span></label>
+                            <input disabled type="text" class="form-control" name="name" id="name" placeholder="Name"
+                                value="<%= client.name %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea disabled class="form-control" name="description" id="description"
+                                rows="3"><%= client.description %></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="logo_uri">Logo Uri</label>
+                            <input disabled type="text" class="form-control" name="logo_uri" id="logo_uri"
+                                placeholder="Logo uri" value="<%= client.logo_uri %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="redirect_uri">Redirect Uri <span style="color: rgb(255, 4, 4);">*</span>
+                                <span id="err-redirect_uri" style="color: rgb(255, 4, 4);"></span></label>
+                            <input disabled type="text" class="form-control" name="redirect_uri" id="redirect_uri"
+                                placeholder="Redirect uri" value="<%= client.redirect_uri %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="redirect_uri">Client Secret</label>
+                            <input id="jsSecret" disabled type="text" class="form-control" value="<%= client.client_secret %>">
+                        </div>
+                        <div id="jsButton" hidden class="form-group mt-5">
+                            <div class="d-flex">
+                                <button id="jsCancel" type="reset" class="btn btn-secondary btn_custom mr-2">Cancel</button>
+                                <button id="jsSubmit" type="button" class="btn btn-success btn_custom ml-2">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="d-none" id="jsCode">
+                    </div>
+                    <div class="d-none" id="jsAccessToken">
+                        <p id='jsAcToken'></p>
+                    </div>
+                    <div class="d-none" id="jsRefresfToken">
+                        <p id='jsReToken'></p>
+                    </div>
+                </div>              
+            </div>
+        </div>
+    </section>
+    <!-- JS, Popper.js, and jQuery -->
+    <% include ../layouts/script %>
+    <script>
+        const form = document.getElementById('jsMainOauth');
+        const submit = document.getElementById('jsSubmit');
+        const errUri = document.getElementById('err-redirect_uri');
+        const errName = document.getElementById('err-name');
+
+        submit.addEventListener('click', () => {
+            let isTrue = true;
+            let name = document.getElementById('name').value;
+            let redirect_uri = document.getElementById('redirect_uri').value;
+            if (name == '') {
+                errName.innerText = 'Please insert your name';
+                isTrue = false;
+            }
+            if (redirect_uri == '') {
+                errUri.innerText = 'Please insert your redirect uri';
+                isTrue = false;
+            }
+            if (isTrue) {
+                form.submit();
+            }
+        });
+
+        $(document).ready(function () {
+
+            $('.left-menu li').each(function (index) {
+                $(this).click(function () {
+                    $('.left-menu li').each(function (index) {
+                        $(this).removeClass('active');
+                    });
+                    $(this).hasClass('active') ? '' : $(this).addClass('active');
+                    switch ($(this).attr('id')) {
+                        case "jsBtn1":
+                            if (!$('#jsMainOauth').hasClass('show')) {
+                                $('#jsMainOauth').addClass('show');
+                            }
+                            $('#jsCode').removeClass('show');
+                            $('#jsAccessToken').removeClass('show');
+                            $('#jsRefresfToken').removeClass('show');
+                            break;
+                        case "jsBtn2":
+                            if (!$('#jsCode').hasClass('show')) {
+                                $('#jsCode').addClass('show');
+                            }
+                            $('#jsMainOauth').removeClass('show');
+                            $('#jsAccessToken').removeClass('show');
+                            $('#jsRefresfToken').removeClass('show');
+                            break;
+                        case "jsBtn3":
+                            if (!$('#jsAccessToken').hasClass('show')) {
+                                $('#jsAccessToken').addClass('show');
+                                let staff_id = ($("select[name='staff_id']"))[0].value;
+                                let client_id = (location.pathname).replace('/oauth/client/detail/', '');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: `${origin}/oauth/token`,
+                                    data: {
+                                        code: sessionStorage.getItem('code'),
+                                        client_id: client_id
+                                    },
+                                    success: function (data) {
+                                        if (data.success) {
+                                            $('#jsAcToken').text(data.result);
+                                        }
+                                    },
+                                    error: function () {
+                                        return false;
+                                    }
+                                })
+                            }
+                            $('#jsCode').removeClass('show');
+                            $('#jsMainOauth').removeClass('show');
+                            $('#jsRefresfToken').removeClass('show');
+                            break;
+                        case "jsBtn4":
+                            if (!$('#jsRefresfToken').hasClass('show')) {
+                                $('#jsRefresfToken').addClass('show');
+                                let staff_id = ($("select[name='staff_id']"))[0].value;
+                                let client_id = (location.pathname).replace('/oauth/client/detail/', '');
+                                $.ajax({
+                                    type: 'POST',
+                                    url: `${origin}/oauth/token`,
+                                    data: {
+                                        refresh_token: sessionStorage.getItem('refresh_token'),
+                                        client_id: client_id,
+                                        grant_type: 'refresh_token'
+                                    },
+                                    success: function (data) {
+                                        if (data.success) {
+                                            $('#jsReToken').text(data.result);
+                                        }
+                                    },
+                                    error: function () {
+                                        return false;
+                                    }
+                                })
+                            }
+                            $('#jsCode').removeClass('show');
+                            $('#jsMainOauth').removeClass('show');
+                            $('#jsAccessToken').removeClass('show');
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            });
+            $('#jsEdit').click(function () {
+                $('#jsButton').removeAttr('hidden');
+                $('input').removeAttr('disabled');
+                $('textarea').removeAttr('disabled');
+                $('#jsSecret').attr('disabled', true);
+            });
+            $('#jsCancel').click(function () {
+                $('#jsButton').attr('hidden', true);
+                $('input').attr('disabled', true);
+                $('textarea').attr('disabled', true);
+                $('#imageLogo').attr("src", $(this).val()); 
+            });
+            $('#jsGetCode').click(function () {
+                let staff_id = ($("select[name='staff_id']"))[0].value;
+                let client_id = (location.pathname).replace('/oauth/client/detail/', '');
+                $.ajax({
+                    type: 'GET',
+                    url: `${origin}/oauth/api/get-code?staff_id=${staff_id}&client_id=${client_id}`,
+                    success: function (data) {
+                        if (data.success) {
+                            $('#jsTextCode').val(data.result.code);
+                            sessionStorage.setItem('code', data.result.code);
+                        } else {
+                            $('#jsTextCode').css("color", "red");
+                            $('#jsTextCode').text("Get code failed");
+                        }
+                    },
+                    error: function () {
+                        return false;
+                    }
+                })
+            });
+
+            $('#logo_uri').change(function  (e) {
+                $('#imageLogo').attr("src", $(this).val()); 
+            });
+        });
+    </script>
+</body>
+
+</html>

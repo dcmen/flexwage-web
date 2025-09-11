@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="jsLoader">
+    <div style="top: 40%; left: 0px;" class="loader">
+      <div class="loader-chiled"></div>
+    </div>
+  </div>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <!-- Toast -->
+          <div id='jsErr' class="toast-err">
+            <p>Connection timeout.</p>
+            <div class="relative w-full sm:w-1/2 bg-gray-200">
+                <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+            </div>
+          </div>
+          <!--End Toast-->
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page body start -->
+                  <div class="page-body">
+                    <input hidden value="csrfToken" name="_csrf">
+                    <div class="card">
+                        <div class="card-block">
+                            <h5 class="mb-4">Transaction frequency</h5>
+                            <div class="dt-responsive table-responsive">
+                                <div class="d-flex justify-content-end">
+                                    <form style="width: 25%;" id="jsSearchKey">
+                                        <div class="input-group mb-0">
+                                          <input name="search_key" type="text" class="form-control"
+                                            placeholder="Search this first name, last name">
+                                          <div class="input-group-append">
+                                            <button class="btn btn-secondary" type="submit">
+                                              <i class="icofont icofont-ui-search"></i>
+                                            </button>
+                                          </div>
+                                        </div>
+                                      </form>
+                                    <div id="jsAveRate" class="pt-2 pl-3 pr-3">
+                                    </div>
+                                </div>
+                                <table id="tableRate" class="table table-striped table-bordered nowrap">
+                                  <thead>
+                                    <tr>
+                                      <th>#</th>
+                                      <th>First Name</th>
+                                      <th>Last Name</th>
+                                      <th>Rate</th>
+                                      <th>Comment</th>
+                                      <th>Date</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                  </tbody>
+                                </table>
+                              </div>
+                        </div>
+                    </div>         
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/jszip.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/pdfmake.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/vfs_fonts.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <script src="../../web-files/assets/js/moment.min.js"></script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script src="../../web-files/assets/pages/data-table/js/logs-dataTable.js"></script>
+</body>

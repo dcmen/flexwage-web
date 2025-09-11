@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <!-- themify-icons line icon -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/icon/themify-icons/themify-icons.css">
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/icon/icofont/css/icofont.css">
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+
+                  <!-- Page body start -->
+                  <div class="page-body">
+                    <form action="/admin/edit-team-member/<%= team._id %>/?_csrf=<%=csrfToken%>" method="POST" enctype="multipart/form-data">
+                      <div class="row">
+                        <div class="col-sm-4">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Team Member Image</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block text-center">
+                              <img src="<%= team.imagePath %>" id="image-upload" alt="Default Team Member"
+                                class="img-fluid">
+                                <span class="messagesImage"></span>
+                                <% if(messages.length > 0) { %>
+                                  <div class="alert alert-danger mt-3">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <i class="icofont icofont-close-line-circled"></i>
+                                    </button>
+                                      <%= messages %>
+                                  </div>
+                                <% } else { %>
+                                  <span class="messagesSuggestion"></span>
+                                <% } %>
+                              <div class="form-group mt-3">
+                                <input type="file" class="form-control" id="upload-path" name="imagePath">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-8">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Add new Team Member</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Name</label>
+                                <div class="col-sm-10">
+                                  <input type="text" maxlength="50" class="form-control" name="name" value="<%= team.name %>">
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Position</label>
+                                <div class="col-sm-10">
+                                  <input type="text" maxlength="30" class="form-control" name="position" value="<%= team.position %>">
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Description</label>
+                                <div class="col-sm-10">
+                                  <textarea type="text" maxlength="100" class="form-control" rows="5" cols="5"
+                                  class="form-control" name="description"><%= team.description %></textarea>
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Facebook</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="facebook" value="<%= team.facebook %>">
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Google</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="google" value="<%= team.google %>">
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Twitter</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="twitter" value="<%= team.twitter %>">
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Instagram</label>
+                                <div class="col-sm-10">
+                                  <input type="text" class="form-control" name="instagram" value="<%= team.instagram %>">
+                                  <span class="messages popover-valid"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                    <select name="status" class="form-control">
+                                      <option value="">Select One Value Only</option>
+                                      <option value="true" <%= team.status === true ? 'selected' : '' %>>Active</option>
+                                      <option value="false" <%= team.status === false ? 'selected' : '' %>>Disable
+                                      </option>
+                                    </select>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <label class="col-sm-2"></label>
+                                <div class="col-sm-10">
+                                  <button id="btn_submit" type="submit" class="btn btn-primary m-b-0">Submit</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- Page body end -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+
+  <script>
+    function readImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#image-upload').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $('#upload-path').change(function () {
+      readImage(this);
+    });
+
+  </script>
+
+  <script>
+    $('.messagesSuggestion').html('<div class="alert alert-success mt-3 text-center"><p style="font-size: 18px">Image should have width = <b>274px</b> and height = <b>346px</b></p></div>');
+    var srcElement = document.getElementById('btn_submit');
+    var _URL = window.URL || window.webkitURL;
+    $("#upload-path").change(function (e) {
+      var file, img;
+      if ((file = this.files[0])) {
+        img = new Image();
+        img.onload = function () {
+          if (this.width !== 274 && this.height !== 346) {
+            $('.messagesImage').html('<div class="alert alert-danger mt-3 text-center"><i class="icofont icofont-warning" style="font-size: 30px;"></i><p style="font-size: 18px;"> Invalid Image. Please upload file image has width = <b>274px</b> and height = <b>346px</b></p>'
+                                    + '<p>(Your image have width = ' + this.width + 'px and height = ' + this.height +'px)</p></div>');
+            $('.messagesSuggestion').html('');
+            srcElement.style.display = 'none';
+          } else {
+            $('.messagesImage').html('<div class="alert alert-success mt-3 text-center"><p class="text-success mt-3" style="font-size: 20px"><i class="icofont icofont-tick-mark ml-2" style="font-size: 25px;"></i><b> Ready to upload!</b></p><div>');
+            $('.messagesSuggestion').html('');
+            srcElement.style.display = 'block';
+          }
+          // alert(this.width + " " + this.height);
+        };
+        img.src = _URL.createObjectURL(file);
+      }
+    });
+  </script>
+
+</body>
+
+</html>

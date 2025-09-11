@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css"
+          href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+    <% include ../layouts/stylesheet %>
+    <link href="/../../web-files/assets/css/select2.min.css" rel="stylesheet" />
+
+    <style>
+        input.text-secure {
+            text-security: disc;
+            -webkit-text-security: disc;
+            -mox-text-security:disc;
+            -moz-text-security:disc;
+        }   
+    </style>
+</head>
+
+<body>
+<% if (messages.length > 0) { %>
+    <div id='jsErr' class="show error">
+        <p><%= messages %></p>
+        <div class="relative w-full sm:w-1/2 bg-gray-200">
+            <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+        </div>
+    </div>
+<% } %>
+<% include ../layouts/preloader %>
+<div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+        <% include ../layouts/navbar %>
+        <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+                <% include ../layouts/leftbar %>
+                <div class="pcoded-content">
+                    <div class="pcoded-inner-content">
+                        <!-- Main-body start -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- Page-body start -->
+                                <div class="page-body">
+                                    <!--profile cover start-->
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <form id="formEdit" class="needs-validation" novalidate autocomplete="off" method="POST" action="/admin/create-admin/?_csrf=<%=csrfToken%>" enctype="multipart/form-data">
+                                                <div class="row">
+                                                    <div class="col-sm-3 col-md-3 ">
+                                                        <div class="card">
+                                                            <div class="card-block">
+                                                                <img id="previewImg" class="avatar-staff img-fluid"  alt="User avatar"
+                                                                     src="../../web-images/4.png" />
+                                                                <div class="form-row mt-3">
+                                                                    <label for="avatar">
+                                                                        <input type="file" accept="image/*" name="avatar" class="form-control" id="avatar">
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-9 col-md-9">
+                                                        <div class="card" id="the">
+                                                            <div class="card-header">
+                                                                <h1 class="card-header-text">Add New</h1>
+                                                            </div>
+                                                            <div class="card-block">
+                                                                <div class="view-info">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <div class="general-info">
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-12 col-xl-12">
+                                                                                        <div class="form-row">
+                                                                                            <div class="col-md-6 mb-3">
+                                                                                                <label  for="role">Role</label>
+                                                                                                <select name="role" id="role" class="form-control">
+                                                                                                    <option value="super_user">Super User</option>
+                                                                                                    <!-- <option value="client_manager">Client Manager</option>
+                                                                                                    <option value="deduction_controller">Deduction Controller</option>
+                                                                                                    <option value="financial_controller">Financial Controller</option>
+                                                                                                    <option value="account_manager">Account Manager</option>
+                                                                                                    <option value="employer">Employer</option>
+                                                                                                    <option value="payroll_officer">Payroll Officer</option> -->
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            <div class="col-md-6 mb-3">
+                                                                                                <label  for="role">Group</label>
+                                                                                                <select name="groupId" id="group" class="form-control">
+                                                                                                    <option value="0" selected>Choose group</option>
+                                                                                                    <% groups?.forEach(function(item) { %>
+                                                                                                        <option value="<%= item._id %>"><%= item.group_name %></option>
+                                                                                                    <% }) %>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-lg-12 col-xl-12">
+                                                                                        <div>
+                                                                                            <input type="hidden" name="countryCode" value="">
+                                                                                            <div class="form-row">
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <label for="validationFirstName">First name</label>
+                                                                                                    <input name="first_name" type="text" class="form-control" id="validationFirstName" required placeholder="Please enter first name">
+                                                                                                </div>
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <label for="validationLastName">Last name</label>
+                                                                                                    <input name="last_name" type="text" class="form-control" id="validationLastName" required placeholder="Please enter last name">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-row">
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <label for="validationEmail">Email</label>
+                                                                                                    <input type="email" name="email" class="form-control" placeholder="Please enter email">
+                                                                                                </div>
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <label for="validationMobile">Mobile Number</label>
+                                                                                                    <div class="form-row custom-mobile">
+                                                                                                        <div class="col-md-8 mb-1">
+                                                                                                            <select class="form-control" name="countryCode" id="selectedCountryCode">
+                                                                                                                <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                                                                                                                <optgroup label="Other countries">
+                                                                                                                    <% countryCode.forEach(function(item) { %>
+                                                                                                                        <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                                                                                                                    <% }) %>
+                                                                                                                </optgroup>
+                                                                                                            </select>
+                                                                                                        </div>
+                                                                                                        <div class="col-md-4 pl-1">
+                                                                                                            <input name="mobile" type="text" class="form-control" placeholder="Mobile" pattern="[0-9]*">
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <!-- <div class="form-row">
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <label for="password">Password</label>
+                                                                                                    <input name="password" type="text" class="form-control text-secure" id="password" autocomplete="new-password" required placeholder="Please enter password">
+                                                                                                </div>
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <label for="confirmPassword">Confirm Password</label>
+                                                                                                    <input name="confirmPassword" type="text" class="form-control text-secure" autocomplete="new-password" id="confirmPassword" required placeholder="Please re-enter password">
+                                                                                                </div>
+                                                                                            </div> -->
+                                                                                            <div class="form-row">
+                                                                                                <div class="col-md-12 mb-3">
+                                                                                                    <label for="validationAddress">Room number / Building</label>
+                                                                                                    <input name="address_line_1" placeholder="Room number / Building" type="text" class="form-control">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-row">
+                                                                                                <div class="col-md-12 mb-3">
+                                                                                                    <label for="validationAddress">Street number and name</label>
+                                                                                                    <input name="address_line_2" placeholder="Street number and name" type="text" class="form-control">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <!-- <div class="form-row">
+                                                                                                <div class="col-md-12 mb-3">
+                                                                                                    <label for="validationAddress">Street number and name</label>
+                                                                                                    <input name="address_line_3" placeholder="Street number and name" type="text" class="form-control">
+                                                                                                </div>
+                                                                                            </div> -->
+                                                                                            <div class="form-row">
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <input id="jsValueCountryId" hidden value="">
+                                                                                                    <label for="validationAddress">Country</label>
+                                                                                                    <select name="address_country_id" class="form-control">
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <input id="jsValueStateId" hidden value="">
+                                                                                                    <label for="validationAddress">State</label>
+                                                                                                    <select name="address_line_state_id" class="form-control">
+                                                                                                        <option value="">Choose State</option>
+                                                                                                    </select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-row">
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <div id="jsCity">
+                                                                                                        <label for="validationAddress">City</label>
+                                                                                                        <input id="jsValueCityName" hidden value="">
+                                                                                                        <select name="address_line_city" class="form-control">
+                                                                                                            <option value="">Choose City</option>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                    <div id='jsSuburb' class="hide">
+                                                                                                        <input id="jsValueSuburbId" hidden value="">
+                                                                                                        <label for="validationAddress">Suburb</label>
+                                                                                                        <select name="address_line_suburb_id" class="form-control">
+                                                                                                            <option value="">Choose Suburb</option>
+                                                                                                        </select>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <label for="validationAddress">Post Code</label>
+                                                                                                    <input name="postcode" placeholder="Post Code" type="text" class="form-control">
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="form-row">
+                                                                                                <div class="col-md-6 mb-3">
+                                                                                                    <input type="checkbox" id="bypass_2fa" name="bypass_2fa">
+                                                                                                    <label for="bypass_2fa">Bypass 2 Factor Authentication</label><br>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            <button class="btn btn-primary" type="submit">Save and send invite</button>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!-- end of table col-lg-6 -->
+                                                                                </div>
+                                                                                <!-- end of row -->
+                                                                            </div>
+                                                                            <!-- end of general info -->
+                                                                        </div>
+                                                                        <!-- end of col-lg-12 -->
+                                                                    </div>
+                                                                    <!-- end of row -->
+                                                                </div>
+                                                                <!-- end of view-info -->
+
+                                                            </div>
+                                                            <!-- end of card-block -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ../layouts/script %>
+<script src="../../web-files/assets/js/select2.min.js"></script>
+<!-- i18next.min.js -->
+<script type="text/javascript"
+        src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+<script type="text/javascript"
+        src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+</script>
+<script type="text/javascript"
+        src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+</script>
+<script type="text/javascript"
+        src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js">
+</script>
+<script src="../../web-files/assets/pages/staffs/script.js"></script>
+<script src="../../web-files/assets/pages/common/common.js"></script>
+<script>
+    $(document).ready(function () {
+        previewImage();
+        validatePassword();
+    });
+    function previewImage() {
+       $('#avatar').on('change', function () {
+           var img = this.files[0];
+           if (img) {
+               var reader = new FileReader();
+               reader.onload = function(e) {
+                   $('#previewImg').attr('src', e.target.result);
+               }
+               reader.readAsDataURL(img);
+           }
+       });
+    }
+
+    function validatePassword() {
+        $('#confirmPassword').on('change', function () {
+            var password = $('#password').val();
+            var confirmPassword = $(this).val();
+            if (confirmPassword !== '' && password !== '' && password !== confirmPassword) {
+                alert('Confirm password not match!');
+                $(this).val('');
+            }
+        });
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<div id="devEmployer" class="modal face">
+  <div style="max-width: 90%; margin-top: 3% !important;" class="modal-dialog" role="document">
+    <div class="modal-content" style="position: relative;">
+      <div class="modal-header pt-2 pb-2">
+        <div class="pt-2 pb-2">
+          <h5>Employer lookup</h5>
+        </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <i class="icofont-close-line"></i>
+        </button>
+      </div>
+      <div style="height: 75vh;" class="modal-body pb-4 pl-4 pr-4 pt-2">
+        <div>
+          <form id="jsToEmployer" style="float: right;">
+            <div class="input-group mb-0">
+              <input name="employer-name" type="text" class="form-control"
+                placeholder="Search this name or email">
+              <div class="input-group-append">
+                <button class="btn btn-secondary" type="submit">
+                  <i class="icofont icofont-ui-search"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="overflow-hidden">
+          <div class="dt-responsive table-responsive">
+            <table style="width: 100%;" id="tableEmployer" class="table table-bordered nowrap">
+              <thead class="thead">
+                <tr>
+                  <th colspan="6" class="text-center"><%= system.system_name %></th>
+                  <th colspan="4" class="text-center">CashD</th>
+                </tr>
+                <tr>
+                  <!-- Payroll -->
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Employment Type</th>
+                  <th>Start Date</th>
+                  <!-- CashD -->
+                  <th>Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top: 70px;" class="modal-footer pt-2 pb-2">
+        <button id="sendInvite" type="button" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<!-- modal choose date payment -->
+<div id="jsChooseDatePayment" class="modal">
+    <div class="modal-dialog modal-dialog-width" role="document">
+      <div style="border-radius: 2px" class="modal-content">
+        <div class="modal-header">
+          <input hidden name="valueMail" />
+          <h5 class="modal-title">Setup time to make repayment automatically</h5>
+        </div>
+        <div class="modal-body pl-4 pr-4">
+          <div class="row mt-2">
+            <div class="col-md-3">
+              <h6 class="pt-2">
+                Date:
+              </h6>
+            </div>
+            <div class="col-md-9">
+              <select name="oneMakeRepaymentDate" class="form-control">
+                <option value="-1" selected disabled>Choose date</option>
+                <option value="0" <%= company.make_repayment_date == 0 ? 'selected': '' %>>End date of pay period</option>
+                <option value="1" <%= company.make_repayment_date == 1 ? 'selected': '' %>>One day after the end of pay period</option>
+                <option value="2" <%= company.make_repayment_date == 2 ? 'selected': '' %>>Two days after the end of pay period</option>
+                <option value="3" <%= company.make_repayment_date == 3 ? 'selected': '' %>>Three days after the end of pay period</option>
+                <option value="4" <%= company.make_repayment_date == 4 ? 'selected': '' %>>Four days after the end of pay period</option>
+                <option value="5" <%= company.make_repayment_date == 5 ? 'selected': '' %>>Five days after the end of pay period</option>
+                <option value="6" <%= company.make_repayment_date == 6 ? 'selected': '' %>>Six days after the end of pay period</option>
+              </select>
+            </div>
+          </div>
+          <div class="pt-3 row">
+            <div class="col-md-3">
+              <h6 class="pt-2">
+                Time:
+              </h6>
+            </div>
+            <div class="col-md-9">
+              <input type="time" name="oneMakePaymentTime" class="form-control input-time" value="<%= company.make_repayment_time ? company.make_repayment_time : '17:00' %>" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer--custom">
+          <button class="modal-footer-button" data-dismiss="modal">CANCEL</button>
+          <button class="modal-footer-button jsSendMailPayment">SEND</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End modal  -->

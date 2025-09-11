@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <!-- themify-icons line icon -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/icon/themify-icons/themify-icons.css">
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/icon/icofont/css/icofont.css">
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page body start -->
+                  <div class="page-body">
+                    <form action="/admin/hiw-add-feature?_csrf=<%= csrfToken %>" method="POST" enctype="multipart/form-data">
+                      <div class="row">
+                          <div class="col-sm-4">
+                              <div class="card">
+                                <div class="card-header">
+                                  <h4>HIW Image</h4>
+                                  <hr>
+                                </div>
+                                <div class="card-block text-center">
+                                  <img src="/../../web-images/default.png" id="image-upload" alt="Default Banner"
+                                    class="img-fluid">
+                                    <span class="messagesImage"></span>
+                                    <% if(messages.length > 0) { %>
+                                      <div class="alert alert-danger mt-3">
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <i class="icofont icofont-close-line-circled"></i>
+                                        </button>
+                                          <%= messages %>
+                                      </div>
+                                      <% } else { %>
+                                        <span class="messagesSuggestion"></span>
+                                      <% } %>
+                                  <div class="form-group mt-3">
+                                    <input type="file" class="form-control" id="upload-path" required name="imagePath">
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        <div class="col-sm-8">
+                          <div class="card">
+                            <div class="card-header">
+                              <h4>Add new HIW</h4>
+                              <hr>
+                            </div>
+                            <div class="card-block">
+                              <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Title<i style = color:red>*</i></label>
+                                <div class="col-sm-10">
+                                  <input type="text" maxlength="50" class="form-control" name="title" required
+                                  placeholder="Enter Title Less Than 50 Character">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <div class="col-sm-2">
+                                  <label class="col-form-label">Description<i style = color:red>*</i></label>
+                                  <label>(Maximum 120 characters)</label>
+                                </div>
+                                <div class="col-sm-10">
+                                  <textarea type="text" class="form-control" rows="5" cols="5" name="description"
+                                    required placeholder="Enter Description"></textarea>
+                                  <span class="messages"></span>
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Status</label>
+                                <div class="col-sm-10">
+                                  <select name="status" class="form-control" required>
+                                    <option value="true">Active</option>
+                                    <option value="false">Disable</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="row">
+                                <label class="col-sm-2"></label>
+                                <div class="col-sm-10">
+                                  <button id="btn_submit" type="submit" class="btn btn-primary m-b-0 d-none">Submit</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                  <!-- Page body end -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <script>
+    function readImage(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#image-upload').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $('#upload-path').change(function () {
+      readImage(this);
+    });
+
+  </script>
+  <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+  <script>
+    CKEDITOR.on('instanceReady', function( ev ) {
+      var blockTags = ['div','h1','h2','h3','h4','h5','h6','p','pre','li','blockquote','ul','ol',
+      'table','thead','tbody','tfoot','td','th',];
+
+      for (var i = 0; i < blockTags.length; i++)
+      {
+        ev.editor.dataProcessor.writer.setRules( blockTags[i], {
+            indent : false,
+            breakBeforeOpen : true,
+            breakAfterOpen : false,
+            breakBeforeClose : false,
+            breakAfterClose : true
+        });
+      }
+    })
+
+    var edit = CKEDITOR.replace('description');
+    $('.messages').html('<p class="text-danger mt-3">Description is required.</p>');
+    edit.on('change', function(e) {
+      var values = edit.getData();
+      if(values.replace(/<[^>]*>?/gm, '').length < 1){
+        $('.messages').html('<p class="text-danger mt-3">Description is required.</p>');
+        $('#btn_submit').addClass('d-none');
+      }
+      else if(values.replace(/<[^>]*>?/gm, '').length > 120){
+        $('.messages').html('<p class="text-danger mt-3">Maximum 120 characters!</p>');
+        $('#btn_submit').addClass('d-none');
+      }
+      else{
+        $('#btn_submit').removeClass('d-none');
+        $('.messages').html('');
+      }
+    });
+  </script>
+
+  <script>
+    $('.messagesSuggestion').html('<div class="alert alert-success mt-3 text-center"><p style="font-size: 18px">Image should have width = <b>40px</b> and height = <b>48px</b></p></div>');
+    var srcElement = document.getElementById('btn_submit');
+    var _URL = window.URL || window.webkitURL;
+    $("#upload-path").change(function (e) {
+      var file, img;
+      if ((file = this.files[0])) {
+        img = new Image();
+        img.onload = function () {
+          if (this.width !== 40 && this.height !== 48) {
+            $('.messagesImage').html('<div class="alert alert-danger mt-3 text-center"><i class="icofont icofont-warning" style="font-size: 30px;"></i><p style="font-size: 18px;"> Invalid Image. Please upload file image has width = <b>40px</b> and height = <b>48px</b></p>'
+                                    + '<p>(Your image have width = ' + this.width + 'px and height = ' + this.height +'px)</p></div>');
+            $('.messagesSuggestion').html('');
+            srcElement.style.display = 'none';
+          } else {
+            $('.messagesImage').html('<div class="alert alert-success mt-3 text-center"><p class="text-success mt-3" style="font-size: 20px"><i class="icofont icofont-tick-mark ml-2" style="font-size: 25px;"></i><b> Ready to upload!</b></p><div>');
+            $('.messagesSuggestion').html('');
+            srcElement.style.display = 'block';
+          }
+          // alert(this.width + " " + this.height);
+        };
+        img.src = _URL.createObjectURL(file);
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <% include ../layouts/stylesheet %>
+</head>
+
+<body>
+    <div id="jsModal" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content shadow p-3 mb-5 bg-white rounded custom-modal">
+                <div style="border: none; height: 30px;" class="modal-header text-a">
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 16px; text-align: justify; margin: 0;">Are you sure you want to change the
+                        transaction fee? <br />
+                        Note: Once you changed, we will apply this value to all companies on the system</p>
+                </div>
+                <div style="border-top: none; text-align: center;" class="modal-footer justify-content-between">
+                    <button style="width: 100%;" id="jsNo" type="button" class="btn btn-secondary"
+                        data-dismiss="modal">No</button>
+                    <button style="width: 100%;" id="jsYes" type="button" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../layouts/preloader %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <% include ../layouts/navbar %>
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <% include ../layouts/leftbar %>
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page body start -->
+                                    <% if(messagesErr.length > 0) { %>
+                                    <div class="row">
+                                        <div class="col-sm-2"></div>
+                                        <div class="col-sm-8">
+                                            <div class="alert alert-danger mt-3">
+                                                <button type="button" class="close" data-dismiss="alert"
+                                                    aria-label="Close">
+                                                    <i class="icofont icofont-close-line-circled"></i>
+                                                </button>
+                                                <%= messagesErr %>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-2"></div>
+                                    </div>
+                                    <% } else { %>
+                                    <span class="messagesSuggestion"></span>
+                                    <% } %>
+                                    <div class="page-body">
+                                        <!-- Bank setting -->
+                                        <form action="/admin/retailer" method="POST">
+                                            <input type="hidden" name="_csrf" id="_csrf" value="<%= csrfToken %>">
+                                            <div class="row">
+                                                <div class="col-sm-2"></div>
+                                                <div class="col-sm-8">
+                                                    <div class="card">
+                                                        <div class="card-header">
+                                                            <div class="form-group row">
+                                                                <h4 class="col-sm-4">Retailer Information</h4>
+                                                                <div class="col-sm-8">
+                                                                    <button id="submit" type="submit"
+                                                                        class="btn btn-primary m-b-0 float-right">Save</button>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                        </div>
+                                                        <div class="card-block">
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Name</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="name" type="text" class="form-control" name="name"
+                                                                        required >
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Phone</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="phone" type="text" class="form-control" name="phone"
+                                                                        required >
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Email</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="email" type="email" class="form-control"
+                                                                        name="email" required >
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Address</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="address" type="text" class="form-control"
+                                                                        name="address" required >
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Website</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="website" type="text" class="form-control"
+                                                                        name="website" required 
+                                                                        >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card-block">
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Bank name</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="bank_name" type="text" class="form-control"
+                                                                        name="bank_name" required >
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Bank account
+                                                                    number</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="bank_account_number" type="text" class="form-control"
+                                                                        name="bank_account_number" required
+                                                                        maxlength="9">
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-sm-3 col-form-label">Bank BSB
+                                                                    number</label>
+                                                                <div class="col-sm-9">
+                                                                    <input id="bank_bsb_number" type="text" class="form-control"
+                                                                        name="bank_bsb_number" required 
+                                                                        maxlength="7">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-2"></div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <!-- Page body end -->
+                                </div>
+                            </div>
+                            <!-- Page body end -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../layouts/script %>
+    <!-- i18next.min.js -->
+    <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+    <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+    </script>
+    <script type="text/javascript"
+        src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+    </script>
+    <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+    <!-- Custom js -->
+    <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+    <script>
+        $(document).ready(function () {
+            let bank_name = $('#bank_name');
+            let bank_account_number = $('#bank_account_number');
+            let bank_bsb_number = $('#bank_bsb_number');
+            let btnSubmit = $('#submit');
+
+            bank_account_number.keydown(function() {
+                let value = bank_account_number.val();
+                if (value.match(/^[0-9]+$/g)) {
+                    bank_account_number.css({"color": "#000"});
+                } else {
+                    bank_account_number.css({"color": "#f00"});
+                }
+            });
+            bank_bsb_number.keydown(function() {
+                let value = bank_bsb_number.val();
+                if (value.match(/^[0-9]+$/g)) {
+                    bank_bsb_number.css({"color": "#000"});
+                } else {
+                    bank_bsb_number.css({"color": "#f00"});
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

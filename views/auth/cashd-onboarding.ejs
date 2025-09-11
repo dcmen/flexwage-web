@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= pageName %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <!-- ico font -->
+  <meta charset="utf-8">
+  <!-- Referrer-Policy -->
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <!-- Google font-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,600,800" rel="stylesheet">
+  <!-- Favicon icon -->
+  <link rel="icon" href="/web-files/assets/images/favicon.ico" type="image/x-icon">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <!-- Style.css -->
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/../../web-files/assets/css/jquery.mCustomScrollbar.css">
+  <link rel="stylesheet" type="text/css" href="../../web-stylesheets/style.css">
+  <link rel="stylesheet" type="text/css" href="/web-stylesheets/reckon-trial.css">
+</head>
+
+<body>
+  <input hidden name="_csrf" value="<%= csrfToken %>">
+  <div id='jsErr'>
+    <p>The connection has timed out</p>
+    <div class="relative w-full sm:w-1/2 bg-gray-200">
+      <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+    </div>
+  </div>
+  <% include ../layouts/preloader %>
+  <section class="login-block">
+    <div id="jsLoader">
+      <div class="loader">
+        <div class="loader-chiled"></div>
+      </div>
+    </div>
+    <!-- Scream registration  -->
+    <div id="divContentSuccess" class="container-body">
+      <header class="header">
+        <div class="header-logo">
+          <img src="/web-images/Group467.png" alt="logo">
+        </div>
+      </header>
+      <main>
+        <div class="logo-reckon">
+          <img src="/web-images/RecoknOne.png" alt="logo-reckon" />
+        </div>
+        <!-- Page after registered   -->
+        <div class="content">
+          <div class="mt-5">
+            <p>Thank you for your registration.</p>
+          </div>
+          <div class="mt-4">
+            <p>
+              Next steps:<br />
+              1.Login to your Reckon Account within the CashD platform.<br />
+              2.Select your Reckon book.<br />
+              3.CashD will then complete your onboarding process.
+            </p>
+          </div>
+          <div class="text-center pt-5 pb-4">
+            <button id="showLoginReckon" class="mt-3 btn btn-danger btn-danger--custom">Login to Reckon</button>
+          </div>
+        </div>
+        <!-- End page after registered   -->
+      </main>
+      <footer>
+        <div class="row">
+          <div class="col-4">
+            <a href="mailto:support@CashD.com.au">
+              <img src="/web-images/icon-mail-black.png" alt="img-email">
+              <span>support@CashD.com.au</span>
+            </a>
+          </div>
+          <div class="col-4">
+            <a href="https://cashd.com.au">
+              <img src="/web-images/icon-web.png" alt="img-email">
+              <span>CashD.com.au</span>
+            </a>
+          </div>
+          <div class="col-4">
+            <a href="https://www.linkedin.com/company/cashd">
+              <img src="/web-images/linkedin-icon-for-website-7.png" alt="img-email">
+              <span>LinkedIn</span>
+            </a>
+          </div>
+        </div>
+        <p class="text-center">Copyright © CashD 2021. All Rights Reserved</p>
+      </footer>
+    </div>
+
+    <!-- After success get code  -->
+    <div id="divShowChooseCompany" class="hide">
+      <!--Navbar Menu-->
+      <nav class="navbar navbar-expand-lg navbar-light bg-primary navbar-menu">
+        <div class="text-center img-logo">
+          <a href="/"><img src="/web-files/assets/images/CashD-logo.png" width="100%" alt="CashD Logo"></a>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active nav-item--border-custom">
+              <a class="nav-link" href="javascript:void(0)">Home</a>
+            </li>
+            <li class="nav-item  nav-item--border-custom">
+              <a class="nav-link" href="javascript:void(0)" onClick="alert('Coming soon!')">About</a>
+            </li>
+            <li class="nav-item pr-5">
+              <a class="nav-link" href="javascript:void(0)" onClick="alert('Coming soon!')">Contact</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/signup">
+                <span class="feather icon-user"></span>
+                Sign Up</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div>
+        <input type="text" hidden id="urlRecKon" value="<%= urlReckon %>">
+      </div>
+
+      <!-- select company -->
+      <div class="card-content jsShowCompany hide">
+        <div class="card">
+          <div class="card-header p-0">
+            <img src="/web-images/Reckon-LogoRGB1.png">
+          </div>
+          <div class="card-body-title">
+            Select company
+          </div>
+          <div class="card-body modal-body--custom">
+            <div id="divChooseCompany">
+              <!-- code  -->
+            </div>
+          </div>
+          <div class="modal-footer--custom">
+            <button class="modal-footer-button" id="jsCancel">
+              CANCEL
+            </button>
+            <button class="modal-footer-button" id="jsSelect">
+              SELECT
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-content-success jsShowInfoCompany hide">
+        <div id="dicContentSuccess">
+          <!-- code -->
+        </div>
+        <button id="btnCloseAfterRegister" class="btn btn-primary btn-sm btn-primary--color mt-4">Close</button>
+      </div>
+
+    </div>
+  </section>
+  <script src="/socket.io/socket.io.js"></script>
+  <% include ../layouts/script %>
+  <script src="/web-files/assets/pages/auth/cashd-onboarding.js"></script>
+  <script>
+    const userTrial = <%- JSON.stringify(userTrial) %>;
+  </script>
+</body>
+
+</html>

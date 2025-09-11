@@ -1,0 +1,58 @@
+<div style="overflow-y: auto;" id="directDebitAuthorityModal" class="modal">
+  <input type="text" name="directDebitFormBankId" hidden value="<%= directDebitForm?.bank_id %>">
+  <div style="max-width: 600px;" class="modal-dialog modal-dialog-width" role="document">
+    <div class="modal-content">
+      <div class="modal-body pl-5 pr-5">
+        <h4 class="text-center text-primary mb-3">Direct Debit Request</h4>
+        <form class="formDirectDebit">
+          <div class="form-group">
+            <label class="text-primary">Company Name</label>
+            <input type="text" class="form-control" name="companyName" value="<%= company.company_name %>" disabled placeholder="Enter Company Name">
+          </div>
+          <div class="form-group">
+            <label class="text-primary">Sender Bank Details</label>
+            <select name="chooseSenderBank" class="form-control" aria-label="Default select example">
+              <option style="font-style: italic;" value="0">
+                Choose bank account
+              </option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="text-primary">Account Name</label>
+            <input type="text" class="form-control" name="nameOnAccount" value="<%= directDebitForm?.bank_account_name ? directDebitForm?.bank_account_name : '' %>" placeholder="Account Name" value="">
+          </div>
+          <div class="form-group">
+            <label class="text-primary">BSB</label>
+            <input type="text" class="form-control" name="bsb" maxlength="7" minlength="6" value="<%= directDebitForm?.bsb ? directDebitForm?.bsb : '' %>" placeholder="BSB">
+          </div>
+          <div class="form-group">
+            <label class="text-primary">Account Number</label>
+            <input type="text" class="form-control" name="accountNumber" maxlength="9" minlength="9" value="<%= directDebitForm?.account_number ? directDebitForm?.account_number : '' %>" placeholder="Account NUmber">
+          </div>
+          <div class="form-group mb-4">
+            <label class="text-primary">Bank Name</label>
+            <input type="text" class="form-control" name="bankName" value="<%= directDebitForm?.bank_name ? directDebitForm.bank_name : '' %>" placeholder="Bank Name">
+          </div>
+          <div class="form-group">
+            <div class="form-check">
+              <input name="authorized" class="form-check-input ml-0" <%= directDebitForm?.authorized ? 'checked' : '' %> type="checkbox">
+              <div>
+                <label class="form-check-label">
+                  By clicking on the check box I agree to the Direct Debit <a class="jsCheckboxFormDD" style="color: blue;" href="javascript:void(0)"><u>Terms & Conditions</u></a> which I have read and understood.
+                </label>
+                <p class="mt-1" style="font-size: 12px; padding-left: 1.25rem; color: #777777;">Please note: Your account will only be debited by the amount drawn by your employees via the CashD App. 
+                  This will be automatically deducted from the employees pay slip in Reckon, and will be processed at the end of each pay cycle. </p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer--custom">
+        <button id="cancel-setup-direct-debit" class="modal-footer-button" data-dismiss="modal">
+          CANCEL
+        </button>
+        <button id="submit-direct-debit" class="modal-footer-button">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

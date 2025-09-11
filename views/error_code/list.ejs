@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <% include ../layouts/stylesheet %>
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css"
+          href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+</head>
+<% include ../layouts/preloader %>
+<div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+        <% include ../layouts/navbar %>
+        <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+                <% include ../layouts/leftbar %>
+                <div class="pcoded-content">
+                    <div class="pcoded-inner-content">
+                        <!-- Main-body start -->
+                        <div class="main-body">
+                            <div class="page-wrapper">
+                                <!-- Page-body start -->
+                                <div class="page-body">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <!-- Zero config.table start -->
+                                            <div class="card">
+                                                <div class="card-block">
+                                                    <div class="dt-responsive table-responsive">
+                                                        <div class="d-flex justify-content-end">
+                                                            <form id="jsErrorCodeSearch">
+                                                                <div class="input-group mb-0">
+                                                                    <input name="error-code" type="number"
+                                                                           class="form-control"
+                                                                           placeholder="Search with error code">
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-secondary" type="submit">
+                                                                            <i class="icofont icofont-ui-search"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <table id="errorCodeTable"
+                                                               class="table table-striped table-bordered nowrap">
+                                                            <thead>
+                                                            <tr>
+                                                                <th>#</th>
+                                                                <th>Code</th>
+                                                                <th>Error Message</th>
+                                                            </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- Zero config.table end -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Page-body end -->
+                            </div>
+                        </div>
+                        <!-- Main-body end -->
+                        <!-- <div id="styleSelector">
+
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% include ../layouts/script %>
+<!-- data-table js -->
+<script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+<script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+</script>
+<!-- modalEffects js nifty modal window effects -->
+<script type="text/javascript" src="../../web-files/assets/js/modalEffects.js"></script>
+<script type="text/javascript" src="../../web-files/assets/js/classie.js"></script>
+<!-- i18next.min.js -->
+<script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+<script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+</script>
+<script type="text/javascript"
+        src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+</script>
+<script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+<!-- Custom js -->
+<script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script>
+<script src="../../web-files/assets/pages/data-table/js/listErorCode-dataTable.js"></script>
+</body>
+
+</html>

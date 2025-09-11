@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+      <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="google-site-verification" content="6OV_0OfURL2AX5MJE3IH3XHYMP-SNv-x-f2xK2q4lOg" />
+  <% include layouts/stylesheet %>
+</head>
+
+<body>
+  <% include layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <div class="page-body">
+                    <% if (role == 'Admin') { %>
+                    <div class="row">                      
+                      <!-- task, page, download counter  start -->
+                      <div class="col-xl-4 col-md-6">
+                        <div class="card bg-c-blue text-white">
+                          <div class="card-block">
+                            <div class="row align-items-center">
+                              <div class="col">
+                                <p class="m-b-5">Companies</p>
+                                <h4 class="m-b-0"><%= countCompany %></h4>
+                              </div>
+                              <div class="col col-auto text-right">
+                                <i class="feather icon-home f-50 text-c-blue"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-xl-4 col-md-6">
+                        <div class="card bg-c-green text-white">
+                          <div class="card-block">
+                            <div class="row align-items-center">
+                              <div class="col">
+                                <p class="m-b-5">Employees</p>
+                                <h4 class="m-b-0"><%= countStaff %></h4>
+                              </div>
+                              <div class="col col-auto text-right">
+                                <i class="feather icon-users f-50 text-c-green"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-xl-4 col-md-6">
+                        <div class="card bg-c-pink text-white">
+                          <div class="card-block">
+                            <div class="row align-items-center">
+                              <div class="col">
+                                <p class="m-b-5">Deduction</p>
+                                <h4 class="m-b-0"><%= countDeduction %></h4>
+                              </div>
+                              <div class="col col-auto text-right">
+                                <i class="feather icon-edit f-50 text-c-pink"></i>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <% } %>
+
+                    <div class="statistis-main row">
+                      <input type="hidden" name="role" value="<%= role %>">
+                      <!-- value total staff -->
+                      <input type="hidden" name="totalStaffDaily" value="<%= totalStaffDaily %>">
+                      <input type="hidden" name="totalStaffWeekly" value="<%= totalStaffWeekly %>">
+                      <input type="hidden" name="totalStaffFornightly" value="<%= totalStaffFornightly %>">
+                      <input type="hidden" name="totalStaffMonthly" value="<%= totalStaffMonthly %>">
+                      <input type="hidden" name="totalStaffYearly" value="<%= totalStaffYearly %>">
+                      <!-- value total company -->
+                      <input type="hidden" name="totalCompanyDaily" value="<%= totalCompanyDaily %>">
+                      <input type="hidden" name="totalCompanyWeekly" value="<%= totalCompanyWeekly %>">
+                      <input type="hidden" name="totalCompanyFornightly" value="<%= totalCompanyFornightly %>">
+                      <input type="hidden" name="totalCompanyMonthly" value="<%= totalCompanyMonthly %>">
+                      <input type="hidden" name="totalCompanyYearly" value="<%= totalCompanyYearly %>">
+                      <!-- value amount deduction -->
+                      <input type="hidden" name="totalAmountDaily" value="<%= totalAmountDaily %>">
+                      <input type="hidden" name="totalAmountWeekly" value="<%= totalAmountWeekly %>">
+                      <input type="hidden" name="totalAmountFornightly" value="<%= totalAmountFornightly %>">
+                      <input type="hidden" name="totalAmountMonthly" value="<%= totalAmountMonthly %>">
+                      <input type="hidden" name="totalAmountYearly" value="<%= totalAmountYearly %>">
+                      <!-- value total deduction -->
+                      <input type="hidden" name="totalDeductionDaily" value="<%= totalDeductionDaily %>">
+                      <input type="hidden" name="totalDeductionWeekly" value="<%= totalDeductionWeekly %>">
+                      <input type="hidden" name="totalDeductionFornightly" value="<%= totalDeductionFornightly %>">
+                      <input type="hidden" name="totalDeductionMonthly" value="<%= totalDeductionMonthly %>">
+                      <input type="hidden" name="totalDeductionYearly" value="<%= totalDeductionYearly %>">
+                      <!-- chart start -->
+                      <div class="col-xl-12 col-md-12">
+                        <div class="card">
+                          <div class="card-header">
+                            <h5>Statistics</h5>
+                            <div class="card-header-right">
+                              <ul class="list-unstyled card-option">
+                                <li><i class="feather icon-maximize full-card"></i></li>
+                                <li><i class="feather icon-minus minimize-card"></i></li>
+                              </ul>
+                            </div>
+                          </div>
+                          <div class="card-block">
+                            <figure class="highcharts-figure">
+                              <!--Staff chart-->
+                              <div class="row pb-3">
+                                <div class="col-md-6">
+                                  <h4 class="float-right mt-2">All Active Users</h4>
+                                </div>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-2">
+                                  <select class="form-control" id="staffSelectedDate">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="fornightly">Fornightly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div id="staff-chart"></div>
+                              <div class="mt-5"></div>
+                              <% if (role == 'Admin') { %>
+                              <!--Company chart -->
+                              <div class="row pb-3">
+                                <div class="col-md-7">
+                                  <h4 class="float-right mt-2">Companies</h4>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-2">
+                                  <select class="form-control" id="companySelectedDate">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="fornightly">Fornightly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div id="company-chart"></div>
+                              <% } %>
+                              <!--Withdrawals chart -->
+                              <div class="mt-5"></div>
+                              <div class="row pb-3">
+                                <div class="col-md-7">
+                                  <h4 class="float-right mt-2">Withdrawals</h4>
+                                </div>
+                                <div class="col-md-3"></div>
+                                <div class="col-md-2">
+                                  <select class="form-control" id="deductionSelectedDate">
+                                    <option value="daily">Daily</option>
+                                    <option value="weekly">Weekly</option>
+                                    <option value="fornightly">Fornightly</option>
+                                    <option value="monthly">Monthly</option>
+                                    <option value="yearly">Yearly</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div id="deduction-chart"></div>
+                            </figure>
+                          </div>
+                        </div>
+                      </div>
+                      <!-- chart end -->
+                    </div>
+                  </div>
+                </div>
+
+                <div id="styleSelector">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include layouts/script %>
+  <!-- highcharts js -->
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <!-- custom chart js -->
+  <script>
+    const role = $('input[name="role"]').val();
+
+    const totalStaffDaily = JSON.parse($('input[name="totalStaffDaily"]').val());
+    const copyTotalStaffDaily = [...totalStaffDaily];
+    const totalStaffWeekly = JSON.parse($('input[name="totalStaffWeekly"]').val());
+    const totalStaffFornightly = JSON.parse($('input[name="totalStaffFornightly"]').val());
+    const totalStaffMonthly = JSON.parse($('input[name="totalStaffMonthly"]').val());
+    const totalStaffYearly = JSON.parse($('input[name="totalStaffYearly"]').val());
+    //company
+    const totalCompanyDaily = JSON.parse($('input[name="totalCompanyDaily"]').val());
+    const copyTotalCompanyDaily = [...totalCompanyDaily];
+    const totalCompanyWeekly = JSON.parse($('input[name="totalCompanyWeekly"]').val());
+    const totalCompanyFornightly = JSON.parse($('input[name="totalCompanyFornightly"]').val());
+    const totalCompanyMonthly = JSON.parse($('input[name="totalCompanyMonthly"]').val());
+    const totalCompanyYearly = JSON.parse($('input[name="totalCompanyYearly"]').val());
+    //deduction
+    //amount
+    const totalAmountDaily = JSON.parse($('input[name="totalAmountDaily"]').val());
+    const copyTotalAmountDaily = [...totalAmountDaily];
+    const totalAmountWeekly = JSON.parse($('input[name="totalAmountWeekly"]').val());
+    const totalAmountFornightly = JSON.parse($('input[name="totalAmountFornightly"]').val());
+    const totalAmountMonthly = JSON.parse($('input[name="totalAmountMonthly"]').val());
+    const totalAmountYearly = JSON.parse($('input[name="totalAmountYearly"]').val());
+    //total deduction
+    const totalDeductionDaily = JSON.parse($('input[name="totalDeductionDaily"]').val());
+    const copyTotalDeductionDaily = [...totalDeductionDaily];
+    const totalDeductionWeekly = JSON.parse($('input[name="totalDeductionWeekly"]').val());
+    const totalDeductionFornightly = JSON.parse($('input[name="totalDeductionFornightly"]').val());
+    const totalDeductionMonthly = JSON.parse($('input[name="totalDeductionMonthly"]').val());
+    const totalDeductionYearly = JSON.parse($('input[name="totalDeductionYearly"]').val());
+    //options chart
+    const optionsChart = (title, name, total) => {
+      return new Highcharts.chart(title, {
+        chart: {
+          scrollablePlotArea: {
+            minWidth: 700
+          }
+        },
+        title: {
+          text: null
+        },
+        // subtitle: {
+        //     text: 'Source: Google Analytics'
+        // },
+        xAxis: {
+          type: 'datetime'
+        },
+        yAxis: [{ // left y axis
+          title: {
+            text: null
+          }
+        }, { // right y axis
+          linkedTo: 0,
+          gridLineWidth: 0,
+          opposite: true,
+          title: {
+            text: null
+          }
+        }],
+        plotOptions: {
+          series: {
+            animation: {
+              duration: 2000
+            }
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        tooltip: {
+          shared: true,
+          useHTML: true
+        },
+        series: [{
+          name: name,
+          data: total,
+          type: 'line'
+        }]
+      });
+    }
+    //draw staff chart
+    let staffChart = optionsChart('staff-chart', 'Staffs', totalStaffDaily);
+    //draw company chart
+    if (role == 'Admin') {
+      var companyChart = optionsChart('company-chart', 'Companies', totalCompanyDaily);
+    }
+    //draw deduction chart
+    let deductionChart = new Highcharts.chart('deduction-chart', {
+        chart: {
+          scrollablePlotArea: {
+            minWidth: 700
+          }
+        },
+        title: {
+          text: null
+        },
+        // subtitle: {
+        //     text: 'Source: Google Analytics'
+        // },
+        xAxis: {
+          type: 'datetime'
+        },
+        yAxis: [{ // left y axis
+          title: {
+            text: null
+          }
+        }, { // right y axis
+          linkedTo: 0,
+          gridLineWidth: 0,
+          opposite: true,
+          title: {
+            text: null
+          }
+        }],
+        plotOptions: {
+          series: {
+            animation: {
+              duration: 2000
+            }
+          }
+        },
+        legend: {
+          enabled: false
+        },
+        tooltip: {
+          shared: true,
+          useHTML: true,
+          formatter: function() {
+            // console.log(this);
+            return `<small>${Highcharts.dateFormat('%A, %Y-%m-%d', this.x)}</small><table>
+              <tr><td style="color: ${this.points[0].color}">${this.points[0].series.name}: </td>
+              <td style="text-align: right"><b>$${(this.points[0].y).toFixed(4)} (Inc. $${(this.points[1].y).toFixed(4)} Fee)
+                </b></td></tr>
+              </table>`
+          },
+        },
+        series: [{
+          name: 'Deductions',
+          data: totalDeductionDaily,
+          type: 'line'
+        }, {
+          data: totalAmountDaily,
+          opacity: 0
+        }]
+    });
+    //update chart when change select
+    $('#staffSelectedDate').on('change', function(e) {
+      const optionsList = [
+        {name: 'daily', option: {data: copyTotalStaffDaily}},
+        {name: 'weekly', option: {data: totalStaffWeekly}},
+        {name: 'fornightly', option: {data: totalStaffFornightly}},
+        {name: 'monthly', option: {data: totalStaffMonthly}},
+        {name: 'yearly', option: {data: totalStaffYearly}},
+      ];
+      //update chart
+      optionsList.forEach(item => {
+        if (item.name == this.value) { staffChart.series[0].update(item.option) }
+      });
+    });
+    //update chart when change select
+    $('#companySelectedDate').on('change', function(e) {
+      const optionsList = [
+        {name: 'daily', option: {data: copyTotalCompanyDaily}},
+        {name: 'weekly', option: {data: totalCompanyWeekly}},
+        {name: 'fornightly', option: {data: totalCompanyFornightly}},
+        {name: 'monthly', option: {data: totalCompanyMonthly}},
+        {name: 'yearly', option: {data: totalCompanyYearly}},
+      ];
+      //update chart
+      optionsList.forEach(item => {
+        if (item.name == this.value) { companyChart.series[0].update(item.option) }
+      });
+    });
+    //update chart when change select
+    $('#deductionSelectedDate').on('change', function(e) {
+      const optionsList = [
+        {name: 'daily', option2: {data: copyTotalAmountDaily}, option1: {data: copyTotalDeductionDaily},},
+        {name: 'weekly', option2: {data: totalAmountWeekly}, option1: {data: totalDeductionWeekly}},
+        {name: 'fornightly', option2: {data: totalAmountFornightly}, option1: {data: totalDeductionFornightly}},
+        {name: 'monthly', option2: {data: totalAmountMonthly}, option1: {data: totalDeductionMonthly}},
+        {name: 'yearly', option2: {data: totalAmountYearly}, option1: {data: totalDeductionYearly}},
+      ];
+      //update chart
+      optionsList.forEach(item => {
+        if (item.name == this.value) { 
+          deductionChart.series[0].update(item.option1); 
+          deductionChart.series[1].update(item.option2); 
+        }
+      });
+    });
+  </script>
+  
+</body>
+
+</html>

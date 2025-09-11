@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+  <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <style>
+    .flex-grow {
+      flex-grow: 1;
+    }
+    .nodata-text {
+      padding-top: 30px;
+      min-height: 100px;
+      text-align: center;
+    }
+    input.text-secure {
+            text-security: disc;
+            -webkit-text-security: disc;
+            -mox-text-security:disc;
+            -moz-text-security:disc;
+        }   
+  </style>
+</head>
+
+<body class="fix-menu">
+  <div id='jsErr'>
+    <p>Connection timeout</p>
+    <div class="relative w-full sm:w-1/2 bg-gray-200">
+      <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+    </div>
+  </div>
+  <% include ../layouts/preloader %>
+  <section class="login-block">
+    <div id="jsLoader">
+      <div class="loader">
+        <div class="loader-chiled"></div>
+      </div>
+    </div>
+    <!--Navbar Menu-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-primary navbar-menu">
+      <div class="text-center img-logo">
+        <a href="/"><img src="../../web-files/assets/images/CashD-logo.png" width="100%" alt="CashD Logo"></a>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item active nav-item--border-custom">
+            <a class="nav-link" href="javascript:void(0)">Home</a>
+          </li>
+          <li class="nav-item  nav-item--border-custom">
+            <a class="nav-link" href="javascript:void(0)" onClick="alert('Coming soon!')">About</a>
+          </li>
+          <li class="nav-item pr-5">
+            <a class="nav-link" href="javascript:void(0)" onClick="alert('Coming soon!')">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/signup">
+              <span class="feather icon-user"></span>
+              Sign Up</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- Container-fluid starts -->
+    <div id="jsFormLogin" class="container mt-5 pt-5 hide">
+      <div class="row">
+        <div class="col-sm-12">
+          <!-- URL -->
+          <input type="hidden" id="urlKeyPay" value="<%= urlKeyPay %>">
+          <input type="hidden" id="urlXeRo" value="<%= urlXero %>">
+          <input type="hidden" id="urlDeputy" value="<%= urlDeputy %>">
+          <!-- End URL-->
+          <!-- Authentication card start -->
+          <form class="md-float-material form-material" action="/signin" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="hidden" name="device_token" id="device_token">
+            <input type="hidden" name="time_offset" id="time_offset">
+            <script>
+              document.getElementById('time_offset').value = Math.abs(new Date().getTimezoneOffset()) * 60 * 1000;
+            </script>
+            <div class="auth-box card">
+              <div class="card-block card-block--custom">
+                <div class="row m-b-20">
+                  <div class="col-md-12">
+                    <h3 class="text-left">Sign In</h3>
+                  </div>
+                </div>
+                <div class="form-group form-primary">
+                  <% if(errorMessage) { %>
+                  <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <i class="icofont icofont-close-line-circled"></i>
+                    </button>
+                    <%= errorMessage %>
+                  </div>
+                  <% } %>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <span class="feather icon-mail"></span>
+                      </div>
+                    </div>
+                    <input type="email" name="email" class="form-control input-email" required="" placeholder="Email"
+                      value="<%= email  ? email : null %>">
+                    <span class="form-bar"></span>
+                  </div>
+                </div>
+                <div class="form-group form-primary">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <span class="feather icon-unlock"></span>
+                      </div>
+                    </div>
+                    <input id="password-field" type="password" name="password" class="form-control input-password"
+                      required="" placeholder="Password" value="<%= password ? password : null %>">
+                    <span class="form-bar"></span>
+                    <div class="input-group-prepend">
+                      <div class="input-group-text">
+                        <span toggle="#password-field" class="feather icon-eye toggle-password"></span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="row m-t-25 text-left">
+                  <div class="col-12">
+                    <div class="checkbox-fade fade-in-primary d-flex justify-content-between">
+                      <label>
+                        <input id="jsCheckbox" type="checkbox" value="">
+                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
+                        <span class="text-inverse">Remember me</span>
+                      </label>
+                      <a href="/forgot-password">Forgot Password?</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="row m-t-30">
+                  <div class="col-md-12">
+                    <button type="submit"
+                      class="btn btn-primary btn-md btn-block waves-effect waves-light d-flex justify-content-between align-items-center m-b-20">Sign
+                      in
+                      <i class="icofont icofont-arrow-right"></i>
+                    </button>
+                  </div>
+                </div>
+                <div class="float-right">
+                  <span>No account yet?</span>
+                  <a style="padding-left: 10px;" href="/signup">Sign up</a>
+                  <i style=" color: #007bff" class="icofont icofont-rounded-right"></i>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- end of form -->
+        </div>
+        <!-- end of col-sm-12 -->
+      </div>
+      <!-- end of row -->
+    </div>
+    <div class="container mt-5 pt-5">
+      <!-- Modal Change password Admin-->
+        <div id="jsChangePassAdmin" class="mt-5">
+          <!-- code  -->
+        </div>
+      </div>
+    <!-- end of container-fluid -->
+  </section>
+  <!-- <%# if((staffs !== null && staffs.length > 0) || (groups && groups.length > 0)) { %>
+  <div id="jsChooseStaff" class="modal show">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="position: relative;">
+        <div class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title">Select Company</h5>
+      </div>
+      <div>
+        <ul class="nav nav-tabs pt-1">
+          <li class="nav-item flex-grow">
+            <a id="jsSiCompany" class="nav-link text-center active" aria-current="page"><b>Companies</b></a>
+          </li>
+          <li class="nav-item flex-grow">
+            <a id="jsSiGroup" class="nav-link text-center"><b>Groups</b></a>
+          </li>
+        </ul>
+      </div>
+        <div class="modal-body modal-body--custom">
+          <%# if(staffs !== null && staffs.length > 0) { %>
+            <form id="jsForm" method="POST">
+              <input type="hidden" name="_csrf" id="_csrf" value="<%# = csrfToken %>">
+              <input type="hidden" id="events" value="<%# = email  ? email : null %>"></input>
+              <input type="hidden" id="data" value="<%# = JSON.stringify(staffs) %>">
+              <%# staffs.forEach(function(item, index) { %>
+                <div class="form-login-checkbox form-login-checkbox--border">
+                  <label class="form-login-checkbox-kepp form-login-checkbox-kepp--flex">
+                    <div class="form-login-checkbox-kepp-txt">
+                      <p>Company: <b><%# = item.company_infor.company_name %></b></p>
+                      <p>Payroll: <b><%# =item.system_infor.code  %></b></p>
+                      <p>
+                        User: <b> <%# = item.fullname %></b>
+                      </p>
+                      <p>Role: <b><%# = item.role === "SUPERVISOR" ? "Supervisor" : (item.company_infor.is_allow_login_other_system == 0 ? "Employee" :  "Employer") %></b></p>
+                    </div>
+                    <div class="form-login-checkbox-cus">
+                      <input type="hidden" name="item" value="<%# = JSON.stringify(item) %>">
+                      <input class="form-login-checkbox_box form-login-checkbox_box-company" type="checkbox" />
+                      <span class="form-login-checkbox_checkmark"></span>
+                    </div>
+                  </label>
+                </div>
+              <%# }) %>
+            </form>
+          <%# } else { %>
+            <form id="jsForm" method="POST"><div class="nodata-text">No data available</div></form>
+          <%# } %>
+          <%# if (groups && groups.length > 0) { %>
+            <form id="jsFormGroup" method="POST" class="hiden">
+              <%# groups.forEach(function(item, index) { %>
+                <div class="form-login-checkbox form-login-checkbox--border">
+                  <label class="form-login-checkbox-kepp form-login-checkbox-kepp--flex">
+                    <div class="form-login-checkbox-kepp-txt">
+                      <p>Group name: <b><%# = item.group_name %></b></p>
+                      <p># of companies: <b><%# =item.company_ids ? item.company_ids.length : "0"  %></b></p>
+                    </div>
+                    <div class="form-login-checkbox-cus">
+                      <input type="hidden" name="itemGroup" value="<%# = JSON.stringify(item) %>">
+                      <input class="form-login-checkbox_box form-login-checkbox_box-group" type="checkbox" />
+                      <span class="form-login-checkbox_checkmark"></span>
+                    </div>
+                  </label>
+                </div>
+                <%# }) %>
+            </form>
+          <%# } else { %>
+            <form id="jsFormGroup" method="POST" class="hiden"><div class="nodata-text">No data available</div></form>
+          <%# } %>
+        </div>
+        <div class="modal-footer--custom">
+          <button class="modal-footer-button" id="jsCancel">
+            CANCEL
+          </button>
+          <button class="modal-footer-button" id="jsSelect">
+            SELECT
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%# } %> -->
+  <!-- Modal Error-->
+  <div id="jsShowErr" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title">CashD</h5>
+        </div>
+        <div class="modal-body modal-body">
+          <p>Your <span class="err--system-name"></span>is not linked to your CashD account. Please contact your Company
+            Administrator to setup CashD system first.</p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a href="/signup" class="btn btn-primary px-5">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal Error active -->
+  <div id="jsShowErrActive" class="modal <%= errorActive ? 'show' : 'fade' %>">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header--custom">
+          <img class="logo-model" src="/web-images/Logo1.png" alt="logo">
+          <h5 style="color: #fff;" class="modal-title">CashD</h5>
+        </div>
+        <div class="modal-body modal-body">
+          <p class="jsTextErr"><%= errorActive %></p>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a href="/" class="btn btn-primary px-5">OK</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Warning Section Starts -->
+  <% include ../layouts/script %>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- JavaScript Bundle with Popper -->
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-messaging.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="../../web-files/assets/pages/auth/signin.js"></script>
+  <script type="text/javascript" src="/../../web-files/assets/js/login/login.js"></script>
+  <!-- < src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></> -->
+  <script>
+  </script>
+</body>
+
+</html>

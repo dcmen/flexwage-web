@@ -1,0 +1,96 @@
+<div>
+  <span class="font-weight-bold">Complete Direct Debit Authority</span>
+  <div class="row mt-3 pl-2 pr-2">
+    <div class="col-xl-4 col-md-7 col-sm-12 mb-4">
+      <h4 class="text-center text-primary">Direct Debit Request</h4>
+      <form class="formDirectDebit">
+        <div class="form-group">
+          <label class="text-primary">Company Name</label>
+          <input type="text" class="form-control" name="companyName" value="<%= company.company_name %>" disabled placeholder="Enter Company Name">
+        </div>
+        <div class="form-group">
+          <label class="text-primary">Sender Bank Details</label>
+          <select name="chooseSenderBank" class="form-control" aria-label="Default select example">
+            <option style="font-style: italic;" value="0">
+              Choose bank account
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="text-primary">Account Name</label>
+          <input type="text" class="form-control" name="nameOnAccount" value="<%= directDebitForm?.bank_account_name ? directDebitForm?.bank_account_name : '' %>" placeholder="Account Name" value="">
+        </div>
+        <div class="form-group">
+          <label class="text-primary">BSB</label>
+          <input type="text" class="form-control" maxlength="7" minlength="6" name="bsb" value="<%= directDebitForm?.bsb ? directDebitForm?.bsb : '' %>" placeholder="BSB">
+        </div>
+        <div class="form-group">
+          <label class="text-primary">Account Number</label>
+          <input type="text" class="form-control" name="accountNumber" maxlength="9" minlength="9" value="<%= directDebitForm?.account_number ? directDebitForm?.account_number : '' %>" placeholder="Account NUmber">
+        </div>
+        <div class="form-group mb-4">
+          <label class="text-primary">Bank Name</label>
+          <input type="text" class="form-control" name="bankName" value="<%= directDebitForm?.bank_name ? directDebitForm.bank_name : '' %>" placeholder="Bank Name">
+        </div>
+        <div class="text-center" id="actionFormDD">
+          <% if(role == "Admin") { %>
+          <buttons type="button" id="approveFormDD" class="btn btn-success btn-block">Approve</buttons>
+          <% } else { %>
+          <% if(!directDebitForm) { %>
+          <buttons type="submit" id="submitFormDD" class="btn btn-primary btn-block">Submit</buttons>
+          <% } else { %>
+          <buttons type="submit" id="updateFormDD" class="btn btn-primary btn-block">Edit & ReApply</buttons>
+          <% } %>
+          <% } %>
+        </div>
+      </form>
+    </div>
+    <div class="col-xl-3 col-md-5 col-sm-12 mb-4 mt-2">
+      <div class="">
+        <div class="text-center" id="txtStatus">
+          <button class="btn btn-sm <%= directDebitForm?.status == 'APPROVED' ? 'text-color-green' : directDebitForm?.status == 'CANCELLED' ? 'text-color-red' : 'text-color-yellow' %>">
+            <%= directDebitForm?.status == 'APPROVED' ? 'Approved' : directDebitForm?.status == 'CANCELLED' ? 'Cancelled' : 'Pending'  %>
+          </button>
+        </div>
+        <div class="mb-5 pt-3">
+          <div style="font-size: 16px;" class="col-md-12 text-center <%= directDebitForm ? '' : 'hide' %>">Application Date: <span class="txtApplication"><%= //moment(directDebitForm?.created_date).format( 'DD/MM/YYYY HH:mm A') %></span></div>
+        </div>
+      </div>
+      <div style="position: absolute; bottom: 0; width: 100%;" class="row" id="actionForm">
+        <% if (role == "Admin" && (directDebitForm?.status == 'PENDING' || directDebitForm?.status == 'APPROVED')) { %>
+        <div class="col-md-12">
+          <button type="submit" id="adminCancelDDForm" class="btn btn-danger btn-block">Cancel</button>
+        </div>
+        <% } else if (directDebitForm?.status == 'PENDING' || directDebitForm?.status == 'APPROVED') { %>
+        <div class="col-md-12">
+          <button type="submit" id="cancelDDForm" class="btn btn-danger btn-block">Cancel</button>
+        </div>
+        <% } %>
+      </div>
+    </div>
+    <div class="col-xl-5 col-md-12 col-sm-12 mb-4">
+      <div class="mb-5">
+        <table style="width: 100%;" id="historyDD" class="table table-bordered nowrap">
+          <thead class="thead">
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+      <div style="position: absolute; bottom: 0; width: 100%;" class="row">
+        <% if (role == "Admin" && system.code === "RECKON") { %>
+        <div class="col-md-8">
+          <button type="button" id="invite" class="btn btn-warning btn-block">Invite to setup</button>
+        </div>
+        <% } %>
+        <div class="col-md-4"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<% include ../layouts/modals/table-employer-supervisors %>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <% include ../layouts/stylesheet %>
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+                <!-- Main-body start -->
+                <div class="main-body">
+                    <div class="page-wrapper">        
+                        <!-- Page-body start -->
+                        <div class="page-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <!-- tab content start -->
+                                <div class="tab-content">
+                                    <!-- tab panel personal start -->
+                                    <div class="tab-pane active" id="personal" role="tabpanel">
+                                        <!-- personal card start -->   
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h4 class="card-header-text">Contact Detail</h4>
+                                                    </div>
+                                                    <div class="card-block">
+                                                        <div class="view-info">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="general-info">
+                                                                        <div class="row">
+                                                                            <div class="col-lg-12 col-xl-12">
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-1">
+                                                                                        <label style="font-weight: bold;" for="">Name</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-11">
+                                                                                        <label for=""><%=contact.name%></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-1">
+                                                                                        <label style="font-weight: bold;" for="">Subject</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-11">
+                                                                                        <label for=""><%=contact.subject%></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-1">
+                                                                                        <label style="font-weight: bold;" for="">Email</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-11">
+                                                                                        <label for=""><%=contact.email%></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-1">
+                                                                                        <label style="font-weight: bold;" for="">Message</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-11">
+                                                                                        <label for=""><%=contact.message%></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <hr>
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-1">
+                                                                                        <label style="font-weight: bold;" for="">Time</label>
+                                                                                    </div>
+                                                                                    <div class="col-lg-11">
+                                                                                        <label for=""><%= moment(contact.create_time).format( 'DD-MM-YYYY HH:MM')%></label>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                            
+                                                                        </div>
+                                                                        <!-- end of row -->
+                                                                    </div>
+                                                                    <!-- end of general info -->
+                                                                </div>
+                                                                <!-- end of col-lg-12 -->
+                                                            </div>
+                                                            <!-- end of row -->
+                                                        </div>
+                                                        <!-- end of view-info -->
+                
+                                                    </div>
+                                                    <!-- end of card-block -->
+                                        </div>
+                                    </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/jszip.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/pdfmake.min.js"></script>
+  <script src="../../web-files/assets/pages/data-table/js/vfs_fonts.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <!-- modalEffects js nifty modal window effects -->
+  <script type="text/javascript" src="../../web-files/assets/js/modalEffects.js"></script>
+  <script type="text/javascript" src="../../web-files/assets/js/classie.js"></script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <!-- Custom js -->
+  <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script>
+</body>
+
+</html>

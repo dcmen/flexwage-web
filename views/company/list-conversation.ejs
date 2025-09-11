@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8"/>
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <!-- ico font -->
+    <link
+            rel="stylesheet"
+            type="text/css"
+            href="../../web-files/assets/icon/icofont/css/icofont.css"
+    />
+    <link href="/../../web-files/assets/css/custom-chat.css" rel="stylesheet"/>
+</head>
+<body class="chats-tab-open">
+<!-- Main Layout Start -->
+<div class="main-layout">
+    <!-- Sidebar Start -->
+    <aside class="sidebar">
+        <!-- Tab Content Start -->
+        <div class="tab-content">
+            <!-- Chat Tab Content Start -->
+            <div class="tab-pane active" id="chats-content">
+                <div class="d-flex flex-column h-100">
+                    <div class="hide-scrollbar h-100" id="chatContactsList">
+                        <!-- Chat Header Start -->
+                        <div class="sidebar-header sticky-top p-2">
+                            <div
+                                    class="d-flex justify-content-between align-items-center"
+                            >
+                                <!-- Chat Tab Pane Title Start -->
+                                <h5 class="font-weight-semibold mb-0">Chats</h5>
+                                <!-- Chat Tab Pane Title End -->
+                            </div>
+                        </div>
+                        <!-- Chat Header End -->
+                        <!-- Chat Contact List Start -->
+                        <ul class="contacts-list" id="chatContactTab" data-chat-list="">
+                        </ul>
+                        <!-- Chat Contact List End -->
+                    </div>
+                </div>
+            </div>
+            <!-- Chats Tab Content End -->
+        </div>
+        <!-- Tab Content End -->
+    </aside>
+    <!-- Sidebar End -->
+    <!-- Main Start -->
+    <main class="main main-visible">
+    </main>
+    <!-- Main End -->
+    <div class="backdrop"></div>
+    <!-- All Modals End -->
+</div>
+<!-- Main Layout End -->
+<script
+        type="text/javascript"
+        src="/../../web-files/bower_components/jquery/js/jquery.min.js"
+></script>
+<script
+        type="text/javascript"
+        src="/../../web-files/bower_components/popper.js/js/popper.min.js"
+></script>
+<script
+        type="text/javascript"
+        src="/../../web-files/bower_components/bootstrap/js/bootstrap.min.js"
+></script>
+<script
+        type="text/javascript"
+        src="/../../web-files/assets/js/moment.min.js"
+></script>
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-app.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+   https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-analytics.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.4.1/firebase-messaging.js"></script>
+<script type="text/javascript">
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyB6LlVaiqII1pPnRRA8QyQaPCSwHlp2O_U",
+        authDomain: "cashd-324d3.firebaseapp.com",
+        databaseURL: "https://cashd-324d3.firebaseio.com",
+        projectId: "cashd-324d3",
+        storageBucket: "cashd-324d3.appspot.com",
+        messagingSenderId: "208800833949",
+        appId: "1:208800833949:web:af744fb1ac23b3f7b98f74",
+        measurementId: "G-YRBM4VC4VV"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    //firebase.analytics();
+    const db = firebase.database();
+
+    $(document).ready(function () {
+        renderAllConversationWithAdmin();
+
+        // Toggle chat
+        $('[data-close]').on('click', function (e) {
+            e.preventDefault()
+            $(".main").removeClass("main-visible");
+        });
+    });
+
+
+    const messaging = firebase.messaging();
+
+    messaging.onMessage(function (payload) {
+        renderMessage();
+        // var notify;
+        // notify = new Notification(payload.notification.title, {
+        //     body: payload.notification.body,
+        //     icon: payload.notification.icon,
+        //     tag: "Dummy"
+        // });
+    });
+
+    self.addEventListener('notificationclick', function (event) {
+        event.notification.close();
+    });
+
+    async function renderAllConversationWithAdmin() {
+        const currentUser = <%- JSON.stringify(user) %>;
+        const url = <%- JSON.stringify(url) %>;
+        let listAdminConversationAndroid = await db.ref()
+            .child("users-droid")
+            .get();
+
+        if (listAdminConversationAndroid.val()) {
+            let listDroidData = listAdminConversationAndroid.val();
+            Object.keys(listDroidData).map(async item => {
+                let getAdminInCompany = await db.ref()
+                    .child("users-droid")
+                    .child(item)
+                    .child(`s-${currentUser._id}`)
+                    .get();
+
+                if (getAdminInCompany.val()) {
+                    let adminConversations = [];
+                    adminConversations.push(getAdminInCompany.val());
+                    let conversations = '';
+                    if (adminConversations.length > 0) {
+                        adminConversations.map(item => {
+                            if (!Object.keys(item.conversations).includes(currentUser._id)) {
+                                if (Object.keys(item.conversations).length > 1) {
+                                    Object.keys(item.conversations).map((conId) => {
+                                        $.get(`/admin/con-get-avatar/${conId}`, function (data) {
+                                            if (data) {
+                                                conversations = `<li class="contacts-item friends unread">
+                                             <a class="contacts-link" href="/admin/conversations/${conId}">
+                                               <div class="avatar avatar-online">
+                                                 <img onerror="javascript: this.src = '../../web-images/4.png'"
+                                                   src="${data.avatar_path ? `${url}${data.avatar_path}` : data.avatar ? `${url}${data.avatar}` : '/../../web-images/4.png'}"
+                                                   alt="${item.conversations[conId].name}"
+                                                 />
+                                               </div>
+                                               <div class="contacts-content">
+                                                 <div class="contacts-info">
+                                                   <h6 class="chat-name">${item.conversations[conId].name}</h6>
+                                                   <div class="chat-time">${moment(item.conversations[conId].createdAt).local().format('h:mm A')}</div>
+                                                 </div>
+                                                 <div class="contacts-texts">
+                                                   <p class="text-truncate">${item.conversations[conId].lastMessage}
+                                                   </p>
+                                                    ${item.conversations[conId].newMessage > 0 ? '<div class="badge badge-rounded badge-primary ml-1">'
+                                                    + item.conversations[conId].newMessage +
+                                                    '</div>' : ''}
+                                                 </div>
+                                               </div>
+                                             </a>
+                                           </li>`;
+                                                document.getElementsByClassName("contacts-list")[0].innerHTML += conversations;
+                                            }
+                                        });
+                                    });
+                                } else {
+                                    $.get(`/admin/con-get-avatar/${Object.keys(item.conversations)[0]}`, function (data) {
+                                        if (data) {
+                                            conversations = `<li class="contacts-item friends unread">
+                                             <a class="contacts-link" href="/admin/conversations/${Object.keys(item.conversations)}">
+                                               <div class="avatar avatar-online">
+                                                 <img onerror="javascript: this.src = '../../web-images/4.png'"
+                                                   src="${data.avatar_path ? `${url}${data.avatar_path}` : data.avatar ? `${url}${data.avatar}` : '/../../web-images/4.png'}"
+                                                   alt="${item.conversations[Object.keys(item.conversations)].name}"
+                                                 />
+                                               </div>
+                                               <div class="contacts-content">
+                                                 <div class="contacts-info">
+                                                   <h6 class="chat-name">${item.conversations[Object.keys(item.conversations)].name}</h6>
+                                                   <div class="chat-time">${moment(item.conversations[Object.keys(item.conversations)].createdAt).local().format('h:mm A')}</div>
+                                                 </div>
+                                                 <div class="contacts-texts">
+                                                   <p class="text-truncate">${item.conversations[Object.keys(item.conversations)].lastMessage}
+                                                   </p>
+                                                    ${item.conversations[Object.keys(item.conversations)].newMessage > 0 ? '<div class="badge badge-rounded badge-primary ml-1">'
+                                                + item.conversations[Object.keys(item.conversations)].newMessage +
+                                                '</div>' : ''}
+                                                 </div>
+                                               </div>
+                                             </a>
+                                           </li>`;
+                                            document.getElementsByClassName("contacts-list")[0].innerHTML += conversations;
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        let noChat = `<div class="chats">
+                                 <div class="d-flex flex-column justify-content-center text-center h-100 w-100">
+                                     <div class="container">
+                                         <h5>You have no conversations!</h5>
+                                     </div>
+                                 </div>
+                             </div>`;
+                        document.getElementsByClassName("main-visible")[0].innerHTML = '';
+                    }
+                }
+            })
+        }
+    }
+</script>

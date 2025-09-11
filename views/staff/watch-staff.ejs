@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title><%= title %></title>
+    <!--[if lt IE 10]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- ico font -->
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+    <!-- Data Table Css -->
+    <link rel="stylesheet" type="text/css"
+        href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+    <% include ../layouts/stylesheet %>
+</head>
+
+<body>
+    <% include ../layouts/preloader %>
+    <div id="pcoded" class="pcoded">
+        <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+            <% include ../layouts/navbar %>
+            <div class="pcoded-main-container">
+                <div class="pcoded-wrapper">
+                    <% include ../layouts/leftbar %>
+                    <div class="pcoded-content">
+                        <div class="pcoded-inner-content">
+                            <!-- Main-body start -->
+                            <div class="main-body">
+                                <div class="page-wrapper">
+                                    <!-- Page-body start -->
+                                    <div class="page-body">
+                                        <!--profile cover start-->
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="row">
+                                                    <div class="col-sm-3 col-md-3 ">
+                                                        <img id="avatar" class="avatar-staff card img-fluid"
+                                                            src="<%= userCashD.avatar_path ? userCashD.avatar_path: '../../web-images/4.png' %>" alt="avatar of <%= userCashD.first_name %>"/>
+                                                    </div>
+                                                    <div class="col-sm-9 col-md-9">
+                                                        <div class="card" id="the">
+                                                            <div class="card-header">
+                                                                <h class="card-header-text">CashD Info</h>
+                                                            </div>
+                                                            <div class="card-block">
+                                                                <div class="view-info">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <div class="general-info">
+                                                                                <div class="row">
+                                                                                    <div class="col-lg-12 col-xl-6">
+                                                                                        <div class="table-responsive">
+                                                                                            <table class="table m-0">
+                                                                                                <tbody>
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Full Name
+                                                                                                        </th>
+                                                                                                        <td><%= userCashD.fullname ? userCashD.fullname : 'N/A' %>
+                                                                                                        </td>
+                                                                                                    </tr>
+
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Email</th>
+                                                                                                        <td><%= userCashD.email ? userCashD.email : 'N/A' %>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Mobile
+                                                                                                            Number</th>
+                                                                                                        <td><%= userCashD.mobile ? ('(+' + (userCashD.mobile_country_code ? userCashD.mobile_country_code : '61') + ') ' + userCashD.mobile.replace('+' + userCashD.mobile_country_code || '61', '')) : "N/A" %>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Address</th>
+                                                                                                        <td> <%= userCashD.address && userCashD.address.trim() != 'null' ? userCashD.address : "N/A"%>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+
+                                                                                    <!-- end of table col-lg-6 -->
+                                                                                </div>
+                                                                                <!-- end of row -->
+                                                                            </div>
+                                                                            <!-- end of general info -->
+                                                                        </div>
+                                                                        <!-- end of col-lg-12 -->
+                                                                    </div>
+                                                                    <!-- end of row -->
+                                                                </div>
+                                                                <!-- end of view-info -->
+
+                                                            </div>
+                                                            <!-- end of card-block -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--profile cover end-->
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <!-- tab content start -->
+                                                <div class="tab-content">
+                                                    <!-- tab panel personal start -->
+                                                    <div class="tab-pane active" id="personal" role="tabpanel">
+                                                        <div class="page-header">
+                                                            <div class="row align-items-end">
+                                                                <div class="col-lg-8">
+                                                                    <div class="page-header-title">
+                                                                        <div class="d-inline">
+                                                                            <h3>Companies</h3>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <% staffs.forEach(staff => { %>
+                                                        <div class="card card--custom">
+                                                            <div class="card-block">
+                                                                <div class="view-info">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12">
+                                                                            <div class="general-info">
+                                                                                <div class="row">
+                                                                                    <!-- <div class="col-xl-2"></div> -->
+                                                                                    <div class="col-lg-12 col-xl-6">
+                                                                                        <div class="table-responsive">
+                                                                                            <table class="table m-0">
+                                                                                                <tbody>
+                                                                                                    <tr class="table--border" >
+                                                                                                        <th
+                                                                                                            scope="row">
+                                                                                                            Company
+                                                                                                            Name
+                                                                                                        </th>
+                                                                                                        <td ><%=staff.company.company_name ? staff.company.company_name : "N/A"%>
+                                                                                                        </td>
+                                                                                                    </tr  >
+                                                                                                    <tr>
+                                                                                                        <th
+                                                                                                            scope="row">
+                                                                                                            Abn
+                                                                                                        </th>
+                                                                                                        <td ><%=staff.company.abn ? staff.company.abn : "N/A"%>
+                                                                                                        </td>
+                                                                                                    </tr  >
+                                                                                                    <tr>
+                                                                                                        <th
+                                                                                                            scope="row">
+                                                                                                            Company
+                                                                                                            Address
+                                                                                                        </th>
+                                                                                                        <td>
+                                                                                                            <p>
+                                                                                                                <% if (!staff.company.postcode && !staff.company.suburb && !staff.company.city && !staff.company.state) { %>
+                                                                                                                    <%= 'N/A' %>
+                                                                                                                <% } else { %>
+                                                                                                                    <%= staff.company.postcode ? staff.company.postcodev + "," : "" %>
+                                                                                                                    <%= staff.company.suburb ? staff.company.suburb + "," : "" %>
+                                                                                                                    <%= staff.company.city ? staff.company.city + "," : "" %>
+                                                                                                                    <%= staff.company.state ? staff.company.state : "" %>
+                                                                                                                <% } %>
+                                                                                                            </p>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- <div class="col-xl-2"></div> -->
+                                                                                    <div class="col-lg-12 col-xl-6">
+                                                                                        <div
+                                                                                            class="table-responsive">
+                                                                                            <table
+                                                                                                class="table m-0">
+                                                                                                <tbody>
+                                                                                                    <tr class="table--border" >
+                                                                                                        <th scope="row">
+                                                                                                            Role
+                                                                                                        </th>
+                                                                                                        <td ><%= staff.is_allow_login_other_system == 1 ? "Employer" : "Employee"%>
+                                                                                                        </td>
+                                                                                                    </tr  >
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Company Phone
+                                                                                                        </th>
+                                                                                                        <td ><%= staff.company.phone_company ? staff.company.phone_company : "N/A"%>
+                                                                                                        </td>
+                                                                                                    </tr  >
+                                                                                                    <tr>
+                                                                                                        <th scope="row">
+                                                                                                            Company Email
+                                                                                                        </th>
+                                                                                                        <td><%= staff.company.email_company ? staff.company.email_company : "N/A"%>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </tbody>
+                                                                                            </table>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- end of table col-lg-6 -->
+                                                                                </div>
+                                                                                <!-- end of row -->
+                                                                            </div>
+                                                                            <!-- end of general info -->
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- end of card-block -->
+                                                        </div>
+                                                        <% }) %>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% include ../layouts/script %>
+    <!-- data-table js -->
+    <script
+        src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js">
+        </script>
+    <script
+        src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js">
+        </script>
+    <script
+        src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js">
+        </script>
+    <script
+        src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js">
+        </script>
+    <script
+        src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js">
+        </script>
+    <script
+        src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js">
+        </script>
+    <script
+        src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js">
+        </script>
+    <script type="text/javascript"
+        src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+        </script>
+    <!-- modalEffects js nifty modal window effects -->
+    <script type="text/javascript" src="../../web-files/assets/js/modalEffects.js">
+    </script>
+    <script type="text/javascript" src="../../web-files/assets/js/classie.js"></script>
+    <!-- i18next.min.js -->
+    <script type="text/javascript"
+        src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+    <script type="text/javascript"
+        src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+        </script>
+    <script type="text/javascript"
+        src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+        </script>
+    <script type="text/javascript"
+        src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js">
+        </script>
+    <!-- Custom js -->
+    <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js">
+    </script>
+</body>
+
+</html>

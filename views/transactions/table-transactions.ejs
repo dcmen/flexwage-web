@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title><%= title %></title>
+  <!--[if lt IE 10]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="stylesheet" type="text/css"
+  href="../../web-files/bower_components/bootstrap-daterangepicker/css/daterangepicker.css" />
+  <% include ../layouts/stylesheet %>
+  <link href="/../../web-files/assets/css/style-custom.css" rel="stylesheet" />
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <!-- Data Table Css -->
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" type="text/css" href="../../web-files/assets/pages/data-table/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" type="text/css"
+    href="../../web-files/bower_components/datatables.net-responsive-bs4/css/responsive.bootstrap4.min.css">
+    <link href="/../../web-files/assets/css/select2.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <% include ../layouts/preloader %>
+  <div id="pcoded" class="pcoded">
+    <div class="pcoded-overlay-box"></div>
+    <div class="pcoded-container navbar-wrapper">
+      <% include ../layouts/navbar %>
+      <div class="pcoded-main-container">
+        <div class="pcoded-wrapper">
+          <% include ../layouts/leftbar %>
+          <!-- Toast -->
+          <div id='jsErr' class="toast-err">
+            <p>Connection timeout.</p>
+            <div class="relative w-full sm:w-1/2 bg-gray-200">
+              <div style="width: 100%" class="absolute top-0 h-4 shim-red"></div>
+            </div>
+          </div>
+          <!---->
+          <div class="pcoded-content">
+            <div class="pcoded-inner-content">
+              <!-- Main-body start -->
+              <div class="main-body">
+                <div class="page-wrapper">
+                  <!-- Page-body start -->
+                  <div class="page-body">
+                    <div class="row">
+                      <div class="col-sm-12">                       
+                        <!-- Zero config.table start -->
+                        <div class="card card--custom"> 
+                          <div class="card-block"> 
+                            <ul class="nav nav-tabs" id="reconcileTab" role="tablist">
+                              <li class="nav-item">
+                                <a class="nav-link active" id="transactions-tab" data-toggle="tab" href="#transactions" role="tab" aria-controls="transactions" aria-selected="true">Transactions</a>
+                              </li>
+                              <!-- <li class="nav-item">
+                                <a class="nav-link" id="reconcile-tab" data-toggle="tab" href="#reconcile" role="tab" aria-controls="reconcile" aria-selected="false">Reconcile</a>
+                              </li> -->
+                            </ul>
+                            <div class="tab-content" id="reconcileTabContent">
+                              <div class="tab-pane fade show active" id="transactions" role="tabpanel" aria-labelledby="transactions-tab">
+                                <div class="dt-responsive table-responsive mt-4 general-info">
+                                  <input hidden name="_csrf" value="<%= csrfToken %>" />
+                                  <table id="trancastionsTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Company Name</th> 
+                                            <th>Staff Name</th> 
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Type</th>
+                                            <th>Debit</th>
+                                            <th>Fee</th>
+                                            <th>Credit</th>
+                                            <!-- <th>Balance</th> -->
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <div class="tab-pane fade" id="reconcile" role="tabpanel" aria-labelledby="reconcile-tab">
+                                <div class="balance mt-3 d-flex justify-content-center">
+                                  <div class="statement-balance pr-3">
+                                    <span data-automationid="statementBalance">(4,609.08)</span>
+                                    <br>
+                                    <label>Statement Balance</label>
+                                  </div>
+                                  <div class="bank-balance pl-3">
+                                    <span id="cashd-bank-balance" data-balance="-17849.7800">(17,849.78)</span>
+                                    <br>
+                                    <label>Balance In Xero</label>
+                                  </div>
+                                </div>
+                                <div class="document mt-3">
+                                  <div id="ItemsToReconcile">
+                                    <div class="line headings d-flex justify-content-center mb-0">
+                                      <div class="statement">
+                                        Review your bank statement lines...
+                                        <div>
+                                          <span>
+                                            Spent
+                                            <i class="icofont icofont-caret-down"></i>
+                                          </span>
+                                          <span>
+                                            Received
+                                            <i class="icofont icofont-caret-down"></i>
+                                          </span>
+                                        </div>
+                                      </div>
+                                      <div class="ok">
+                                        <a class="xbtn okayButton btn" style="visibility: hidden; display: none;">OK</a>
+                                      </div>
+                                      <div class="statement create">
+                                        ...then match with your transactions in Xero
+                                        <div>
+                                          <span>
+                                            Spent
+                                            <i class="icofont icofont-caret-down"></i>
+                                          </span>
+                                          <span>
+                                            Received
+                                            <i class="icofont icofont-caret-down"></i>
+                                          </span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="d-flex justify-content-center">
+                                      <div class="line item">
+                                        <div class="d-flex justify-content-center">
+                                          <div class="statement statement-info" style="margin-top: 2.2rem">
+                                            <div class="details-container details-left d-flex">
+                                              <div class="details d-flex">
+                                                <span>15 Jan 2021</span>
+                                                <span>Trunxton Property Management</span>
+                                                <span>Rent</span>
+                                                <span></span>
+                                                <a class="more">More details</a>
+                                              </div>
+                                              <div class="amount spent sent">1,181.25&nbsp;</div>
+                                              <div class="amount received set">2000&nbsp;</div>
+                                            </div>
+                                          </div>
+                                          <div class="ok">
+                                            <a class="xbtn okayButton btn">OK</a>
+                                          </div>
+                                          <div class="statement create">
+                                            <ul class="nav nav-tabs" id="statementTab" role="tablist">
+                                              <li class="nav-item">
+                                                <a class="nav-link active" id="match-tab" data-toggle="tab" href="#match" role="tab" aria-controls="match" aria-selected="true">Match</a>
+                                              </li>
+                                              <li class="nav-item">
+                                                <a class="nav-link" id="findMatch-tab" data-toggle="tab" href="#findMatch" role="tab" aria-controls="findMatch" aria-selected="false">Find & Match</a>
+                                              </li>
+                                            </ul>
+                                            <div class="tab-content" id="statementTabContent">
+                                              <div class="tab-pane fade show active" id="match" role="tabpanel" aria-labelledby="match-tab">
+                                                <div class="statement statement-info">
+                                                  <div class="details-container d-flex">
+                                                    <div class="details d-flex">
+                                                      <span>15 Jan 2021</span>
+                                                      <span>Trunxton Property Management</span>
+                                                      <span>Rent</span>
+                                                      <span></span>
+                                                      <a class="more">More details</a>
+                                                    </div>
+                                                    <div class="amount spent sent">1,181.25&nbsp;</div>
+                                                    <div class="amount received set">2000&nbsp;</div>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                              <div class="tab-pane fade" id="findMatch" role="tabpanel" aria-labelledby="findMatch-tab">
+                                                <div class="find-matching">
+                                                  <div class="no-float card p-3">
+                                                    <p>Find & select matching transactions below</p>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="findMatch closed mt-3">
+                                          <div class="find">
+                                            <div class="group">
+                                              <p class="mb-2"><b>1. Find & select matching transactions</b></p>
+                                              <div class="table-scroll-reponsive">
+                                                <table id="matchingTransactionTable" class="table table-bordered" style="width: 100%;">
+                                                  <thead class="table-primary">
+                                                    <tr>
+                                                      <th style="width: 4.33%;"></th>
+                                                      <th>Date</th>
+                                                      <th>Description</th>
+                                                      <th>Debit</th>
+                                                      <th>Credit</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                    <tr>
+                                                      <th>
+                                                        <input type="checkbox" id="1" class="checked-transaction" value="<%= JSON.stringify({id: 1, name1: '25-01-2021', name2: 'Payment gateway processing fee', name3: '$0.08', name4: '$0.00'}) %>"/>
+                                                      </th>
+                                                      <td>25-01-2021</td>
+                                                      <td>Payment gateway processing fee</td>
+                                                      <td>$0.08</td>
+                                                      <td>$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                      <th>
+                                                        <input type="checkbox" id="2" class="checked-transaction" value="<%= JSON.stringify({id: 2, name1: '15-01-2021', name2: 'From dcmen to', name3: '$220.00', name4: '$0.00'}) %>"/>
+                                                      </th>
+                                                      <td>15-01-2021</td>
+                                                      <td>From dcmen to</td>
+                                                      <td>$220.00</td>
+                                                      <td>$0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                      <th>
+                                                        <input type="checkbox" id="3" class="checked-transaction" value="<%= JSON.stringify({id: 3, name1: '05-01-2021', name2: 'Processing fee for npp trasaction N0040002346123', name3: '$32.12', name4: '$0.00'}) %>"/>
+                                                      </th>
+                                                      <td>05-01-2021</td>
+                                                      <td>Processing fee for npp trasaction N0040002346123</td>
+                                                      <td>$32.12</td>
+                                                      <td>$0.00</td>
+                                                    </tr>
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                              <div class="pager d-flex justify-content-between">
+                                                <div id="selectAllToggle" class="p-1">
+                                                  <input type="checkbox" class="checked-all">
+                                                  <span class="align-text-bottom">Select all on this page</span>
+                                                </div>
+                                                <div class="info-pager p-1">Showing 1 - 14 of 14</div>
+                                              </div>
+                                            </div>
+                                            <div class="group">
+                                              <p class="mb-2"><b>2. View your selected transactions. Add new transactions, as needed.</b></p>
+                                              <div class="table-scroll-reponsive">
+                                                <table id="confirmMatchingTransactionTable" class="table table-striped table-bordered nowrap" style="width: 100%;">
+                                                  <thead class="table-primary">
+                                                    <tr>
+                                                      <th style="width: 4.33%;"></th>
+                                                      <th>Date</th>
+                                                      <th>Description</th>
+                                                      <th>Debit</th>
+                                                      <th>Credit</th>
+                                                    </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                  </tbody>
+                                                </table>
+                                              </div>
+                                            </div>
+                                            <div class="group row">
+                                              <div class="sum-info col-md-9">
+                                                <p class="mb-2"><b>3. The sum of your selected transactions must match the money. Make adjustments, as needed.</b></p>
+                                                <p class="line-border"><strong>No Transactions selected</strong></p>
+                                                <p class="double-border row">
+                                                  <strong class="col-md-9">Must match: Money Spent <span class="inverse">100.00 AUD</span></strong>
+                                                  <strong class="col-md-3 text-right"><span class="selectedTotal">100.00 AUD</span></strong>
+                                                </p>
+                                              </div>
+                                              <div class="options col-md-3" style="margin-top: 35px;">
+                                                <dl class="select list skip">
+                                                  <dt id="addAdjustmentsMenu">
+                                                    <div>
+                                                      <em class="icofont icofont-plus-square"><strong class="ml-1">Adjustments</strong></em>
+                                                      <span class="icofont icofont-caret-down"></span>
+                                                    </div>
+                                                  </dt>
+                                                </dl>
+                                                <p style="margin-top: 43px; color: red">
+                                                  <i class="icofont icofont-warning" style="font-size: 25px;"></i>
+                                                  <span class="align-text-bottom">Total is out by: 
+                                                    <strong>-6,180.00</strong>
+                                                  </span>
+                                                </p>
+                                              </div>
+                                            </div>
+                                            <div class="group actions mt-4 text-right" style="width: 100%;">
+                                              <button class="btn btn-success disabled mr-2">Reconcile</button>
+                                              <button class="btn btn-secondary">Cancel</button>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div> 
+                             
+                          </div>
+                        </div>
+                        <!-- Zero config.table end -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Page-body end -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <% include ../layouts/script %>
+  <!-- data-table js -->
+  <script src="../../web-files/bower_components/datatables.net/js/jquery.dataTables.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.print.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-buttons/js/buttons.html5.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="../../web-files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-maxlength/js/bootstrap-maxlength.js">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/js/bootstrap-formhelpers.min.js"></script>
+  <!-- modalEffects js nifty modal window effects -->
+  <script type="text/javascript" src="../../web-files/assets/js/modalEffects.js"></script>
+  <script type="text/javascript" src="../../web-files/assets/js/classie.js"></script>
+  <script src="../../web-files/assets/js/moment.min.js"></script>
+  <script src="../../web-files/assets/js/select2.min.js"></script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="../../web-files/bower_components/i18next/js/i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/i18next-xhr-backend/js/i18nextXHRBackend.min.js">
+  </script>
+  <script type="text/javascript"
+    src="../../web-files/bower_components/i18next-browser-languagedetector/js/i18nextBrowserLanguageDetector.min.js">
+  </script>
+  <script type="text/javascript" src="../../web-files/bower_components/jquery-i18next/js/jquery-i18next.min.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/bootstrap-daterangepicker/js/daterangepicker.js"></script>
+  <!-- Custom js -->
+  <!-- <script src="../../web-files/assets/pages/data-table/js/data-table-custom.js"></script> -->
+  
+  <!-- Call api-->
+  <script type="text/javascript" src="../../web-files/assets/pages/transaction/transaction.js"></script>
+  <!-- <script src="../../web-files/assets/pages/transactions/transaction-call-api.js"></script> -->
+  <script type="text/javascript" src="../../web-files/assets/pages/data-table/js/transaction-dataTable.js"></script>
+  <script type="text/javascript" src="../../web-files/assets/pages/data-table/js/bank-dataTable.js"></script>
+  <!-- script  -->
+  <script type="text/javascript" src="../../web-files/bower_components/ajax/libs/jszip.min.js" ></script>
+  <script type="text/javascript" src="../../web-files/bower_components/ajax/libs/vfs_fonts.js" ></script>
+  <script type="text/javascript" src="../../web-files/bower_components/buffer/FileSaver.js"></script>
+  <script type="text/javascript" src="../../web-files/bower_components/jspdf/jspdf.debug.js"></script>
+</body>
+
+</html>
