@@ -1,3 +1,4 @@
+require('dotenv').config();
 const UserModel = require("../../models/user");
 const request = require("request");
 const moment = require("moment");

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const mongoose = require("mongoose");
 const request = require("request");
 const requestPromise = require("request-promise");

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const request = require("request");
 const requestPromise = require("request-promise");
 const { createWriteStream } = require("fs");

@@ -1,3 +1,4 @@
+require('dotenv').config();
 const request = require("request");
 const fs = require("fs");
 const CURRENT_ENV = process.env.TYPE.toLowerCase();

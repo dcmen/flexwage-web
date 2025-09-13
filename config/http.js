@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
     'API_HTTP': process.env.API_HTTP,
     //TODO: THIS IS SUPPOSED TO BE API_HTTPS, SHOULD BE CHANGED IMMEDIATELY AFTER web.cashd.net.au is added to SSL whitelist

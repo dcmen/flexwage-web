@@ -1,3 +1,4 @@
+require('dotenv').config();
 const moment = require("moment");
 var ObjectID = require("mongodb").ObjectID;
 const mongoose = require("mongoose");

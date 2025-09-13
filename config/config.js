@@ -1,3 +1,4 @@
+require('dotenv').config();
 module.exports = {
   'SENDGRID_APIKEY': process.env.SENDGRID_APIKEY,
   'SENDGRID_FROM_EMAIL': process.env.SENDGRID_FROM_EMAIL,
