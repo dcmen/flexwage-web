@@ -603,25 +603,112 @@ div.slider-childTable {
   margin: 0 auto;
   background-color: #fff;
   min-height: 100vh;
-  /* padding: 30px 0;
-  margin: 0 auto;
-  background: url(../web-files/assets/images/auth/bg.jpg) no-repeat;
-  background-size: cover;
-  min-height: 100vh;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center; */
 }
 
-.signup-block .auth-box {
-  background-color: #edf5fa;
+.signup-block .auth-box.signup-card {
+  background-color: #fff;
   margin: 20px auto 0 auto;
-  max-width: 800px;
-  /* margin: 20px auto 0 auto;
-  width: 800px; */
+  max-width: 960px;
+  border-radius: 16px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+  overflow: hidden;
+  border: none;
+}
+
+.signup-card .card-block {
+  padding: 0;
+}
+
+.signup-layout {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.signup-sidebar {
+  width: 32%;
+  min-width: 260px;
+  background-color: #0f3d3e;
+  color: #fff;
+  padding: 32px 32px 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.signup-brand-text {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.signup-sidebar-intro {
+  margin-top: 40px;
+}
+
+.signup-sidebar-intro h4 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.signup-sidebar-intro p {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.signup-main {
+  flex: 1;
+  padding: 40px 48px;
+  background-color: #ffffff;
+}
+
+.signup-main-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.signup-main-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+/* Form fields in signup main area */
+.signup-main .form-control {
+  height: 48px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  box-shadow: none;
+  font-size: 14px;
+}
+
+/* đảm bảo ô Mobile có chiều cao bằng các field khác */
+.signup-main input#mobile {
+  height: 48px;
+}
+
+/* đảm bảo ô Country Code có chiều cao bằng các field khác */
+.signup-main select#selectedCountryCode {
+  height: 48px;
+  line-height: 48px;
+}
+
+/* đảm bảo ô Company Country Code ở bước Enter your company details có chiều cao bằng các field khác */
+.signup-main select#companyCountryCode {
+  height: 48px;
+  line-height: 48px;
+}
+
+.signup-main .form-control::placeholder {
+  color: #9ca3af;
+}
+
+.signup-main .form-control:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.18);
 }
 
 .auth-box a:hover {
@@ -634,90 +721,114 @@ div.slider-childTable {
 
 .multi_step_form #msform {
   position: relative;
-  margin: 0 auto;
+  margin: 0;
   z-index: 1;
-}
-
-.multi_step_form #msform h2 {
-  margin-bottom: 30px;
 }
 
 .multi_step_form #msform fieldset {
   border: 0;
-  padding: 20px 105px 0;
+  padding: 0;
   position: relative;
   width: 100%;
   left: 0;
   right: 0;
-  text-align: center;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
 .form-login-checkbox .form-login-checkbox-kepp .form-login-checkbox-kepp-txt {
   text-align: left;
 }
 
-.progressbar {
-  counter-reset: step;
-  padding: 0;
-
-  /* for demo */
-  max-width: 800px;
-}
-
-.progressbar li {
-  float: left;
+.signup-sidebar .progressbar {
   list-style: none;
+  padding: 0;
+  margin: 40px 0 0;
+}
+
+.signup-sidebar .progressbar li {
   position: relative;
-  text-align: center;
-  width: calc(100% / 6);
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+  float: none;
+  width: auto;
+  text-align: left;
 }
 
-.progressbar li:before {
-  background: #fff;
-  border: 2px solid #305ed3;
-  border-radius: 50%;
-  color: #305ed3;
-  content: counter(step);
-  counter-increment: step;
-  display: block;
-  font-weight: 700;
-  height: 30px;
-  line-height: 27px;
-  margin: 0 auto 10px;
-  text-align: center;
-  width: 30px;
+.signup-sidebar .progressbar li:last-child {
+  margin-bottom: 0;
 }
 
-.progressbar li:after {
-  background: #305ed3;
-  content: '';
-  height: 3px;
-  left: -50%;
+.progress-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 2px solid #a7f3d0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  background-color: transparent;
+  color: #e5e7eb;
+  margin-right: 12px;
+  position: relative;
+  z-index: 2;
+}
+
+.progress-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.signup-sidebar .progressbar li::before {
+  content: "";
   position: absolute;
-  top: 15px;
-  width: 100%;
-  z-index: -1;
+  left: 16px;
+  top: 32px;
+  width: 2px;
+  height: calc(100% - 32px);
+  background-color: rgba(148, 163, 184, 0.6);
 }
 
-.progressbar li:first-child:after {
-  content: none;
+.signup-sidebar .progressbar li:last-child::before {
+  display: none;
 }
 
-.progressbar li.active:after,
-.progressbar li.complete:after {
-  background: #305ed3;
+.signup-sidebar .progressbar li.active .progress-circle,
+.signup-sidebar .progressbar li.complete .progress-circle {
+  background-color: #a7f3d0;
+  color: #064e3b;
+  border-color: #a7f3d0;
 }
 
-.progressbar li.active:before,
-.progressbar li.complete:before {
-  background: #305ed3;
-  border-color: #305ed3;
-  color: #fff;
+.signup-sidebar .progressbar li.active .progress-label,
+.signup-sidebar .progressbar li.complete .progress-label {
+  color: #ffffff;
 }
 
-.progressbar li.active {
-  color: #305ed3;
-  font-weight: 700;
+.signup-main .btn-step {
+  width: 170px;
+  height: 46px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* Đưa nhóm button xuống đáy fieldset, Back trái - Next/Submit phải */
+.signup-main #msform fieldset .btn-step {
+  margin-top: 16px;
+}
+
+.signup-main #msform fieldset .btn-step:first-of-type {
+  margin-top: auto;
+  align-self: flex-start;
+}
+
+.signup-main #msform fieldset .btn-step:last-of-type {
+  align-self: flex-end;
 }
 
 input#otpCode::placeholder {

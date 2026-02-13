@@ -68,65 +68,98 @@
           <input type="hidden" id="urlReckon" value="<%= urlReckon %>">
           <!-- Multi step form --> 
           <section class="multi_step_form">  
-            <div class="auth-box card">
-              <div class="card-block">
-                <div class="row m-b-20">
-                  <div class="col-md-12">
-                    <h2 class="text-center">Create your account in <b>6 easy steps</b></h2>
+            <div class="auth-box card signup-card">
+              <div class="card-block signup-layout">
+                <!-- Left sidebar: steps -->
+                <aside class="signup-sidebar">
+                  <div class="signup-brand">
+                    <span class="signup-brand-text">FlexWagely</span>
                   </div>
-                </div>
-                <form id="msform">
+                  <div class="signup-sidebar-intro">
+                    <h4>Step 1</h4>
+                    <p>Enter your personal information to get closer to companies.</p>
+                  </div>
                   <!-- progressbar -->
                   <ul class="progressbar">
-                    <li class="active">Step 1</li>
-                    <li>Step 2</li>
-                    <li>Step 3</li>
-                    <li>Step 4</li>
-                    <li>Step 5</li>
-                    <li>Step 6</li>
+                    <li class="active">
+                      <div class="progress-circle">1</div>
+                      <div class="progress-label">Personal Information</div>
+                    </li>
+                    <li>
+                      <div class="progress-circle">2</div>
+                      <div class="progress-label">Company Details</div>
+                    </li>
+                    <li>
+                      <div class="progress-circle">3</div>
+                      <div class="progress-label">System Selection</div>
+                    </li>
+                    <li>
+                      <div class="progress-circle">4</div>
+                      <div class="progress-label">Payroll Setup</div>
+                    </li>
+                    <li>
+                      <div class="progress-circle">5</div>
+                      <div class="progress-label">Invite Employees</div>
+                    </li>
+                    <li>
+                      <div class="progress-circle">6</div>
+                      <div class="progress-label">Complete</div>
+                    </li>
                   </ul>
-                  <!-- fieldsets 1 -->
-                  <fieldset>
-                    <h3 class="text-center py-2">Enter your personal details</h3>
-                    <div class="form-row m-t-30 text-left">
-                      <div class="form-group col-md-6 form-primary">
-                        <input id="firstName" type="text" name="firstname" class="form-control" placeholder="First Name">
-                      </div>
-                      <div class="form-group col-md-6 form-primary">
-                        <input id="lastName" type="text" name="lastname" class="form-control" placeholder="Last Name">
-                      </div>
+                </aside>
+
+                <!-- Right content: form fields -->
+                <div class="signup-main">
+                  <div class="row m-b-20">
+                    <div class="col-md-12">
+                      <h2 class="signup-main-title">Your Personal Information</h2>
+                      <p class="signup-main-subtitle">
+                        Enter your personal information to get closer to companies.
+                      </p>
                     </div>
-                    <div class="form-group form-primary text-left">
-                      <input id="email" type="text" name="email" class="form-control" placeholder="Email">
-                      <span class="form-bar"></span>
-                    </div>
-                    <div class="form-group form-primary text-left">
-                      <div class="row">
-                        <div class="col-md-6">
-                          <select class="form-control" name="countryCode" id="selectedCountryCode">
-                            <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
-                            <optgroup label="Other countries">
-                              <% countryCode.forEach(function(item) { %>
-                                <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
-                              <% }) %>
-                            </optgroup>
-                          </select>
+                  </div>
+                  <form id="msform">
+                    <!-- fieldsets 1 -->
+                    <fieldset>
+                      <h3 class="text-center py-2 d-none d-md-block">Enter your personal details</h3>
+                      <div class="row m-t-30 text-left">
+                        <div class="form-group col-md-6 form-primary">
+                          <input id="firstName" type="text" name="firstname" class="form-control" placeholder="First Name" autocomplete="given-name">
                         </div>
-                        <div class="col-md-6">
-                          <input type="text" id="mobile" name="mobile" class="form-control" required="" placeholder="Mobile">
+                        <div class="form-group col-md-6 form-primary">
+                          <input id="lastName" type="text" name="lastname" class="form-control" placeholder="Last Name" autocomplete="family-name">
                         </div>
                       </div>
-                      <span class="form-bar"></span>
-                    </div>
-                    <!-- <div class="form-group form-primary">
-                      <select id="typeUser" type="text" class="form-control">
-                        <option>I am an employee</option>
-                      </select>
-                    </div> -->
-                    <button id="jsNextStep1" type="button"
-                      class="btn btn-primary btn-md btn-step my-3">NEXT</button>
-                      
-                  </fieldset>
+                      <div class="form-group form-primary text-left">
+                        <input id="email" type="text" name="email" class="form-control" placeholder="Email" autocomplete="email">
+                        <span class="form-bar"></span>
+                      </div>
+                      <div class="form-group form-primary text-left">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <select class="form-control" name="countryCode" id="selectedCountryCode">
+                              <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                              <optgroup label="Other countries">
+                                <% countryCode.forEach(function(item) { %>
+                                  <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                                <% }) %>
+                              </optgroup>
+                            </select>
+                          </div>
+                          <div class="col-md-6">
+                            <input type="tel" id="mobile" name="mobile" class="form-control" required="" placeholder="Mobile" autocomplete="tel" inputmode="tel">
+                          </div>
+                        </div>
+                        <span class="form-bar"></span>
+                      </div>
+                      <!-- <div class="form-group form-primary">
+                        <select id="typeUser" type="text" class="form-control">
+                          <option>I am an employee</option>
+                        </select>
+                      </div> -->
+                      <button id="jsNextStep1" type="button"
+                        class="btn btn-primary btn-md btn-step my-3">NEXT</button>
+                    </fieldset>
                   <!-- fieldsets 2 -->
                   <fieldset id="step2">
                   </fieldset>
