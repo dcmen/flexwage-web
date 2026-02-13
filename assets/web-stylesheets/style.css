@@ -662,6 +662,9 @@ div.slider-childTable {
   flex: 1;
   padding: 40px 48px;
   background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .signup-main-title {
@@ -723,6 +726,9 @@ div.slider-childTable {
   position: relative;
   margin: 0;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .multi_step_form #msform fieldset {
@@ -736,6 +742,7 @@ div.slider-childTable {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  flex: 1; /* đảm bảo mọi step cao bằng nhau để nhóm nút chạm đáy giống step 1 */
 }
 
 .form-login-checkbox .form-login-checkbox-kepp .form-login-checkbox-kepp-txt {
@@ -810,6 +817,13 @@ div.slider-childTable {
   color: #ffffff;
 }
 
+/* Ẩn bước 4 và 5 trong left panel (chỉ ẩn hiển thị, không ảnh hưởng logic) */
+.signup-sidebar .progressbar li:nth-child(4),
+.signup-sidebar .progressbar li:nth-child(5) {
+  display: none;
+}
+
+/* Buttons styling used in all steps */
 .signup-main .btn-step {
   width: 170px;
   height: 46px;
@@ -818,17 +832,110 @@ div.slider-childTable {
 }
 
 /* Đưa nhóm button xuống đáy fieldset, Back trái - Next/Submit phải */
-.signup-main #msform fieldset .btn-step {
-  margin-top: 16px;
+.signup-main #msform fieldset {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
-.signup-main #msform fieldset .btn-step:first-of-type {
+.system-actions,
+.step-actions {
   margin-top: auto;
-  align-self: flex-start;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.signup-main #msform fieldset .btn-step:last-of-type {
-  align-self: flex-end;
+/* Step 1: chỉ có nút SELECT, căn phải */
+#step4 .system-actions {
+  justify-content: flex-end;
+}
+
+/* canh nút Back/NEXT theo chiều ngang form (cùng container với các field) */
+
+/* Loại bỏ margin-bottom mặc định của btn (my-3) để khoảng cách bottom = padding top của title */
+.system-actions .btn-step,
+.step-actions .btn-step {
+  margin-bottom: 0;
+}
+
+/* Bước 1: style radio danh sách hệ thống */
+.system-list .system-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.system-list .system-option.form-check {
+  padding-left: 0;
+}
+
+.system-list .system-option .form-check-input {
+  margin-left: 0;
+  margin-top: 0; /* canh giữa theo trục dọc với text */
+}
+
+.system-list .system-option .form-check-label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Complete step (Registration Successful) */
+.signup-complete {
+  text-align: center;
+  padding: 40px 0 20px;
+}
+
+.signup-complete__title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.signup-complete__icon-wrapper {
+  margin-bottom: 24px;
+}
+
+.signup-complete__icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 999px;
+  background-color: #22c55e1a; /* nhạt */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.signup-complete__check {
+  font-size: 40px;
+  color: #16a34a;
+}
+
+.signup-complete__headline {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+
+.signup-complete__company {
+  margin-bottom: 4px;
+}
+
+.signup-complete__company-abn {
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.signup-complete__description {
+  max-width: 500px;
+  margin: 8px auto 24px;
+  color: #4b5563;
+}
+
+.signup-complete__button {
+  min-width: 200px;
 }
 
 input#otpCode::placeholder {

@@ -20,6 +20,14 @@ $(document).ready(function() {
   astuteApiKey, astuteApiUserName, astuteApiPassword, userNameHR3, passwordHR3, apiKeyRH3, companyIdHR3; 
   let companiesAstute = {};
   
+  // initial step: payroll system integration (step4)
+  current_step = $('#step4');
+  next_step = $('#step4');
+  updateStepHeader(current_step);
+  showLoader();
+  $('.system-list .row').remove();
+  getSystemList();
+
   $('input[type="text"]').keypress(function(event) {
     if (event.which === 13) {
       if (event.target.id === 'activeCode') {
@@ -119,113 +127,91 @@ $(document).ready(function() {
     }, 500);
     return popup;
   }
-  //success next step 
+  // cập nhật title/description theo fieldset hiện tại
+  function updateStepHeader(step) {
+    if (!step || !step.length) return;
+    const title = $(step).data('title');
+    const desc  = $(step).data('description');
+
+    if (title) {
+      $('.signup-main-title').text(title);
+    }
+
+    const $subtitle = $('.signup-main-subtitle');
+    if (typeof desc !== 'undefined') {
+      if (desc && desc.length > 0) {
+        $subtitle.text(desc).show();
+      } else {
+        // nếu mô tả rỗng (ví dụ step 4), ẩn hẳn để không chừa khoảng trống
+        $subtitle.text('').hide();
+      }
+    }
+  }
+
+  //success next step – chuyển step gọn, không scale/co giãn panel
   function successNextStep(current_step, next_step) {
-    if ($("fieldset").index(next_step) === 5) {
+    const currentIndex = $("fieldset").index(current_step);
+    const nextIndex    = $("fieldset").index(next_step);
+
+    updateStepHeader(next_step);
+
+    if (nextIndex === 5) {
       $(".progressbar li").addClass("complete");
       $(".progressbar li").removeClass("active");
-    } else if ($("fieldset").index(next_step) !== 5) {
-      $(".progressbar li").eq($("fieldset").index(current_step)).addClass("complete");
-      $(".progressbar li").eq($("fieldset").index(current_step)).removeClass("active");
-      $(".progressbar li").eq($("fieldset").index(next_step)).addClass("active");
+    } else if (nextIndex !== 5) {
+      $(".progressbar li").eq(currentIndex).addClass("complete");
+      $(".progressbar li").eq(currentIndex).removeClass("active");
+      $(".progressbar li").eq(nextIndex).addClass("active");
     }
-    //show the next fieldset
-    next_step.show();
-     //hide the current fieldset with style
-    current_step.animate({opacity: 0}, {
-      step: function(now, mx) {
-        //as the opacity of current_step reduces to 0 - stored in "now"
-        //1. scale current_step down to 80%
-        scale = 1 - (1 - now) * 0.2;
-        //2. bring next_step from the right(50%)
-        left = (now * 50)+"%";
-        //3. increase opacity of next_step to 1 as it moves in
-        opacity = 1 - now;
-        current_step.css({'transform': 'scale('+scale+')'});
-        next_step.css({'left': left, 'opacity': opacity});
-      },
-      duration: 800,
-      complete: function(){
-        current_step.hide();
-        animating = false;
-      },
-      //this comes from the custom easing plugin
-      easing: 'easeInOutBack'
-    });
+
+    current_step.hide();
+    next_step.css({ left: 0, opacity: 1, transform: 'scale(1)' }).show();
+    animating = false;
   }
   
   // back step
   $(document).on('click', '.jsBackStep', function() {
-    if ($(this).parent()[0].className === 'input-company') {
-      const inputs = $(".input-company input");
-      inputs.each(function(e) {
-        const name = $(this).attr("name");
-        $(`input[name='${name}']`).val('');
-      });
-      $('.input-company').attr('hidden', true);
-      current_step = $(this).parent().parent();
-      previous_step = $(this).parent().parent().prev();
-    } else if ($(this).parent()[0].className === 'as-company') {
-      const inputs = $(".as-company input");
-      inputs.each(function(e) {
-        const name = $(this).attr("name");
-        $(`input[name='${name}']`).val('');
-      });
-      $('.as-company').attr('hidden', true);
-      current_step = $(this).parent().parent();
-      previous_step = $(this).parent().parent().prev();
-    } else if ($(this).parent()[0].className === 'as-company-hr3') {
-      const inputs = $(".as-company-hr3 input");
-      inputs.each(function(e) {
-        const name = $(this).attr("name");
-        $(`input[name='${name}']`).val('');
-      });
-      $('.as-company-hr3').attr('hidden', true);
-      current_step = $(this).parent().parent();
-      previous_step = $(this).parent().parent().prev();
+    const fieldset = $(this).closest('fieldset');
+
+    if (fieldset.attr('id') === 'step5') {
+      // Bước 2: luôn quay lại step 1 (Payroll System)
+      current_step = fieldset;
+      previous_step = $('#step4');
     } else {
-      current_step = $(this).parent();
-      previous_step = $(this).parent().prev();
+      // Các bước còn lại giữ hành vi cũ: quay về fieldset trước đó trong DOM
+      current_step = fieldset;
+      previous_step = fieldset.prev();
     }
 
     //de-activate current step on progressbar
-    $(".progressbar li").eq($("fieldset").index(current_step)).removeClass("active");
-    $(".progressbar li").eq($("fieldset").index(previous_step)).addClass("active");
+    const currentIndex  = $("fieldset").index(current_step);
+    const previousIndex = $("fieldset").index(previous_step);
+    $(".progressbar li").eq(currentIndex).removeClass("active");
+    $(".progressbar li").eq(previousIndex).addClass("active");
 
-    //show the previous fieldset
-    previous_step.show();
-    //hide the current fieldset with style
-    current_step.animate({opacity: 0}, {
-      step: function(now, mx) {
-        //as the opacity of current_step reduces to 0 - stored in "now"
-        //1. scale previous_step from 80% to 100%
-        scale = 0.8 + (1 - now) * 0.2;
-        //2. take current_step to the right(50%) - from 0%
-        left = ((1-now) * 50)+"%";
-        //3. increase opacity of previous_step to 1 as it moves in
-        opacity = 1 - now;
-        // current_step.css({'left': left});
-        previous_step.css({'transform': 'scale('+scale+')', 'opacity': opacity});
-      },
-      duration: 800,
-      complete: function(){
-        current_step.hide();
-        animating = false;
-      },
-      //this comes from the custom easing plugin
-      easing: 'easeInOutBack'
-    });
+    // nếu quay về step 1 (fieldset đầu tiên), đảm bảo chỉ vòng tròn đầu tiên active
+    if (previousIndex === 0) {
+      $(".progressbar li").removeClass("active complete");
+      $(".progressbar li").eq(0).addClass("active");
+    }
+
+    //show the previous fieldset – không scale/co giãn panel
+    updateStepHeader(previous_step);
+    current_step.hide();
+    previous_step.css({ left: 0, opacity: 1, transform: 'scale(1)' }).show();
+    animating = false;
 
   })
-  //Step Get OTP 
-  $('#jsNextStep1').click(function(){
-    current_step = $(this).parent();
-    next_step = $(this).parent().next();
-    const email = $("#email").val();
-    const firstName = $("#firstName").val(), lastName = $("#lastName").val();
-    const mobile = $("#mobile").val();
+  // Step 3: Complete – thu thập thông tin user và submit registration
+  $('#jsNextStep1').click(function() {
+    current_step = $(this).closest('fieldset');
+    const email       = $("#email").val();
+    const firstName   = $("#firstName").val();
+    const lastName    = $("#lastName").val();
+    const mobile      = $("#mobile").val();
+    const countryCode = $('#selectedCountryCode').val();
 
-    if (!validateInput($(this).parent().find("input"))) {
+    if (!validateInput(current_step.find("input"))) {
       showToast('error', 'Please fill in all the required fields.');
       return false;
     }
@@ -233,47 +219,36 @@ $(document).ready(function() {
       showToast('error', 'Invalid Email address.');
       return;
     }
-    showLoader();
-    
-    formUser = {
-      email: email,
-      firstName: firstName,
-      lastName: lastName,
-      countryCode: $('#selectedCountryCode').val(),
-      mobile: mobile
-    }
 
-    $.ajax({
-      dataType: 'json',
-      method: "POST",
-      url: `/get-OTPCode`,
-      data: {
-        email: email,
-        first_name: firstName,
-        last_name: lastName,
-        phone: mobile,
-        countryCode: formUser.formUser,
-        "_csrf": token
-      },
-      async: true,
-      success: function(data){
-        if (data.success) {
-          sessionStorage.setItem("registration_code", data.result.registration_code);
-          successNextStep(current_step, next_step);
-          hidenLoader();
-          $("#step2").html(data.sourceCode);
-        } else {
-          hidenLoader();
-          showToast('error', "Can not connect to server. Please try again.");
-        }
-        return true;
-      },
-      error: function() {
-        hidenLoader();
-        showToast('error', "Can't connect to server. Try again!")
-        return false;
-      }
-    });
+    showLoader();
+
+    // Lưu lại thông tin người dùng ở bước 3
+    formUser = {
+      email,
+      firstName,
+      lastName,
+      countryCode,
+      mobile
+    };
+
+    // Thu thập thông tin user vào system_user để gửi lên API đăng ký
+    const systemId = systemCompany && systemCompany.system_company_id
+      ? systemCompany.system_company_id
+      : '';
+
+    systemUser = {
+      first_name: firstName,
+      last_name: lastName,
+      fullname: `${firstName} ${lastName}`.trim(),
+      mobile: countryCode ? `+${countryCode}${mobile}` : mobile,
+      email,
+      system_user_id: systemId,
+      system_employee_id: systemId
+    };
+
+    // next_step là fieldset cuối cùng (màn hình Complete)
+    const next_step = $('#msform fieldset').last();
+    submitFormRegister(current_step, next_step);
   });
   //Step POST OTP 
   $(document).on('click', '#jsNextStep2', function(){
@@ -327,7 +302,8 @@ $(document).ready(function() {
     showLoader();
     const activation_code = $("#activeCode").val();
     current_step = $(this).parent();
-    next_step = $('#step5').next();
+    // after activation, go to final "Completed" fieldset (last one)
+    next_step = $('#msform fieldset').last();
     $.ajax({
       dataType: "json",
       method: "POST",
@@ -403,13 +379,13 @@ $(document).ready(function() {
       }
     });
   });
-  //Register Company and Next Step 3
+  //Register Company and Next Step 3 (OTP flow)
   $(document).on('click', '#jsNextStep3', function() {
     showLoader();
     $('.system-list .row').remove();
-    current_step = $(this).parent().parent();
-    next_step = $(this).parent().parent().next();
-    getSystemList(current_step, next_step);        
+    const fromStep = $(this).parent().parent();
+    const toStep = $(this).parent().parent().next();
+    getSystemList(fromStep, toStep);        
   })
   //Load System 
   $('#jsNextStep4').click(function () {
@@ -564,7 +540,13 @@ $(document).ready(function() {
   });
 
   //get system list
-  function getSystemList() {
+  function getSystemList(fromStep, toStep) {
+    if (fromStep) {
+      current_step = fromStep;
+    }
+    if (toStep) {
+      next_step = toStep;
+    }
     $.ajax({
       dataType: "json",
       method: "POST",
@@ -576,19 +558,16 @@ $(document).ready(function() {
       success: function(data) {
         let itemsProcessed = 0;
         data.result.forEach((item, index, array) => {
+          const id = `system-${item.code}`;
           $('.system-list').append(
-            `<div class="row">
-              <div class="col-md-2"></div>
-              <div class="form-login-checkbox col-md-8 form-login-checkbox--border form-signup-checkbox-custom">
-                <label class="form-login-checkbox-kepp form-login-checkbox-kepp--flex">
-                  <div class="form-login-checkbox-kepp-txt">
-                    <p>${item.system_name}</p>
-                  </div>
-                  <div class="form-login-checkbox-cus">
-                    <input class="form-login-checkbox_box checkbox-system" name="item" type="checkbox" value="${item.code}"/>
-                    <span class="form-login-checkbox_checkmark"></span>
-                  </div>
-                </label>
+            `<div class="row mb-2">
+              <div class="col-12">
+                <div class="form-check system-option">
+                  <input class="form-check-input checkbox-system" type="radio" name="payrollSystem" value="${item.code}" id="${id}">
+                  <label class="form-check-label" for="${id}">
+                    ${item.system_name}
+                  </label>
+                </div>
               </div>
             </div>`
           );
@@ -596,16 +575,22 @@ $(document).ready(function() {
           if (itemsProcessed === array.length) {
             let checkboxs = $('.checkbox-system');
             checkboxs.click(function (e) {
+              // với radio, browser tự đảm bảo chỉ chọn một; giữ lại để chắc chắn
               checkboxs.each(function () {
                 this.checked = false;
               });
               var target = $(e.target);
               target.prop('checked', true);
-              codeSystem = $(target.parent()).find("input[name='item']").val();
-              if (this.checked) { $('#jsNextStep4').prop('disabled', false) }
+              // lưu lại code của hệ thống payroll đã chọn
+              codeSystem = target.val();
+              if (this.checked) { $('#jsNextStep4').prop('disabled', false); }
             });
-            hidenLoader();
-            successNextStep(current_step, next_step);
+            // chỉ chuyển bước nếu fromStep và toStep khác nhau (flow OTP cũ)
+            if (current_step && next_step && current_step[0] !== next_step[0]) {
+              successNextStep(current_step, next_step);
+            } else {
+              hidenLoader();
+            }
           }
         });
         return true;
@@ -882,30 +867,44 @@ $(document).ready(function() {
     showInfoSignup(formUser, userRoot);
   }
 
-  // show info company
+  // show info company and prefill forms
   function showInfoSignup(user, root) {
-    $('.info-company').html(`
-      <h4>${root.company_name}</h4>
-      <h6>${root.abn ? root.abn : ""}</h6>
-      <h6>${root.address ? root.address : ""}</h6>
-      <img src="/web-images/ic_group_company.png" alt="img_company" width="200">
-      <div style="margin-top: -170px; z-index: 999;">
-        <h4>Payroll Admin User</h4>
-        <h6>Full name: ${root.first_name ? root.first_name + " " + root.last_name : root.fullname}</h6>
-        <h6>Email: ${root.email}</h6>
-      </div>
-      <div style="margin-top: -60px; z-index: 999;">
-        <h4 style="margin-top: 100px; line-height: 24px;"> 
-          CashD User
-        </h4>
-        <h6>Full name: ${user.firstName + " " + user.lastName}</h6>
-        <h6>Email: ${user.email}</h6>
-        <h6>Phone: ${user.mobile ? '+'+ user.countryCode + user.mobile : "null"}</h6>
-      </div>
-      <div class="mt-5">
-        <button type="button" class="btn btn-primary btn-submit-signup" style="width: 50%">Submit</button>
-      </div>
-    `)
+    const hasUser = !!user;
+    const userFullName = hasUser
+      ? (user.firstName ? (user.firstName + " " + (user.lastName || "")) : (user.fullname || ""))
+      : "";
+    const userEmail = hasUser ? (user.email || "") : "";
+    const userPhone = hasUser && user.mobile
+      ? ('+' + (user.countryCode || '') + user.mobile)
+      : "";
+
+    // Prefill company details step if fields are empty
+    if (root.company_name && $("input[name='companyName']").length && !$("input[name='companyName']").val()) {
+      $("input[name='companyName']").val(root.company_name);
+    }
+    if (root.abn && $("input[name='ABN']").length && !$("input[name='ABN']").val()) {
+      $("input[name='ABN']").val(root.abn);
+    }
+    if (root.address && $("input[name='companyAddress']").length && !$("input[name='companyAddress']").val()) {
+      $("input[name='companyAddress']").val(root.address);
+    }
+    if (root.email && $("input[name='companyEmail']").length && !$("input[name='companyEmail']").val()) {
+      $("input[name='companyEmail']").val(root.email);
+    }
+
+    // Prefill personal details step if fields are empty
+    if (hasUser && user.firstName && $("#firstName").length && !$("#firstName").val()) {
+      $("#firstName").val(root.first_name);
+    }
+    if (hasUser && user.lastName && $("#lastName").length && !$("#lastName").val()) {
+      $("#lastName").val(root.last_name);
+    }
+    if (hasUser && user.email && $("#email").length && !$("#email").val()) {
+      $("#email").val(user.email);
+    }
+
+    // always show standard company-detail form (same layout as system NONE)
+    showRegisterNone();
   }
   //convert Xero Company to Cashd Company
   function convertXeroCompanyToCashdCompany (xeroCompany) {
@@ -1628,20 +1627,33 @@ $(document).ready(function() {
       async: true,
       success: function(data) { 
         if (data.success) {
-          $('.info-company-register').append(
-            `<h4>${data.result.user.company_infor.company_name}</h4>
-            <h6>${data.result?.user?.company_infor?.abn ? data.result.user.company_infor.abn : ""}</h6>
-            <h6>${data.result?.user?.company_infor?.address ? data.result.user.company_infor.address : ""}</h6>
-            <img src="/web-images/ic_group_company.png" alt="img_company" width="200">
-            <h4 style="margin-top: -200px; z-index: 999;">Your Company is now setup on CashD and linked to ${codeSystem}</h4>
-            <h4 style="margin-top: 100px; line-height: 24px;">An Email with your password has been sent to your mail 
-            <br>Please use this to login to CashD to finalise your registration
-            </h4>
-            <div>
-              <img src="/web-images/ic_submit_email_success.9.png" alt="img_mail" width="200">
-            </div>
-            <div>
-              <button type="button" class="btn btn-primary btn-redirect-login" style="width: 50%">OK</button>
+          const company = data.result?.user?.company_infor || {};
+          $('.info-company-register').html(
+            `<div class="signup-complete">
+              <h2 class="signup-complete__title">Registration Successful 🎉</h2>
+              <div class="signup-complete__icon-wrapper">
+                <div class="signup-complete__icon">
+                  <span class="signup-complete__check">&#10003;</span>
+                </div>
+              </div>
+              <p class="signup-complete__headline">
+                Your company account has been created successfully.
+              </p>
+              ${
+                company.company_name
+                  ? `<p class="signup-complete__company">
+                      <strong>${company.company_name}</strong>
+                      ${company.abn ? `<span class="signup-complete__company-abn"> · ABN: ${company.abn}</span>` : ''}
+                    </p>`
+                  : ''
+              }
+              <p class="signup-complete__description">
+                Your login credentials have been sent to your email address.
+                Please check your inbox and change your password after logging in.
+              </p>
+              <button type="button" class="btn btn-primary btn-step btn-redirect-login signup-complete__button">
+                Go to login
+              </button>
             </div>`
           );
           successNextStep(current_step, next_step);
@@ -1782,7 +1794,7 @@ $(document).ready(function() {
   }
 
   $(document).on('click', '#submitCompanyInfo', function (e) {
-    showLoader();
+    // Bước 2: chỉ lưu local, không cần gọi API hay show loading
     if (request && request.readyState != 4) {
       request.abort();
     }
@@ -1811,8 +1823,7 @@ $(document).ready(function() {
     body.companyCountryCode = $('#companyCountryCode').val();
 
     if (isValidate) {
-      const { email, firstName, lastName, countryCode, mobile } = formUser;
-
+      // lưu company vào local biến systemCompany như flow cũ
       systemCompany = {
         system_company_id: body.companyName, 
         company_name: body.companyName,
@@ -1820,20 +1831,44 @@ $(document).ready(function() {
         address: body.companyAddress || null,
         abn: body.abn || null
       };
-  
-      systemUser = {
-        first_name: firstName,
-        last_name: lastName,
-        fullname: `${firstName} ${lastName}`,
-        mobile: '+' + countryCode + mobile,
-        email: email,
-        system_user_id: body.companyName,
-        system_employee_id: body.companyName
-      },
-  
-      submitFormRegister($('#step5'), $('#step5').next());
-    } else {
-      hidenLoader();
+
+      // chuyển sang bước 3: personal details, không gọi submitFormRegister
+      current_step = $('#step5');
+      next_step = $('#step5').next();
+      successNextStep(current_step, next_step);
+
+      // sau khi sang bước 3, nếu có dữ liệu người dùng từ hệ thống payroll, prefill vào form
+      if (systemUser) {
+        if (systemUser.first_name && $('#firstName').length && !$('#firstName').val()) {
+          $('#firstName').val(systemUser.first_name);
+        }
+        if (systemUser.last_name && $('#lastName').length && !$('#lastName').val()) {
+          $('#lastName').val(systemUser.last_name);
+        }
+        if (systemUser.email && $('#email').length && !$('#email').val()) {
+          $('#email').val(systemUser.email);
+        }
+        // với Deputy: PrimaryPhone đã được map vào systemUser.mobile
+        if (systemUser.mobile && $('#mobile').length && !$('#mobile').val()) {
+          let mobileStr = systemUser.mobile.toString().trim();
+          const selectedCode = $('#selectedCountryCode').val();
+
+          if (selectedCode) {
+            // Chỉ tách country code khi chắc chắn khớp với dropdown.
+            // Ví dụ: selectedCode = "61" và số dạng "+61xxxxxxxx".
+            if (mobileStr.startsWith('+' + selectedCode)) {
+              mobileStr = mobileStr.slice(1 + selectedCode.length);
+              // loại bỏ khoảng trắng/thành phần không phải số ở đầu sau khi cắt
+              mobileStr = mobileStr.replace(/^[^\d]*/, '');
+            }
+          } else {
+            // không có country code → hiển thị nguyên số (chỉ trim khoảng trắng)
+            mobileStr = mobileStr;
+          }
+
+          $('#mobile').val(mobileStr);
+        }
+      }
     }
 
   });

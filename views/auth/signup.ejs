@@ -76,14 +76,16 @@
                     <span class="signup-brand-text">FlexWagely</span>
                   </div>
                   <div class="signup-sidebar-intro">
-                    <h4>Step 1</h4>
-                    <p>Enter your personal information to get closer to companies.</p>
+                    <p>
+                      An earned wage access platform that lets employees access their pay as they earn it,
+                      powered by payroll integration.
+                    </p>
                   </div>
                   <!-- progressbar -->
                   <ul class="progressbar">
                     <li class="active">
                       <div class="progress-circle">1</div>
-                      <div class="progress-label">Personal Information</div>
+                      <div class="progress-label">Payroll System</div>
                     </li>
                     <li>
                       <div class="progress-circle">2</div>
@@ -91,7 +93,7 @@
                     </li>
                     <li>
                       <div class="progress-circle">3</div>
-                      <div class="progress-label">System Selection</div>
+                      <div class="progress-label">Personal Details</div>
                     </li>
                     <li>
                       <div class="progress-circle">4</div>
@@ -112,17 +114,118 @@
                 <div class="signup-main">
                   <div class="row m-b-20">
                     <div class="col-md-12">
-                      <h2 class="signup-main-title">Your Personal Information</h2>
-                      <p class="signup-main-subtitle">
-                        Enter your personal information to get closer to companies.
-                      </p>
+                      <h2 class="signup-main-title"></h2>
+                      <p class="signup-main-subtitle"></p>
                     </div>
                   </div>
                   <form id="msform">
-                    <!-- fieldsets 1 -->
-                    <fieldset>
-                      <h3 class="text-center py-2 d-none d-md-block">Enter your personal details</h3>
-                      <div class="row m-t-30 text-left">
+                    <!-- Step 1: Payroll System Integration (Choose System) -->
+                    <fieldset id="step4" data-title="Payroll System Integration" data-description="Connect your payroll system to enable secure earned wage access for your employees.">
+                      <div class="system-list"></div>
+                      <div class="system-actions">
+                        <button
+                          type="button"
+                          class="btn btn-primary btn-md btn-step"
+                          id="jsNextStep4" disabled>SELECT
+                        </button>
+                      </div>
+                    </fieldset>
+
+                    <!-- Step 2: Company Details -->
+                    <fieldset id="step5" data-title="Your company details" data-description="Sync your company data from your payroll or enter it manually.">
+                      <!-- none group -->
+                      <div hidden class="input-company">
+                        <div class="form-group form-primary text-left">
+                          <input type="text" name="companyName" class="form-control" placeholder="Company Name">
+                          <span id="companyNameValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide company name.</span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="number" name="ABN" class="form-control"  placeholder="ABN">
+                          <span class="form-bar"></span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="email" name="companyEmail" class="form-control" placeholder="Company Email">
+                          <span id="companyEmailValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Company email is not valid.</span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <select class="form-control" name="companyCountryCode" id="companyCountryCode">
+                                <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                                <optgroup label="Other countries">
+                                  <% countryCode.forEach(function(item) { %>
+                                    <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                                  <% }) %>
+                                </optgroup>
+                              </select>
+                            </div>
+                            <div class="col-md-6">
+                              <input type="number" name="companyPhone" class="form-control" placeholder="Company Phone">
+                            </div>
+                          </div>
+                          <span class="form-bar"></span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="text" name="companyAddress" class="form-control" placeholder="Address">
+                          <span class="form-bar"></span>
+                        </div>
+                        <div class="step-actions">
+                          <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                          <button type="button" id="submitCompanyInfo" class="btn btn-primary btn-md btn-step my-3">NEXT</button>
+                        </div>
+                      </div>
+                      <!-- end none  -->
+                      <!-- Astute -->
+                      <div hidden class="as-company">
+                        <div class="astute-logo">
+                          <img src="../../web-files/assets/images/astute_logo.png" alt="log-astute">
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="text" name="apiKey" class="form-control" placeholder="API Key">
+                          <span id="apiKeyValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Key.</span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="text" name="apiUserName" class="form-control" placeholder="API Username">
+                          <span id="apiUserNameValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Username.</span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="text" name="apiPassword" class="form-control" placeholder="API Password">
+                          <span id="apiPasswordValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Password.</span>
+                        </div>
+                        <div class="step-actions">
+                          <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                          <button type="button" id="submitAstuteInfo" class="btn btn-primary btn-md btn-step my-3">Submit</button>
+                        </div>
+                      </div>
+                      <!-- end  -->
+                      <!-- HR3 -->
+                      <div hidden class="as-company-hr3">
+                        <div class="hr3-logo">
+                          <img src="../../web-files/assets/images/logo-hr3.jpg" alt="log-HR3">
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="text" name="userNameHR3" class="form-control" placeholder="Email / Username">
+                          <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Email/Username.</span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="password" name="passwordHR3" class="form-control" placeholder="Password">
+                          <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Password.</span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <input type="text" name="apiKeyRH3" class="form-control" placeholder="API Key">
+                          <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Key.</span>
+                        </div>
+                        <div class="step-actions">
+                          <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                          <button type="button" id="submitHR3Info" class="btn btn-primary btn-md btn-step my-3">Submit</button>
+                        </div>
+                      </div>
+                      <!-- End HR3 -->
+                    </fieldset>
+
+                    <!-- Step 3: Personal Details -->
+                    <fieldset data-title="Your personal details" data-description="Enter your personal information to create your account and manage your company.">
+                      <div class="row text-left" style="margin-top: 0;">
                         <div class="form-group col-md-6 form-primary">
                           <input id="firstName" type="text" name="firstname" class="form-control" placeholder="First Name" autocomplete="given-name">
                         </div>
@@ -152,134 +255,35 @@
                         </div>
                         <span class="form-bar"></span>
                       </div>
-                      <!-- <div class="form-group form-primary">
-                        <select id="typeUser" type="text" class="form-control">
-                          <option>I am an employee</option>
-                        </select>
-                      </div> -->
-                      <button id="jsNextStep1" type="button"
-                        class="btn btn-primary btn-md btn-step my-3">NEXT</button>
+                      <div class="step-actions">
+                        <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                        <button id="jsNextStep1" type="button"
+                          class="btn btn-primary btn-md btn-step my-3">Complete</button>
+                      </div>
                     </fieldset>
-                  <!-- fieldsets 2 -->
-                  <fieldset id="step2">
-                  </fieldset>
-                  <!-- fieldsets 3 -->
-                  <fieldset id="step3">
-                  </fieldset>
-                  <!--fieldsets 4 -->
-                  <fieldset id="step4">
-                    <h3>Choose System</h3>
-                    <div class="system-list"></div>
-                    <button type="button"
-                      class="btn btn-default btn-md btn-step my-3 mx-2 ml-0 jsBackStep">BACK</button>
-                    <button
-                      type="button"
-                      class="btn btn-primary btn-md btn-step my-3"
-                      id="jsNextStep4" disabled>SELECT
-                    </button>
-                  </fieldset>
-                  <fieldset id="step5">
-                    <div class="info-company">
-                    </div>
-                    <!-- none group -->
-                    <div hidden class="input-company">
-                      <h3 class="text-center py-2">Enter your company details</h3>
-                      <div class="form-group form-primary text-left">
-                        <input type="text" name="companyName" class="form-control" placeholder="Company Name">
-                        <span id="companyNameValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide company name.</span>
+
+                    <!-- Step 4: OTP (content injected from backend) -->
+                    <fieldset id="step2">
+                    </fieldset>
+
+                    <!-- Step 5: Activation (content injected from backend) -->
+                    <fieldset id="step3">
+                    </fieldset>
+
+                    <!-- fieldsets finish -->
+                    <fieldset data-title="Completed for company" data-description="">
+                      <div class="info-company-register"></div>
+                      <!-- <h6 style="margin-top: 100px; line-height: 24px;">An Email with your password has been sent to your mail 
+                        <br>Please use this to login to CashD to finalise your registration
+                      </h6>
+                      <div>
+                        <img src="/web-images/ic_submit_email_success.9.png" alt="img_mail" width="200">
                       </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="number" name="ABN" class="form-control"  placeholder="ABN">
-                        <span class="form-bar"></span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="email" name="companyEmail" class="form-control" placeholder="Company Email">
-                        <span id="companyEmailValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Company email is not valid.</span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <select class="form-control" name="companyCountryCode" id="companyCountryCode">
-                              <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
-                              <optgroup label="Other countries">
-                                <% countryCode.forEach(function(item) { %>
-                                  <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
-                                <% }) %>
-                              </optgroup>
-                            </select>
-                          </div>
-                          <div class="col-md-6">
-                            <input type="number" name="companyPhone" class="form-control" placeholder="Company Phone">
-                          </div>
-                        </div>
-                        <span class="form-bar"></span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="text" name="companyAddress" class="form-control" placeholder="Address">
-                        <span class="form-bar"></span>
-                      </div>
-                      <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
-                      <button type="button" id="submitCompanyInfo" class="btn btn-primary btn-md btn-step my-3">Submit</button>
-                    </div>
-                    <!-- end none  -->
-                    <!-- Astute -->
-                    <div hidden class="as-company">
-                      <div class="astute-logo">
-                        <img src="../../web-files/assets/images/astute_logo.png" alt="log-astute">
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="text" name="apiKey" class="form-control" placeholder="API Key">
-                        <span id="apiKeyValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Key.</span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="text" name="apiUserName" class="form-control" placeholder="API Username">
-                        <span id="apiUserNameValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Username.</span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="text" name="apiPassword" class="form-control" placeholder="API Password">
-                        <span id="apiPasswordValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Password.</span>
-                      </div>
-                      <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
-                      <button type="button" id="submitAstuteInfo" class="btn btn-primary btn-md btn-step my-3">Submit</button>
-                    </div>
-                    <!-- end  -->
-                    <!-- HR3 -->
-                    <div hidden class="as-company-hr3">
-                      <div class="hr3-logo">
-                        <img src="../../web-files/assets/images/logo-hr3.jpg" alt="log-HR3">
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="text" name="userNameHR3" class="form-control" placeholder="Email / Username">
-                        <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Email/Username.</span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="password" name="passwordHR3" class="form-control" placeholder="Password">
-                        <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Password.</span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <input type="text" name="apiKeyRH3" class="form-control" placeholder="API Key">
-                        <span hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide API Key.</span>
-                      </div>
-                      <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
-                      <button type="button" id="submitHR3Info" class="btn btn-primary btn-md btn-step my-3">Submit</button>
-                    </div>
-                    <!-- End HR3 -->
-                  </fieldset>
-                  <!-- fieldsets finish -->
-                  <fieldset>
-                    <h3>Completed for company</h3>
-                    <div class="info-company-register"></div>
-                    <!-- <h6 style="margin-top: 100px; line-height: 24px;">An Email with your password has been sent to your mail 
-                      <br>Please use this to login to CashD to finalise your registration
-                    </h6>
-                    <div>
-                      <img src="/web-images/ic_submit_email_success.9.png" alt="img_mail" width="200">
-                    </div>
-                    <div>
-                      <button class="btn btn-default btn-redirect-login" style="width: 50%">OK</button>
-                    </div> -->
-                  </fieldset>
-                </form>  
+                      <div>
+                        <button class="btn btn-default btn-redirect-login" style="width: 50%">OK</button>
+                      </div> -->
+                    </fieldset>
+                  </form>  
               </div>
             </div>
           </section> 
