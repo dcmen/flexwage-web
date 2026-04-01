@@ -15,11 +15,118 @@ $(document).ready(function() {
   const pupupHeight = screen.height - 200;
   const windowFeatures = `resizable,scrollbars=0,status,top=100,left=200,width=${pupupWidth},height=${pupupHeight}`;
   let codeSystem = '', current_step, next_step, tenantId, companyName, reckonSelected;
+  let lastSignupCodeSystem = ''; // hệ thống đã chọn lần trước (để không clear khi back step 1 rồi chọn lại đúng hệ thống đó)
   let accessToken, refreshToken, systemEmployeeList, systemCompany, systemUser, formUser, endpoint, systemCompanyId;
   let currentPageNumber = 0, checkData, request = null, companyIdKeypay, userRoot = {}, reckonReLogin = true, companies = {}, reckonUser, 
   astuteApiKey, astuteApiUserName, astuteApiPassword, userNameHR3, passwordHR3, apiKeyRH3, companyIdHR3; 
   let companiesAstute = {};
-  
+  let misaOtpSent = false;
+  let misaOtpResendIntervalId = null;
+
+  function clearMisaOtpResendCooldown() {
+    if (misaOtpResendIntervalId) {
+      clearInterval(misaOtpResendIntervalId);
+      misaOtpResendIntervalId = null;
+    }
+  }
+
+  /** Đếm ngược 30s: Resend disabled, hiển thị "in Ns." (giống design). */
+  function startMisaOtpResendCooldown(totalSeconds) {
+    clearMisaOtpResendCooldown();
+    const $btn = $('#misaOtpResend');
+    const $cd = $('#misaOtpResendCountdown');
+    if (!$btn.length) return;
+    let sec = totalSeconds;
+    $btn.prop('disabled', true);
+    $cd.text(' in ' + sec + 's.').show();
+    misaOtpResendIntervalId = setInterval(function () {
+      sec -= 1;
+      if (sec <= 0) {
+        clearMisaOtpResendCooldown();
+        $btn.prop('disabled', false);
+        $cd.text('').hide();
+        return;
+      }
+      $cd.text(' in ' + sec + 's.');
+    }, 1000);
+  }
+
+  /** Bước 3: MISA dùng 2 tab (chi tiết cá nhân / OTP). Các hệ thống khác chỉ hiện form + Complete. */
+  function setPersonalStepMisaMode(isMisa) {
+    if (isMisa) {
+      $('.misa-personal-tabs').removeAttr('hidden');
+      $('.misa-personal-tab-dot').removeClass('active');
+      $('.misa-personal-tab-dot[data-target="misa-personal-details"]').addClass('active');
+      $('.misa-personal-pane-details').removeAttr('hidden');
+      $('.misa-personal-pane-otp').attr('hidden', true);
+      $('#jsMisaPersonalNext').removeAttr('hidden');
+      $('#jsNextStep1').attr('hidden', true);
+    } else {
+      $('.misa-personal-tabs').attr('hidden', true);
+      $('.misa-personal-tab-dot').removeClass('active');
+      $('.misa-personal-tab-dot[data-target="misa-personal-details"]').addClass('active');
+      $('.misa-personal-pane-details').removeAttr('hidden');
+      $('.misa-personal-pane-otp').attr('hidden', true);
+      $('#jsMisaPersonalNext').attr('hidden', true);
+      $('#jsNextStep1').removeAttr('hidden');
+    }
+  }
+
+  function showMisaPersonalOtpTab() {
+    $('.misa-personal-tab-dot').removeClass('active');
+    $('.misa-personal-tab-dot[data-target="misa-personal-otp"]').addClass('active');
+    $('.misa-personal-pane-details').attr('hidden', true);
+    $('.misa-personal-pane-otp').removeAttr('hidden');
+    $('.misa-otp-email-hint').text(formUser && formUser.email ? formUser.email : '');
+    startMisaOtpResendCooldown(30);
+  }
+
+  function showMisaPersonalDetailsTab() {
+    clearMisaOtpResendCooldown();
+    $('#misaOtpResend').prop('disabled', false);
+    $('#misaOtpResendCountdown').text('').hide();
+    $('.misa-personal-tab-dot').removeClass('active');
+    $('.misa-personal-tab-dot[data-target="misa-personal-details"]').addClass('active');
+    $('.misa-personal-pane-otp').attr('hidden', true);
+    $('.misa-personal-pane-details').removeAttr('hidden');
+  }
+
+  function requestMisaRegisterOtp(callbackOnOk) {
+    const { email, firstName, lastName, countryCode, mobile  } = formUser;
+    const phone = countryCode ? `+${countryCode}${mobile}` : mobile;
+    $.ajax({
+      dataType: 'json',
+      method: 'POST',
+      url: '/get-OTPCode',
+      data: {
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        phone,
+        '_csrf': token,
+      },
+      async: true,
+      success: function (data) {
+        if (data.success) {
+          misaOtpSent = true;
+          if (typeof callbackOnOk === 'function') {
+            callbackOnOk();
+          } else {
+            hidenLoader();
+            showToast('success', 'Verification code sent to your email.');
+          }
+        } else {
+          hidenLoader();
+          showToast('error', data.message || 'Could not send verification code. Please try again.');
+        }
+      },
+      error: function () {
+        hidenLoader();
+        showToast('error', "Can't connect to server. Try again.");
+      },
+    });
+  }
+
   // initial step: payroll system integration (step4)
   current_step = $('#step4');
   next_step = $('#step4');
@@ -34,16 +141,39 @@ $(document).ready(function() {
         $('#jsSubmitStep3').trigger('click');
       } else if (event.target.id === 'otpCode') {
         $('#jsNextStep2').trigger('click');
+      } else if (event.target.id === 'misaOtpCode') {
+        $('#misaOtpComplete').trigger('click');
       } else if ($("#step5").find(`input[name='${event.target.name}']`).length > 0) {  
         if (!$("#jsChooseCompany").hasClass("show")) {
           if (event.target.name == "userNameHR3" || event.target.name == "passwordHR3" || event.target.name == "apiKeyRH3") {
             $('#submitHR3Info').trigger('click');
           } else if (event.target.name == "apiKey" || event.target.name == "apiUserName" || event.target.name == "apiPassword") {
             $('#submitAstuteInfo').trigger('click');
+          } else if (
+            codeSystem === 'MISA' &&
+            !$('.misa-api').attr('hidden') &&
+            [
+              'misaApiKey',
+              'misaApiUserName',
+              'misaApiPassword',
+              'employeeCentralConnectionId',
+              'employeeCentralPasscode',
+              'timekeepingConnectionId',
+              'timekeepingPasscode',
+              'salaryConnectionId',
+              'salaryPasscode'
+            ].includes(event.target.name)
+          ) {
+            $('#misaApiNextBtn').trigger('click');
           } else {
             $('#submitCompanyInfo').trigger('click');
           }
         }
+      } else if (
+        codeSystem === 'MISA' &&
+        $(event.target).closest('#stepPersonal .misa-personal-pane-details').length
+      ) {
+        $('#jsMisaPersonalNext').trigger('click');
       } else {
         $('#jsNextStep1').trigger('click');
       }
@@ -173,6 +303,25 @@ $(document).ready(function() {
   $(document).on('click', '.jsBackStep', function() {
     const fieldset = $(this).closest('fieldset');
 
+    // Trường hợp MISA đang ở tab 2 (company) của step 2: chỉ quay về tab 1 (API), không đổi step
+    if (fieldset.attr('id') === 'step5' && codeSystem === 'MISA' && !$('.misa-tabs').attr('hidden')) {
+      const $step5Dots = $('#step5 .misa-tabs .misa-tab-dot');
+      $step5Dots.removeClass('active');
+      $step5Dots.filter('[data-target="misa-api"]').addClass('active');
+      $('.misa-api').attr('hidden', false);
+      $('.input-company').attr('hidden', true);
+      return;
+    }
+
+    if (
+      fieldset.attr('id') === 'stepPersonal' &&
+      codeSystem === 'MISA' &&
+      !$('.misa-personal-pane-otp').attr('hidden')
+    ) {
+      showMisaPersonalDetailsTab();
+      return;
+    }
+
     if (fieldset.attr('id') === 'step5') {
       // Bước 2: luôn quay lại step 1 (Payroll System)
       current_step = fieldset;
@@ -202,8 +351,140 @@ $(document).ready(function() {
     animating = false;
 
   })
-  // Step 3: Complete – thu thập thông tin user và submit registration
+  // Step 3 (MISA): NEXT – gửi OTP, chuyển tab xác minh email
+  $('#jsMisaPersonalNext').click(function () {
+    current_step = $('#stepPersonal');
+    const email = $('#email').val();
+    const firstName = $('#firstName').val();
+    const lastName = $('#lastName').val();
+    const mobile = $('#mobile').val();
+    const countryCode = $('#selectedCountryCode').val();
+
+    if (!validateInput(current_step.find('.misa-personal-pane-details input'))) {
+      showToast('error', 'Please fill in all the required fields.');
+      return false;
+    }
+    if (!validateEmail(email)) {
+      showToast('error', 'Invalid Email address.');
+      return;
+    }
+
+    showLoader();
+
+    formUser = {
+      email,
+      firstName,
+      lastName,
+      countryCode,
+      mobile,
+    };
+
+    const systemId = systemCompany && systemCompany.system_company_id
+      ? systemCompany.system_company_id
+      : '';
+
+    systemUser = {
+      first_name: firstName,
+      last_name: lastName,
+      fullname: `${firstName} ${lastName}`.trim(),
+      mobile: countryCode ? `+${countryCode}${mobile}` : mobile,
+      email,
+      system_user_id: systemId,
+      system_employee_id: systemId,
+    };
+
+    requestMisaRegisterOtp(function () {
+      hidenLoader();
+      $('#misaOtpCode').val('');
+      showMisaPersonalOtpTab();
+    });
+  });
+
+  $('.misa-personal-tab-dot').on('click', function () {
+    if (codeSystem !== 'MISA') return;
+    var target = $(this).data('target');
+    if (target === 'misa-personal-details') {
+      showMisaPersonalDetailsTab();
+      return;
+    }
+    if (target === 'misa-personal-otp') {
+      if (!misaOtpSent) {
+        showToast('error', 'Please complete your details and tap NEXT to receive a code.');
+        return;
+      }
+      showMisaPersonalOtpTab();
+    }
+  });
+
+  $(document).on('click', '.jsMisaOtpBack', function () {
+    showMisaPersonalDetailsTab();
+  });
+
+  $('#misaOtpResend').on('click', function () {
+    if ($(this).prop('disabled')) return;
+    if (!formUser || !formUser.email) {
+      showToast('error', 'Please complete your personal details first.');
+      return;
+    }
+    if (!misaOtpSent) {
+      showToast('error', 'Use NEXT on the previous step first.');
+      return;
+    }
+    showLoader();
+    requestMisaRegisterOtp(function () {
+      hidenLoader();
+      showToast('success', 'A new verification code has been sent.');
+      startMisaOtpResendCooldown(30);
+    });
+  });
+
+  $('#misaOtpComplete').on('click', function () {
+    if (!formUser || !formUser.email) {
+      showToast('error', 'Please complete your personal details first.');
+      return;
+    }
+    const otpVal = ($('#misaOtpCode').val() || '').trim();
+    if (!otpVal) {
+      showToast('error', 'Please enter the verification code.');
+      return;
+    }
+    showLoader();
+    current_step = $('#stepPersonal');
+    next_step = $('#msform fieldset').last();
+    $.ajax({
+      dataType: 'json',
+      method: 'POST',
+      url: '/send-OTPCode',
+      data: {
+        email: formUser.email,
+        code: otpVal,
+        '_csrf': token,
+      },
+      async: true,
+      success: function (data) {
+        if (data.success) {
+          $('#misaOtpCode').val('');
+          submitFormRegister(current_step, next_step);
+        } else if (data.errorCode === 'FORGOT_PASSWORD_CODE_EXPIRED') {
+          hidenLoader();
+          showToast('error', 'Verification code expired.');
+        } else {
+          hidenLoader();
+          showToast('error', 'Incorrect code, please try again.');
+        }
+      },
+      error: function () {
+        hidenLoader();
+        showToast('error', 'Incorrect code, please try again.');
+      },
+    });
+  });
+
+  // Step 3: Complete – thu thập thông tin user và submit registration (không dùng khi MISA – dùng OTP tab)
   $('#jsNextStep1').click(function() {
+    if (codeSystem === 'MISA') {
+      return false;
+    }
     current_step = $(this).closest('fieldset');
     const email       = $("#email").val();
     const firstName   = $("#firstName").val();
@@ -410,6 +691,7 @@ $(document).ready(function() {
         hidenLoader();
         break;
       case 'ASTUTE':
+        lastSignupCodeSystem = codeSystem;
         successNextStep($('#step4'), $('#step4').next());
         showRegisterAstute();
         hidenLoader();
@@ -418,11 +700,26 @@ $(document).ready(function() {
         runLoginSystem(urlReckon, codeSystem);
         break;
       case 'NONE':
+      case 'TANCA':
+        if (lastSignupCodeSystem !== codeSystem) {
+          clearLocalPaymentDataAndFormFields();
+        }
+        lastSignupCodeSystem = codeSystem;
         successNextStep($('#step4'), $('#step4').next());
         showRegisterNone();
         hidenLoader();
         break;
+      case 'MISA':
+        if (lastSignupCodeSystem !== codeSystem) {
+          clearLocalPaymentDataAndFormFields();
+        }
+        lastSignupCodeSystem = codeSystem;
+        successNextStep($('#step4'), $('#step4').next());
+        showRegisterMisa();
+        hidenLoader();
+        break;
       case 'HR3':
+        lastSignupCodeSystem = codeSystem;
         successNextStep($('#step4'), $('#step4').next());
         showRegisterHR3();
         hidenLoader();
@@ -559,13 +856,16 @@ $(document).ready(function() {
         let itemsProcessed = 0;
         data.result.forEach((item, index, array) => {
           const id = `system-${item.code}`;
+          const isActive = item.active !== false;
+          const comingSoonHtml = !isActive ? ' <span style="color: #0066cc;">[Coming soon]</span>' : '';
+          const disabledAttr = !isActive ? ' disabled' : '';
           $('.system-list').append(
             `<div class="row mb-2">
               <div class="col-12">
                 <div class="form-check system-option">
-                  <input class="form-check-input checkbox-system" type="radio" name="payrollSystem" value="${item.code}" id="${id}">
+                  <input class="form-check-input checkbox-system" type="radio" name="payrollSystem" value="${item.code}" id="${id}"${disabledAttr}>
                   <label class="form-check-label" for="${id}">
-                    ${item.system_name}
+                    ${item.system_name}${comingSoonHtml}
                   </label>
                 </div>
               </div>
@@ -573,7 +873,7 @@ $(document).ready(function() {
           );
           itemsProcessed++;
           if (itemsProcessed === array.length) {
-            let checkboxs = $('.checkbox-system');
+            let checkboxs = $('.checkbox-system:not(:disabled)');
             checkboxs.click(function (e) {
               // với radio, browser tự đảm bảo chỉ chọn một; giữ lại để chắc chắn
               checkboxs.each(function () {
@@ -869,6 +1169,7 @@ $(document).ready(function() {
 
   // show info company and prefill forms
   function showInfoSignup(user, root) {
+    lastSignupCodeSystem = codeSystem;
     const hasUser = !!user;
     const userFullName = hasUser
       ? (user.firstName ? (user.firstName + " " + (user.lastName || "")) : (user.fullname || ""))
@@ -878,29 +1179,39 @@ $(document).ready(function() {
       ? ('+' + (user.countryCode || '') + user.mobile)
       : "";
 
-    // Prefill company details step if fields are empty
-    if (root.company_name && $("input[name='companyName']").length && !$("input[name='companyName']").val()) {
+    // Đổ dữ liệu từ hệ thống thanh toán (có thì đổ đè lên ô trước đó đã nhập)
+    if (root.company_name && $("input[name='companyName']").length) {
       $("input[name='companyName']").val(root.company_name);
+      lockFieldFromApi("input[name='companyName']");
     }
-    if (root.abn && $("input[name='ABN']").length && !$("input[name='ABN']").val()) {
+    if (root.abn && $("input[name='ABN']").length) {
       $("input[name='ABN']").val(root.abn);
+      lockFieldFromApi("input[name='ABN']");
     }
-    if (root.address && $("input[name='companyAddress']").length && !$("input[name='companyAddress']").val()) {
+    if (root.address && $("input[name='companyAddress']").length) {
       $("input[name='companyAddress']").val(root.address);
     }
-    if (root.email && $("input[name='companyEmail']").length && !$("input[name='companyEmail']").val()) {
-      $("input[name='companyEmail']").val(root.email);
-    }
 
-    // Prefill personal details step if fields are empty
-    if (hasUser && user.firstName && $("#firstName").length && !$("#firstName").val()) {
-      $("#firstName").val(root.first_name);
+    // Đổ dữ liệu personal từ hệ thống thanh toán (có thì đổ đè)
+    if (hasUser && (user.first_name || user.firstName) && $("#firstName").length) {
+      $("#firstName").val(user.first_name || user.firstName);
     }
-    if (hasUser && user.lastName && $("#lastName").length && !$("#lastName").val()) {
-      $("#lastName").val(root.last_name);
+    if (hasUser && (user.last_name || user.lastName) && $("#lastName").length) {
+      $("#lastName").val(user.last_name || user.lastName);
     }
-    if (hasUser && user.email && $("#email").length && !$("#email").val()) {
+    if (hasUser && user.email && $("#email").length) {
       $("#email").val(user.email);
+      lockFieldFromApi("#email");
+    }
+    if (hasUser && user.mobile != null && user.mobile !== '' && $("#mobile").length) {
+      let mobileStr = String(user.mobile).trim();
+      if (user.countryCode && mobileStr.startsWith('+' + user.countryCode)) {
+        mobileStr = mobileStr.slice(String(user.countryCode).length + 1).replace(/^[^\d]*/, '');
+      }
+      $("#mobile").val(mobileStr);
+    }
+    if (hasUser && user.countryCode != null && $("#selectedCountryCode").length) {
+      $("#selectedCountryCode").val(user.countryCode);
     }
 
     // always show standard company-detail form (same layout as system NONE)
@@ -1787,7 +2098,137 @@ $(document).ready(function() {
 
   //-------------------- Employer None ---------------------//
 
+  /** Lock field and show lock icon when value is from payroll system API (readonly, not editable) */
+  function lockFieldFromApi(inputSelector) {
+    const $input = $(inputSelector);
+    if (!$input.length) return;
+    $input.prop('readonly', true);
+    $input.closest('.input-with-lock-wrap').find('.input-lock-icon').removeClass('d-none');
+  }
+
+  /** Unlock field and hide lock icon (selector string hoặc jQuery object) */
+  function unlockField(inputSelector) {
+    const $input = typeof inputSelector === 'string' ? $(inputSelector) : inputSelector;
+    if (!$input || !$input.length) return;
+    $input.prop('readonly', false);
+    $input.closest('.input-with-lock-wrap').find('.input-lock-icon').addClass('d-none');
+  }
+
+  /** Đọc form tab company (.input-company) thành object */
+  function readInputCompanyFormBody() {
+    var body = {};
+    $('.input-company input').each(function() {
+      body[$(this).attr('name')] = $(this).val();
+    });
+    body.companyCountryCode = $('#companyCountryCode').val();
+    return body;
+  }
+
+  /** Merge systemCompany từ form tab 2 (phone, address, abn, tên hiển thị) */
+  function syncSystemCompanyFromInputCompanyForm() {
+    if (!systemCompany) return;
+    var body = readInputCompanyFormBody();
+    var phone =
+      body.companyPhone && String(body.companyPhone).trim() !== ''
+        ? '+' + body.companyCountryCode + body.companyPhone
+        : null;
+    $.extend(systemCompany, {
+      company_name: (body.companyName || '').trim() || systemCompany.company_name,
+      phone_company: phone,
+      address: (body.companyAddress || '').trim() || null,
+      abn: body.abn != null && body.abn !== '' ? String(body.abn) : null,
+    });
+  }
+
+  /** Điền tab 2 (MISA / manual company) từ bản ghi đơn vị AMIS */
+  function fillInputCompanyFormFromMisaOrganization(org) {
+    if (!org) return;
+    unlockField("input[name='companyName']");
+    $("input[name='companyName']").val(org.OrganizationUnitName || '');
+    lockFieldFromApi("input[name='companyName']");
+    unlockField("input[name='ABN']");
+    $("input[name='ABN']").val('');
+    $("input[name='companyPhone']").val('');
+    $("input[name='companyAddress']").val('');
+    $('#companyNameValidate').attr('hidden', true);
+    $('.input-company input').css('border-color', '#ccc');
+  }
+
+  /** Đổ systemUser (nếu có) vào bước Personal Details sau khi sang step tương ứng (không dùng cho MISA). */
+  function applyPrefillPersonalDetailsFromSystemUser() {
+    if (!systemUser) return;
+    if ((systemUser.first_name || systemUser.firstName) && $('#firstName').length) {
+      $('#firstName').val(systemUser.first_name || systemUser.firstName);
+    }
+    if ((systemUser.last_name || systemUser.lastName) && $('#lastName').length) {
+      $('#lastName').val(systemUser.last_name || systemUser.lastName);
+    }
+    if (systemUser.email && $('#email').length) {
+      $('#email').val(systemUser.email);
+      lockFieldFromApi("#email");
+    }
+    if (systemUser.mobile != null && systemUser.mobile !== '' && $('#mobile').length) {
+      let mobileStr = systemUser.mobile.toString().trim();
+      const selectedCode = $('#selectedCountryCode').val();
+      if (selectedCode && mobileStr.startsWith('+' + selectedCode)) {
+        mobileStr = mobileStr.slice(1 + selectedCode.length).replace(/^[^\d]*/, '');
+      }
+      $('#mobile').val(mobileStr);
+    }
+    if (systemUser.countryCode != null && $('#selectedCountryCode').length) {
+      $('#selectedCountryCode').val(systemUser.countryCode);
+    }
+  }
+
+  /** Xoá hết dữ liệu local từ hệ thống thanh toán và clear các field form (dùng khi chọn hệ thống không phải thanh toán) */
+  function clearLocalPaymentDataAndFormFields() {
+    systemCompany = {};
+    systemUser = null;
+    systemEmployeeList = [];
+    formUser = null;
+    accessToken = undefined;
+    refreshToken = undefined;
+    // Clear step 2 - company fields
+    $(".input-company input").each(function() {
+      $(this).val('');
+      unlockField($(this));
+    });
+    $(".input-company select").each(function() {
+      $(this).val($(this).find('option').first().val());
+    });
+    // Clear step 3 - personal fields
+    $('#firstName').val('');
+    $('#lastName').val('');
+    $('#email').val('');
+    $('#mobile').val('');
+    if ($('#selectedCountryCode').length) {
+      $('#selectedCountryCode').val($('#selectedCountryCode').find('option').first().val());
+    }
+    unlockField('#firstName');
+    unlockField('#lastName');
+    unlockField('#email');
+    unlockField('#mobile');
+    unlockField("input[name='companyName']");
+    unlockField("input[name='ABN']");
+
+    // Clear step 2 - MISA API fields
+    $(".misa-api input").each(function() {
+      $(this).val('');
+    });
+    $('#employeeCentralConnectionIdValidate, #employeeCentralPasscodeValidate, #timekeepingConnectionIdValidate, #timekeepingPasscodeValidate, #salaryConnectionIdValidate, #salaryPasscodeValidate')
+      .attr('hidden', true);
+
+    misaOtpSent = false;
+    $('#misaOtpCode').val('');
+    clearMisaOtpResendCooldown();
+    $('#misaOtpResend').prop('disabled', false);
+    $('#misaOtpResendCountdown').text('').hide();
+    setPersonalStepMisaMode(false);
+  }
+
   function showRegisterNone() {
+    $('.misa-tabs').attr('hidden', true);
+    $('.misa-api').attr('hidden', true);
     $('.input-company').attr('hidden', false);
     $('.as-company').attr('hidden', true);
     $('.as-company-hr3').attr('hidden', true);
@@ -1804,11 +2245,6 @@ $(document).ready(function() {
     inputs.each(function(e) {
       const name = $(this).attr("name");
       const value = $(this).val();
-      if (name === 'companyEmail' && value.trim() !== "" && !validateEmail(value.trim())) {
-        $(`input[name='${name}']`).css("border-color", "rgb(225 0 0)");
-        $(`#${name}Validate`).attr('hidden', false);
-        isValidate = false;
-      }
       body[name] = value;
     });
     if ((body.companyName).trim() === "") {
@@ -1823,68 +2259,50 @@ $(document).ready(function() {
     body.companyCountryCode = $('#companyCountryCode').val();
 
     if (isValidate) {
-      // lưu company vào local biến systemCompany như flow cũ
-      systemCompany = {
-        system_company_id: body.companyName, 
-        company_name: body.companyName,
-        phone_company: '+' + body.companyCountryCode + body.companyPhone || null,
-        address: body.companyAddress || null,
-        abn: body.abn || null
-      };
+      var phoneVal =
+        body.companyPhone && String(body.companyPhone).trim() !== ''
+          ? '+' + body.companyCountryCode + body.companyPhone
+          : null;
+      if (codeSystem === 'MISA' && systemCompany && systemCompany.misa_organization_unit_id != null) {
+        systemCompany = $.extend({}, systemCompany, {
+          company_name: body.companyName,
+          phone_company: phoneVal,
+          address: (body.companyAddress || '').trim() || null,
+          abn: body.abn != null && body.abn !== '' ? String(body.abn) : null,
+        });
+      } else {
+        systemCompany = {
+          system_company_id: body.companyName,
+          company_name: body.companyName,
+          phone_company: phoneVal,
+          address: body.companyAddress || null,
+          abn: body.abn != null && body.abn !== '' ? String(body.abn) : null,
+        };
+      }
 
       // chuyển sang bước 3: personal details, không gọi submitFormRegister
       current_step = $('#step5');
-      next_step = $('#step5').next();
+      next_step = $('#stepPersonal');
       successNextStep(current_step, next_step);
 
-      // sau khi sang bước 3, nếu có dữ liệu người dùng từ hệ thống payroll, prefill vào form
-      if (systemUser) {
-        if (systemUser.first_name && $('#firstName').length && !$('#firstName').val()) {
-          $('#firstName').val(systemUser.first_name);
-        }
-        if (systemUser.last_name && $('#lastName').length && !$('#lastName').val()) {
-          $('#lastName').val(systemUser.last_name);
-        }
-        if (systemUser.email && $('#email').length && !$('#email').val()) {
-          $('#email').val(systemUser.email);
-        }
-        // với Deputy: PrimaryPhone đã được map vào systemUser.mobile
-        if (systemUser.mobile && $('#mobile').length && !$('#mobile').val()) {
-          let mobileStr = systemUser.mobile.toString().trim();
-          const selectedCode = $('#selectedCountryCode').val();
+      misaOtpSent = false;
+      $('#misaOtpCode').val('');
+      if (codeSystem === 'MISA') {
+        setPersonalStepMisaMode(true);
+      } else {
+        setPersonalStepMisaMode(false);
+      }
 
-          if (selectedCode) {
-            // Chỉ tách country code khi chắc chắn khớp với dropdown.
-            // Ví dụ: selectedCode = "61" và số dạng "+61xxxxxxxx".
-            if (mobileStr.startsWith('+' + selectedCode)) {
-              mobileStr = mobileStr.slice(1 + selectedCode.length);
-              // loại bỏ khoảng trắng/thành phần không phải số ở đầu sau khi cắt
-              mobileStr = mobileStr.replace(/^[^\d]*/, '');
-            }
-          } else {
-            // không có country code → hiển thị nguyên số (chỉ trim khoảng trắng)
-            mobileStr = mobileStr;
-          }
-
-          $('#mobile').val(mobileStr);
-        }
+      if (codeSystem !== 'MISA') {
+        applyPrefillPersonalDetailsFromSystemUser();
       }
     }
 
   });
 
-  $("input[name='companyName'], input[name='companyEmail']").on('paste keydown click', function(e) {
-    let iValidate = false;
+  $("input[name='companyName']").on('paste keydown click', function(e) {
     const name = $(this).attr("name");
-    if (($(this).val()).trim() !== "" && name === 'companyName') {
-      iValidate = true;
-    } else if (($(this).val()).trim() === "" && name !== 'companyName') {
-      iValidate = true;
-    } else {
-      iValidate = validateEmail($(this).val());
-    }
-
-    if (iValidate) {
+    if (($(this).val()).trim() !== "") {
       $(this).css("border-color", "#ccc");
       $(`#${name}Validate`).attr('hidden', true);
     }
@@ -1896,9 +2314,188 @@ $(document).ready(function() {
 
   function showRegisterAstute() {
     $('.modal-chooseCompany .form-login-checkbox').remove();
+    $('.misa-tabs').attr('hidden', true);
+    $('.misa-api').attr('hidden', true);
     $('.as-company-hr3').attr('hidden', true);
     $('.as-company').attr('hidden', false);
   }
+
+  //----------------------------- Employer MISA ---------------------------//
+
+  function showRegisterMisa() {
+    $('.modal-chooseCompany .form-login-checkbox').remove();
+    $('.misa-tabs').attr('hidden', false);
+    $('.as-company').attr('hidden', true);
+    $('.as-company-hr3').attr('hidden', true);
+    // Mặc định: màn API (dot 1 trái); chỉ dot trong #step5 .misa-tabs, không đụng tab Personal
+    const $step5Dots = $('#step5 .misa-tabs .misa-tab-dot');
+    $step5Dots.removeClass('active');
+    $step5Dots.filter('[data-target="misa-api"]').addClass('active');
+    $('.misa-api').attr('hidden', false);
+    $('.input-company').attr('hidden', true);
+  }
+
+  // Đổi tab giữa API và Company (chỉ dot trong step 5)
+  $('#step5 .misa-tabs').on('click', '.misa-tab-dot', function() {
+    var target = $(this).data('target');
+    const $step5Dots = $('#step5 .misa-tabs .misa-tab-dot');
+    $step5Dots.removeClass('active');
+    $(this).addClass('active');
+    if (target === 'misa-api') {
+      $('.misa-api').attr('hidden', false);
+      $('.input-company').attr('hidden', true);
+    } else {
+      $('.misa-api').attr('hidden', true);
+      $('.input-company').attr('hidden', false);
+    }
+  });
+
+  //---------------------- End Employer MISA -----------------//
+
+  // Nút Back/Next riêng cho tab 1 MISA (API)
+  $('#misaApiBackBtn').on('click', function() {
+    // quay về step 1 giống jsBackStep cho step5
+    current_step = $('#step5');
+    previous_step = $('#step4');
+
+    const currentIndex  = $("fieldset").index(current_step);
+    const previousIndex = $("fieldset").index(previous_step);
+    $(".progressbar li").eq(currentIndex).removeClass("active");
+    $(".progressbar li").eq(previousIndex).addClass("active");
+    if (previousIndex === 0) {
+      $(".progressbar li").removeClass("active complete");
+      $(".progressbar li").eq(0).addClass("active");
+    }
+    updateStepHeader(previous_step);
+    current_step.hide();
+    previous_step.css({ left: 0, opacity: 1, transform: 'scale(1)' }).show();
+    animating = false;
+  });
+
+  $('#misaApiNextBtn').on('click', function() {
+    const invalidColor = "rgb(225 0 0)";
+    const normalColor = "#ccc";
+
+    function setInvalid(inputSelector, spanSelector) {
+      const $input = $(inputSelector);
+      const $span = $(spanSelector);
+      if ($input && $input.length) $input.css('border-color', invalidColor);
+      if ($span && $span.length) $span.attr('hidden', false);
+    }
+
+    function setValid(inputSelector, spanSelector) {
+      const $input = $(inputSelector);
+      const $span = $(spanSelector);
+      if ($input && $input.length) $input.css('border-color', normalColor);
+      if ($span && $span.length) $span.attr('hidden', true);
+    }
+
+    const empConn = ($('#employeeCentralConnectionId').val() || '').trim();
+    const empPass = ($('#employeeCentralPasscode').val() || '').trim();
+
+    const tkConn = ($('#timekeepingConnectionId').val() || '').trim();
+    const tkPass = ($('#timekeepingPasscode').val() || '').trim();
+
+    const salConn = ($('#salaryConnectionId').val() || '').trim();
+    const salPass = ($('#salaryPasscode').val() || '').trim();
+
+    let isValidate = true;
+
+    // Employee Central: mandatory (both Connection ID + Passcode)
+    if (!empConn) { setInvalid('#employeeCentralConnectionId', '#employeeCentralConnectionIdValidate'); isValidate = false; }
+    else { setValid('#employeeCentralConnectionId', '#employeeCentralConnectionIdValidate'); }
+
+    if (!empPass) { setInvalid('#employeeCentralPasscode', '#employeeCentralPasscodeValidate'); isValidate = false; }
+    else { setValid('#employeeCentralPasscode', '#employeeCentralPasscodeValidate'); }
+
+    // Timekeeping: optional, but if user fills one of them -> require both
+    const tkAny = tkConn !== '' || tkPass !== '';
+    if (tkAny) {
+      if (!tkConn) { setInvalid('#timekeepingConnectionId', '#timekeepingConnectionIdValidate'); isValidate = false; }
+      else { setValid('#timekeepingConnectionId', '#timekeepingConnectionIdValidate'); }
+
+      if (!tkPass) { setInvalid('#timekeepingPasscode', '#timekeepingPasscodeValidate'); isValidate = false; }
+      else { setValid('#timekeepingPasscode', '#timekeepingPasscodeValidate'); }
+    } else {
+      setValid('#timekeepingConnectionId', '#timekeepingConnectionIdValidate');
+      setValid('#timekeepingPasscode', '#timekeepingPasscodeValidate');
+    }
+
+    // Salary: optional, but if user fills one of them -> require both
+    const salAny = salConn !== '' || salPass !== '';
+    if (salAny) {
+      if (!salConn) { setInvalid('#salaryConnectionId', '#salaryConnectionIdValidate'); isValidate = false; }
+      else { setValid('#salaryConnectionId', '#salaryConnectionIdValidate'); }
+
+      if (!salPass) { setInvalid('#salaryPasscode', '#salaryPasscodeValidate'); isValidate = false; }
+      else { setValid('#salaryPasscode', '#salaryPasscodeValidate'); }
+    } else {
+      setValid('#salaryConnectionId', '#salaryConnectionIdValidate');
+      setValid('#salaryPasscode', '#salaryPasscodeValidate');
+    }
+
+    if (!isValidate) {
+      showToast('error', 'Please check MISA connection/passcode fields.');
+      return;
+    }
+
+    showLoader();
+    $.ajax({
+      dataType: 'json',
+      method: 'POST',
+      url: '/misa/get-organization-unit',
+      data: {
+        employeeCentralConnectionId: empConn,
+        employeeCentralPasscode: empPass,
+        timekeepingConnectionId: tkConn || '',
+        timekeepingPasscode: tkPass || '',
+        salaryConnectionId: salConn || '',
+        salaryPasscode: salPass || '',
+        '_csrf': token,
+      },
+      success: function (response) {
+        hidenLoader();
+        if (response.code !== 200 || !response.success || !response.result) {
+          showToast('error', response.message || 'Cannot load company from MISA.');
+          return;
+        }
+        var r = response.result;
+        var org = r.organization;
+        systemCompany = $.extend({}, r.systemCompany, {
+          employee_central_connection_id: empConn,
+          employee_central_passcode: empPass,
+          timekeeping_connection_id: tkConn || '',
+          timekeeping_passcode: tkPass || '',
+          payroll_connection_id: salConn || '',
+          payroll_passcode: salPass || '',
+        });
+
+        systemUser = null;
+
+        if (systemCompany.company_name) {
+          userRoot.company_name = systemCompany.company_name;
+        }
+
+        // Tab 2 bước 2: hiển thị & đồng bộ form công ty từ MISA
+        const $step5Dots = $('#step5 .misa-tabs .misa-tab-dot');
+        $step5Dots.removeClass('active');
+        $step5Dots.filter('[data-target="misa-company"]').addClass('active');
+        $('.misa-api').attr('hidden', true);
+        $('.input-company').attr('hidden', false);
+        fillInputCompanyFormFromMisaOrganization(org);
+        syncSystemCompanyFromInputCompanyForm();
+        // Dừng ở tab 2: user bắt buộc bấm NEXT (#submitCompanyInfo) để sang bước 3
+      },
+      error: function (xhr) {
+        hidenLoader();
+        var msg = "Can't connect to MISA. Please try again.";
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+          msg = xhr.responseJSON.message;
+        }
+        showToast('error', msg);
+      }
+    });
+  });
 
   $(document).on('click', '#submitAstuteInfo', function (e) {
     showLoader();

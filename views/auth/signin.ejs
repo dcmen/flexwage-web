@@ -14,20 +14,30 @@
   <% include ../layouts/stylesheet %>
   <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
   <style>
-    .flex-grow {
-      flex-grow: 1;
+    /* Đồng bộ style field/button với trang đăng ký */
+    .signup-block .form-control:not([readonly]) { background-color: #fff; }
+    .signup-block .form-control[readonly] { background-color: #e9ecef; }
+    /* Khung trắng bên phải bung ra max (full phần còn lại) */
+    .signin-page .signup-main {
+      flex: 1;
+      min-width: 0;
     }
-    .nodata-text {
-      padding-top: 30px;
-      min-height: 100px;
-      text-align: center;
-    }
+    .signin-page .signup-main-title { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+    .signin-page .signup-main-subtitle { font-size: 13px; color: #9ca3af; margin-bottom: 24px; }
+    .signin-page .signup-main .btn-step { width: 100%; justify-content: center; }
+    .signin-page .signup-main .signin-footer { text-align: center; margin-top: 24px; padding-top: 16px; }
+    /* Checkbox chuẩn: native style, căn chỉnh đúng */
+    .signin-page .signin-remember { display: flex; align-items: center; gap: 8px; cursor: pointer; margin: 0; font-weight: 400; }
+    .signin-page .signin-remember input[type="checkbox"] { width: 18px; height: 18px; margin: 0; cursor: pointer; accent-color: #2563eb; flex-shrink: 0; }
+    .signin-page .signin-remember .signin-remember-text { user-select: none; }
+    .flex-grow { flex-grow: 1; }
+    .nodata-text { padding-top: 30px; min-height: 100px; text-align: center; }
     input.text-secure {
-            text-security: disc;
-            -webkit-text-security: disc;
-            -mox-text-security:disc;
-            -moz-text-security:disc;
-        }   
+      text-security: disc;
+      -webkit-text-security: disc;
+      -mox-text-security: disc;
+      -moz-text-security: disc;
+    }
   </style>
 </head>
 
@@ -39,16 +49,16 @@
     </div>
   </div>
   <% include ../layouts/preloader %>
-  <section class="login-block">
-    <div id="jsLoader">
-      <div class="loader">
-        <div class="loader-chiled"></div>
-      </div>
+  <div id="jsLoader">
+    <div class="loader">
+      <div class="loader-chiled"></div>
     </div>
+  </div>
+  <section class="signup-block signin-page">
     <!--Navbar Menu-->
     <nav class="navbar navbar-expand-lg navbar-light bg-primary navbar-menu">
       <div class="text-center img-logo">
-        <a href="/"><img src="../../web-files/assets/images/CashD-logo.png" width="100%" alt="CashD Logo"></a>
+        <a href="/"><img src="../../web-files/assets/images/flexwagely_logo.png" width="100%" alt="FlexWagely Logo"></a>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +69,7 @@
           <li class="nav-item active nav-item--border-custom">
             <a class="nav-link" href="javascript:void(0)">Home</a>
           </li>
-          <li class="nav-item  nav-item--border-custom">
+          <li class="nav-item nav-item--border-custom">
             <a class="nav-link" href="javascript:void(0)" onClick="alert('Coming soon!')">About</a>
           </li>
           <li class="nav-item pr-5">
@@ -73,16 +83,13 @@
         </ul>
       </div>
     </nav>
-    <!-- Container-fluid starts -->
-    <div id="jsFormLogin" class="container mt-5 pt-5 hide">
+    <!-- Container -->
+    <div id="jsFormLogin" class="container mt-5 hide">
       <div class="row">
         <div class="col-sm-12">
-          <!-- URL -->
           <input type="hidden" id="urlKeyPay" value="<%= urlKeyPay %>">
           <input type="hidden" id="urlXeRo" value="<%= urlXero %>">
           <input type="hidden" id="urlDeputy" value="<%= urlDeputy %>">
-          <!-- End URL-->
-          <!-- Authentication card start -->
           <form class="md-float-material form-material" action="/signin" method="POST">
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
             <input type="hidden" name="device_token" id="device_token">
@@ -90,14 +97,26 @@
             <script>
               document.getElementById('time_offset').value = Math.abs(new Date().getTimezoneOffset()) * 60 * 1000;
             </script>
-            <div class="auth-box card">
-              <div class="card-block card-block--custom">
-                <div class="row m-b-20">
-                  <div class="col-md-12">
-                    <h3 class="text-left">Sign In</h3>
+            <div class="auth-box card signup-card">
+              <div class="card-block signup-layout">
+                <!-- Left sidebar (giống đăng ký) -->
+                <aside class="signup-sidebar">
+                  <div class="signup-brand">
+                    <span class="signup-brand-text">FlexWagely</span>
                   </div>
-                </div>
-                <div class="form-group form-primary">
+                  <div class="signup-sidebar-intro">
+                    <p>
+                      An earned wage access platform that lets employees access their pay as they earn it,
+                      powered by timesheet/payroll integration.
+                    </p>
+                  </div>
+                </aside>
+                <!-- Right: form Sign In (bố cục giống mẫu) -->
+                <div class="signup-main">
+                  <div class="mb-4">
+                    <p class="signup-main-subtitle mb-1">Please enter your details</p>
+                    <h2 class="signup-main-title">Welcome back</h2>
+                  </div>
                   <% if(errorMessage) { %>
                   <div class="alert alert-danger">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -106,68 +125,39 @@
                     <%= errorMessage %>
                   </div>
                   <% } %>
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <span class="feather icon-mail"></span>
-                      </div>
-                    </div>
-                    <input type="email" name="email" class="form-control input-email" required="" placeholder="Email"
-                      value="<%= email  ? email : null %>">
+                  <div class="form-group form-primary text-left">
+                    <input type="email" name="email" class="form-control" required="" placeholder="Email address"
+                      value="<%= email ? email : '' %>" autocomplete="email">
                     <span class="form-bar"></span>
                   </div>
-                </div>
-                <div class="form-group form-primary">
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <span class="feather icon-unlock"></span>
-                      </div>
-                    </div>
-                    <input id="password-field" type="password" name="password" class="form-control input-password"
-                      required="" placeholder="Password" value="<%= password ? password : null %>">
+                  <div class="form-group form-primary text-left mb-0">
+                    <input id="password-field" type="password" name="password" class="form-control"
+                      required="" placeholder="Password" value="<%= password ? password : '' %>" autocomplete="current-password">
                     <span class="form-bar"></span>
-                    <div class="input-group-prepend">
-                      <div class="input-group-text">
-                        <span toggle="#password-field" class="feather icon-eye toggle-password"></span>
-                      </div>
-                    </div>
                   </div>
-                </div>
-                <div class="row m-t-25 text-left">
-                  <div class="col-12">
-                    <div class="checkbox-fade fade-in-primary d-flex justify-content-between">
-                      <label>
-                        <input id="jsCheckbox" type="checkbox" value="">
-                        <span class="cr"><i class="cr-icon icofont icofont-ui-check txt-primary"></i></span>
-                        <span class="text-inverse">Remember me</span>
-                      </label>
-                      <a href="/forgot-password">Forgot Password?</a>
-                    </div>
+                  <div class="d-flex justify-content-between align-items-center mt-2 mb-3">
+                    <label class="signin-remember">
+                      <input id="jsCheckbox" type="checkbox" value="">
+                      <span class="signin-remember-text">Remember me</span>
+                    </label>
+                    <a href="/forgot-password">Forgot password</a>
                   </div>
-                </div>
-                <div class="row m-t-30">
-                  <div class="col-md-12">
-                    <button type="submit"
-                      class="btn btn-primary btn-md btn-block waves-effect waves-light d-flex justify-content-between align-items-center m-b-20">Sign
-                      in
-                      <i class="icofont icofont-arrow-right"></i>
+                  <div class="form-group form-primary">
+                    <button type="submit" class="btn btn-primary btn-md btn-step">
+                      Sign in
+                      <i class="icofont icofont-arrow-right ml-1"></i>
                     </button>
                   </div>
-                </div>
-                <div class="float-right">
-                  <span>No account yet?</span>
-                  <a style="padding-left: 10px;" href="/signup">Sign up</a>
-                  <i style=" color: #007bff" class="icofont icofont-rounded-right"></i>
+                  <div class="signin-footer">
+                    <span>Don't have an account?</span>
+                    <a href="/signup">Sign up</a>
+                  </div>
                 </div>
               </div>
             </div>
           </form>
-          <!-- end of form -->
         </div>
-        <!-- end of col-sm-12 -->
       </div>
-      <!-- end of row -->
     </div>
     <div class="container mt-5 pt-5">
       <!-- Modal Change password Admin-->

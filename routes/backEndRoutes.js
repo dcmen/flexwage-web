@@ -11,6 +11,7 @@ const TransactionController = require('../controllers/web-admin/transactions.con
 const paymentSystemsController = require('.././controllers/web-admin/paymentSystem.controller.js')
 const AdminController = require('../controllers/web-admin/admin.controller');
 const { companyEntityQuery } = require('../controllers/web-admin/astute.controller');
+const { getOrganizationUnit } = require('../controllers/web-admin/misa.controller');
 const { userAuthorized } = require('../controllers/web-admin/hr3.controller');
 const { validateParamAPIUserAuthorized } = require('../validates/hr3.validate');
 
@@ -186,6 +187,9 @@ router.get("/bsb/australia", CompanyController.getBSB);
 
 // ASTUTE
 router.post('/astute/company-entity-query', companyEntityQuery);
+
+// MISA AMIS — proxy tới HRM Open API (CORS + HMAC token server-side)
+router.post('/misa/get-organization-unit', getOrganizationUnit);
 
 // HR3
 router.post('/hr3/request-user-authorized', validateParamAPIUserAuthorized, userAuthorized);

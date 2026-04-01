@@ -13,6 +13,149 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <% include ../layouts/stylesheet %>
   <link rel="stylesheet" type="text/css" href="../../web-files/assets/icon/icofont/css/icofont.css">
+  <style>
+    /* Tất cả field nhập liệu: không LOCK = trắng, LOCK (readonly) = xám */
+    .signup-block .form-control:not([readonly]) { background-color: #fff; }
+    .signup-block .form-control[readonly] { background-color: #e9ecef; }
+    .input-with-lock-wrap { position: relative; }
+    .input-with-lock-wrap .form-control { padding-right: 2.5rem; }
+    .input-with-lock-wrap .input-lock-icon { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); color: #6c757d; pointer-events: none; font-size: 1rem; }
+    /* Country code: mũi tên margin-right 15px, text căn giữa dọc */
+    .signup-block #companyCountryCode,
+    .signup-block #selectedCountryCode {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 10px 10px;
+      padding-right: 35px;
+      height: 48px;
+      line-height: 48px;
+      padding-top: 0;
+      padding-bottom: 0;
+      box-sizing: border-box;
+    }
+    /* MISA tabs (dấu chấm) cho bước 2 */
+    .misa-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .misa-tab-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      border: none;
+      background-color: #d1d5db;
+      padding: 0;
+    }
+    .misa-tab-dot.active {
+      background-color: #2563eb;
+    }
+    .misa-module {
+      margin-bottom: 16px;
+    }
+    .misa-module-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px 16px;
+      margin-bottom: 12px;
+    }
+    .misa-module-header .misa-module-title {
+      margin-bottom: 0;
+    }
+    .misa-module-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1b3a5b;
+    }
+    /* Ghi đè font đậm từ theme — chữ mảnh, nghiêng */
+    .signup-block .misa-api a.misa-amis-help-link,
+    .signup-block .misa-api a.misa-amis-help-link:hover,
+    .signup-block .misa-api a.misa-amis-help-link:focus {
+      font-size: 14px;
+      font-weight: 300 !important;
+      font-style: italic !important;
+      font-synthesis: none;
+      color: #2563eb;
+      text-decoration: underline;
+      white-space: nowrap;
+    }
+    .signup-block .misa-api a.misa-amis-help-link:hover,
+    .signup-block .misa-api a.misa-amis-help-link:focus {
+      color: #1d4ed8;
+    }
+    .required-star {
+      color: #e60000;
+      font-weight: 700;
+    }
+    /* MISA bước 3: tab Personal / Verify email (OTP) */
+    .misa-personal-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .misa-personal-pane-otp {
+      text-align: left;
+    }
+    .misa-otp-intro {
+      font-size: 15px;
+      color: #374151;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+    .misa-otp-intro strong {
+      color: #1b3a5b;
+    }
+    #misaOtpCode {
+      text-align: center;
+      letter-spacing: 0.12em;
+      font-size: 18px;
+    }
+    .misa-otp-resend-line {
+      margin-top: 8px;
+      margin-bottom: 0;
+      font-size: 14px;
+      color: #374151;
+      line-height: 1.5;
+    }
+    .misa-otp-resend-link {
+      display: inline;
+      padding: 0;
+      margin: 0;
+      font-size: inherit;
+      font-family: inherit;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #2563eb;
+      text-decoration: none;
+      outline: none;
+      box-shadow: none;
+    }
+    .misa-otp-resend-link:focus,
+    .misa-otp-resend-link:focus-visible,
+    .misa-otp-resend-link:active {
+      outline: none;
+      box-shadow: none;
+    }
+    .misa-otp-resend-link:disabled {
+      color: #93c5fd;
+      cursor: not-allowed;
+    }
+    .misa-otp-resend-link:not(:disabled):hover {
+      text-decoration: underline;
+    }
+    .misa-otp-resend-countdown {
+      color: #374151;
+    }
+  </style>
 </head>
 
 <body>
@@ -32,7 +175,7 @@
     <!--Navbar Menu-->
     <nav class="navbar navbar-expand-lg navbar-light bg-primary navbar-menu">
       <div class="text-center img-logo">
-        <a href="/"><img src="../../web-files/assets/images/CashD-logo.png" width="100%" alt="CashD Logo"></a>
+        <a href="/"><img src="../../web-files/assets/images/flexwagely_logo.png" width="100%" alt="CashD Logo"></a>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -78,14 +221,14 @@
                   <div class="signup-sidebar-intro">
                     <p>
                       An earned wage access platform that lets employees access their pay as they earn it,
-                      powered by payroll integration.
+                      powered by timesheet/payroll integration.
                     </p>
                   </div>
                   <!-- progressbar -->
                   <ul class="progressbar">
                     <li class="active">
                       <div class="progress-circle">1</div>
-                      <div class="progress-label">Payroll System</div>
+                      <div class="progress-label">System Integration</div>
                     </li>
                     <li>
                       <div class="progress-circle">2</div>
@@ -119,8 +262,8 @@
                     </div>
                   </div>
                   <form id="msform">
-                    <!-- Step 1: Payroll System Integration (Choose System) -->
-                    <fieldset id="step4" data-title="Payroll System Integration" data-description="Connect your payroll system to enable secure earned wage access for your employees.">
+                    <!-- Step 1: System Integration (Choose System) -->
+                    <fieldset id="step4" data-title="System Integration" data-description="Connect your timesheet/payroll system to enable secure earned wage access for your employees.">
                       <div class="system-list"></div>
                       <div class="system-actions">
                         <button
@@ -133,28 +276,34 @@
 
                     <!-- Step 2: Company Details -->
                     <fieldset id="step5" data-title="Your company details" data-description="Sync your company data from your payroll or enter it manually.">
+                      <!-- MISA: 2 tab bằng dấu chấm (API / Company) -->
+                      <div class="misa-tabs" hidden>
+                        <!-- Dot 1 = API (EC / Timekeeping / Salary), Dot 2 = Company form -->
+                        <button type="button" class="misa-tab-dot active" data-target="misa-api" aria-label="MISA API"></button>
+                        <button type="button" class="misa-tab-dot" data-target="misa-company" aria-label="Company details"></button>
+                      </div>
                       <!-- none group -->
                       <div hidden class="input-company">
-                        <div class="form-group form-primary text-left">
+                        <div class="form-group form-primary text-left input-with-lock-wrap">
                           <input type="text" name="companyName" class="form-control" placeholder="Company Name">
+                          <span class="input-lock-icon d-none" title="From payroll system" aria-hidden="true"><i class="icofont icofont-lock"></i></span>
                           <span id="companyNameValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide company name.</span>
                         </div>
-                        <div class="form-group form-primary text-left">
-                          <input type="number" name="ABN" class="form-control"  placeholder="ABN">
+                        <div class="form-group form-primary text-left input-with-lock-wrap">
+                          <input type="number" name="ABN" class="form-control" placeholder="ABN">
+                          <span class="input-lock-icon d-none" title="From payroll system" aria-hidden="true"><i class="icofont icofont-lock"></i></span>
                           <span class="form-bar"></span>
-                        </div>
-                        <div class="form-group form-primary text-left">
-                          <input type="email" name="companyEmail" class="form-control" placeholder="Company Email">
-                          <span id="companyEmailValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Company email is not valid.</span>
                         </div>
                         <div class="form-group form-primary text-left">
                           <div class="row">
                             <div class="col-md-6">
                               <select class="form-control" name="companyCountryCode" id="companyCountryCode">
-                                <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
+                                <option data-countryCode="VN" value="84" Selected>Vietnam (+84)</option>
                                 <optgroup label="Other countries">
                                   <% countryCode.forEach(function(item) { %>
+                                    <% if (item.code !== 'VN') { %>
                                     <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                                    <% } %>
                                   <% }) %>
                                 </optgroup>
                               </select>
@@ -198,6 +347,94 @@
                         </div>
                       </div>
                       <!-- end  -->
+                      <!-- MISA API (tách riêng khỏi ASTUTE) -->
+                      <div hidden class="misa-api">
+                        <div class="misa-module">
+                          <div class="misa-module-header">
+                            <div class="misa-module-title">Employee Central (<span class="required-star">*</span>)</div>
+                            <a class="misa-amis-help-link" href="https://helpamis.misa.vn/amis-thong-tin-nhan-su/kb/tich-hop-api/" target="_blank" rel="noopener noreferrer">Get credentials from AMIS</a>
+                          </div>
+                          <div class="form-group form-primary text-left">
+                            <input
+                              id="employeeCentralConnectionId"
+                              type="text"
+                              name="employeeCentralConnectionId"
+                              class="form-control"
+                              placeholder="Connection ID"
+                            >
+                            <span id="employeeCentralConnectionIdValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Connection ID.</span>
+                          </div>
+                          <div class="form-group form-primary text-left">
+                            <input
+                              id="employeeCentralPasscode"
+                              type="password"
+                              name="employeeCentralPasscode"
+                              class="form-control"
+                              placeholder="Passcode"
+                            >
+                            <span id="employeeCentralPasscodeValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Passcode.</span>
+                          </div>
+                        </div>
+
+                        <div class="misa-module">
+                          <div class="misa-module-header">
+                            <div class="misa-module-title">Timekeeping</div>
+                            <a class="misa-amis-help-link" href="https://helpamis.misa.vn/amis-cham-cong/kb/tich-hop-api-de-chuyen-du-lieu-tu-amis-cham-cong-sang-cac-phan-mem-khac/" target="_blank" rel="noopener noreferrer">Get credentials from AMIS</a>
+                          </div>
+                          <div class="form-group form-primary text-left">
+                            <input
+                              id="timekeepingConnectionId"
+                              type="text"
+                              name="timekeepingConnectionId"
+                              class="form-control"
+                              placeholder="Connection ID"
+                            >
+                            <span id="timekeepingConnectionIdValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Connection ID.</span>
+                          </div>
+                          <div class="form-group form-primary text-left">
+                            <input
+                              id="timekeepingPasscode"
+                              type="password"
+                              name="timekeepingPasscode"
+                              class="form-control"
+                              placeholder="Passcode"
+                            >
+                            <span id="timekeepingPasscodeValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Passcode.</span>
+                          </div>
+                        </div>
+
+                        <div class="misa-module">
+                          <div class="misa-module-header">
+                            <div class="misa-module-title">Salary</div>
+                            <a class="misa-amis-help-link" href="https://helpamis.misa.vn/amis-tien-luong/kb/tich-hop-api-de-chuyen-du-lieu-tu-amis-tien-luong-sang-cac-phan-mem-khac/" target="_blank" rel="noopener noreferrer">Get credentials from AMIS</a>
+                          </div>
+                          <div class="form-group form-primary text-left">
+                            <input
+                              id="salaryConnectionId"
+                              type="text"
+                              name="salaryConnectionId"
+                              class="form-control"
+                              placeholder="Connection ID"
+                            >
+                            <span id="salaryConnectionIdValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Connection ID.</span>
+                          </div>
+                          <div class="form-group form-primary text-left">
+                            <input
+                              id="salaryPasscode"
+                              type="password"
+                              name="salaryPasscode"
+                              class="form-control"
+                              placeholder="Passcode"
+                            >
+                            <span id="salaryPasscodeValidate" hidden class="form-bar pl-2" style="color: red; font-size: 13px;">Please provide Passcode.</span>
+                          </div>
+                        </div>
+                        <div class="step-actions">
+                          <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2" id="misaApiBackBtn">BACK</button>
+                          <button type="button" class="btn btn-primary btn-md btn-step my-3" id="misaApiNextBtn">NEXT</button>
+                        </div>
+                      </div>
+                      <!-- end MISA API -->
                       <!-- HR3 -->
                       <div hidden class="as-company-hr3">
                         <div class="hr3-logo">
@@ -224,41 +461,70 @@
                     </fieldset>
 
                     <!-- Step 3: Personal Details -->
-                    <fieldset data-title="Your personal details" data-description="Enter your personal information to create your account and manage your company.">
-                      <div class="row text-left" style="margin-top: 0;">
-                        <div class="form-group col-md-6 form-primary">
-                          <input id="firstName" type="text" name="firstname" class="form-control" placeholder="First Name" autocomplete="given-name">
-                        </div>
-                        <div class="form-group col-md-6 form-primary">
-                          <input id="lastName" type="text" name="lastname" class="form-control" placeholder="Last Name" autocomplete="family-name">
-                        </div>
+                    <fieldset id="stepPersonal" data-title="Your personal details" data-description="Enter your personal information to create your account and manage your company.">
+                      <div class="misa-personal-tabs" hidden>
+                        <button type="button" class="misa-tab-dot misa-personal-tab-dot active" data-target="misa-personal-details" aria-label="Personal details"></button>
+                        <button type="button" class="misa-tab-dot misa-personal-tab-dot" data-target="misa-personal-otp" aria-label="Verify email"></button>
                       </div>
-                      <div class="form-group form-primary text-left">
-                        <input id="email" type="text" name="email" class="form-control" placeholder="Email" autocomplete="email">
-                        <span class="form-bar"></span>
-                      </div>
-                      <div class="form-group form-primary text-left">
-                        <div class="row">
-                          <div class="col-md-6">
-                            <select class="form-control" name="countryCode" id="selectedCountryCode">
-                              <option data-countryCode="AU" value="61" Selected>Australia (+61)</option>
-                              <optgroup label="Other countries">
-                                <% countryCode.forEach(function(item) { %>
-                                  <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
-                                <% }) %>
-                              </optgroup>
-                            </select>
+                      <div class="misa-personal-pane misa-personal-pane-details" data-pane="misa-personal-details">
+                        <div class="row text-left" style="margin-top: 0;">
+                          <div class="form-group col-md-6 form-primary">
+                            <input id="firstName" type="text" name="firstname" class="form-control" placeholder="First Name" autocomplete="given-name">
                           </div>
-                          <div class="col-md-6">
-                            <input type="tel" id="mobile" name="mobile" class="form-control" required="" placeholder="Mobile" autocomplete="tel" inputmode="tel">
+                          <div class="form-group col-md-6 form-primary">
+                            <input id="lastName" type="text" name="lastname" class="form-control" placeholder="Last Name" autocomplete="family-name">
                           </div>
                         </div>
-                        <span class="form-bar"></span>
+                        <div class="form-group form-primary text-left input-with-lock-wrap">
+                          <input id="email" type="text" name="email" class="form-control" placeholder="Email" autocomplete="email">
+                          <span class="input-lock-icon d-none" title="From payroll system" aria-hidden="true"><i class="icofont icofont-lock"></i></span>
+                          <span class="form-bar"></span>
+                        </div>
+                        <div class="form-group form-primary text-left">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <select class="form-control" name="countryCode" id="selectedCountryCode">
+                                <option data-countryCode="VN" value="84" Selected>Vietnam (+84)</option>
+                                <optgroup label="Other countries">
+                                  <% countryCode.forEach(function(item) { %>
+                                    <% if (item.code !== 'VN') { %>
+                                    <option data-countryCode="<%= item.code %>" value="<%= item.dial_code %>"><%= item.name %></option>
+                                    <% } %>
+                                  <% }) %>
+                                </optgroup>
+                              </select>
+                            </div>
+                            <div class="col-md-6">
+                              <input type="tel" id="mobile" name="mobile" class="form-control" required="" placeholder="Mobile" autocomplete="tel" inputmode="tel">
+                            </div>
+                          </div>
+                          <span class="form-bar"></span>
+                        </div>
+                        <div class="step-actions">
+                          <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
+                          <button id="jsMisaPersonalNext" type="button" hidden
+                            class="btn btn-primary btn-md btn-step my-3">NEXT</button>
+                          <button id="jsNextStep1" type="button"
+                            class="btn btn-primary btn-md btn-step my-3">Complete</button>
+                        </div>
                       </div>
-                      <div class="step-actions">
-                        <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsBackStep">BACK</button>
-                        <button id="jsNextStep1" type="button"
-                          class="btn btn-primary btn-md btn-step my-3">Complete</button>
+                      <div hidden class="misa-personal-pane misa-personal-pane-otp" data-pane="misa-personal-otp">
+                        <p class="misa-otp-intro">
+                          We sent a verification code to <strong class="misa-otp-email-hint"></strong>.
+                          Enter it below to finish registration.
+                        </p>
+                        <div class="form-group form-primary text-left">
+                          <input type="text" id="misaOtpCode" class="form-control" placeholder="Verification code" autocomplete="one-time-code" inputmode="numeric">
+                          <span class="form-bar"></span>
+                        </div>
+                        <p class="misa-otp-resend-line">
+                          Didn't receive the code?
+                          <button type="button" class="misa-otp-resend-link" id="misaOtpResend" disabled>Resend code</button><span class="misa-otp-resend-countdown" id="misaOtpResendCountdown"> in 30s.</span>
+                        </p>
+                        <div class="step-actions">
+                          <button type="button" class="btn btn-default btn-md btn-step my-3 mr-2 jsMisaOtpBack">BACK</button>
+                          <button type="button" id="misaOtpComplete" class="btn btn-primary btn-md btn-step my-3">Complete</button>
+                        </div>
                       </div>
                     </fieldset>
 

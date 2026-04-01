@@ -47,7 +47,7 @@ class BaseService {
   initializeProperty() {
     this.#headers = {
       "Content-Type": "application/json",
-      "x-api-key": xApiKey,
+      "x-api-key": xApiKey
     };
   }
 
